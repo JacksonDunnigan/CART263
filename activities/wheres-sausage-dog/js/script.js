@@ -115,7 +115,22 @@ function simulation() {
 }
 // Victory
 function victory() {
-
+  push();
+  textFont('courier');
+  textSize(86);
+  textAlign(CENTER,CENTER);
+  fill(80);
+  text("You Found Him!", width / 2 - 4, height *.4 );
+  fill(255);
+  text("You Found Him!", width / 2, height *.4);
+  textSize(32);
+  fill(80);
+  text("press any key to restart", width / 2 - 3, height *.47);
+  fill(225);
+  text("press any key to restart", width / 2, height *.47);
+  imageMode(CENTER);
+  image(sausageDogImage, width / 2, height *.55);
+  pop();
 }
 
 // draw()
@@ -159,6 +174,13 @@ function mousePressed() {
   // Changes states
   if (state === 'menu'){
     state = 'simulation';
+  } else if (state === 'victory'){
+    for (var i = 0; i < animals.length; i++){
+      animals.splice(i);
+    }
+
+    state = 'simulation'
+    setup();
   }
 }
 

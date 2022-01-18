@@ -12,6 +12,8 @@ class SausageDog extends Animal {
 
     this.found = false;
     this.rotationSpeed = 0.25;
+    this.timer = 0;
+    this.maxTimer = 120;
   }
 
   // update()
@@ -19,7 +21,12 @@ class SausageDog extends Animal {
   update() {
     super.update();
     if (this.found) {
+      this.timer = min(this.timer + 1, this.maxTimer);
       this.angle += this.rotationSpeed;
+    }
+    // Timer for switching to the end screen
+    if (this.timer == this.maxTimer) {
+      state = 'victory';
     }
   }
 
