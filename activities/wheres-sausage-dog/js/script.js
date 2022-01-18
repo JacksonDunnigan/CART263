@@ -17,6 +17,10 @@ const SAUSAGE_DOG_IMAGE = `assets/images/sausage-dog.png`;
 // Number of images to display
 const NUM_ANIMALS = 100;
 
+// Constant for spawning
+const MARGIN = 50;
+
+
 // Array of the loaded animal images
 let animalImages = [];
 // Array of animal objects
@@ -69,8 +73,8 @@ function createAnimals() {
 // Create an animal object at a random position with a random image
 // then return that created animal
 function createRandomAnimal() {
-  let x = random(0, width);
-  let y = random(0, height);
+  let x = random(MARGIN, width-MARGIN);
+  let y = random(MARGIN, height-MARGIN);
   let animalImage = random(animalImages);
   let animal = new Animal(x, y, animalImage);
   return animal;
@@ -79,8 +83,8 @@ function createRandomAnimal() {
 // createSausageDog()
 // Creates a sausage dog at a random position
 function createSausageDog() {
-  let x = random(0, width);
-  let y = random(0, height);
+  let x = random(MARGIN, width-MARGIN);
+  let y = random(MARGIN, height-MARGIN);
   sausageDog = new SausageDog(x, y, sausageDogImage);
 }
 
@@ -96,9 +100,9 @@ function menu() {
   text("Sausage Quest", width / 2, height *.4);
   textSize(32);
   fill(80);
-  text("find the sausage dog", width / 2 - 3, height *.47);
+  text("press any key to play", width / 2 - 3, height *.47);
   fill(225);
-  text("find the sausage dog", width / 2, height *.47);
+  text("press any key to play", width / 2, height *.47);
   imageMode(CENTER);
   image(sausageDogImage, width / 2, height *.55);
   pop();
@@ -118,8 +122,6 @@ function victory() {
 // Draws the background then updates all animals and the sausage dog
 function draw() {
   background(92,175,110);
-
-
 
   // Game states
   if (state === 'menu'){
@@ -156,6 +158,13 @@ function mousePressed() {
 
   // Changes states
   if (state === 'menu'){
+    state = 'simulation';
+  }
+}
+
+// keyPressed()
+function keyPressed() {
+  if (state === 'menu') {
     state = 'simulation';
   }
 }
