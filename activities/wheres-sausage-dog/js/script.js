@@ -140,10 +140,10 @@ function simulation() {
   textSize(42);
   textAlign(CENTER,CENTER);
   fill(80);
-  text("Score: "+ score, MARGIN*2.2-3, height - MARGIN );
+  text("Score:"+ score, MARGIN*2.2-3, height - MARGIN );
 
   fill(255);
-  text("Score: "+ score, MARGIN*2.2, height - MARGIN );
+  text("Score:"+ score, MARGIN*2.2, height - MARGIN );
 
   pop();
 }
@@ -159,9 +159,9 @@ function victory() {
   text("You Found Him!", width / 2, height *.4);
   textSize(32);
   fill(80);
-  text("press any key to continue", width / 2 - 3, height *.47);
+  text("current score:"+score, width / 2 - 3, height *.47);
   fill(225);
-  text("press any key to continue", width / 2, height *.47);
+  text("current score:"+score, width / 2, height *.47);
   imageMode(CENTER);
   image(sausageDogImage, width / 2, height *.55);
   pop();
@@ -179,9 +179,9 @@ function gameOver(){
   text("Game Over", width / 2, height *.4);
   textSize(32);
   fill(80);
-  text("you had a score of: "+ score, width / 2 - 3, height *.47);
+  text("you had a score of "+ score, width / 2 - 3, height *.47);
   fill(225);
-  text("you had a score of: "+ score, width / 2, height *.47);
+  text("you had a score of "+ score, width / 2, height *.47);
   // fill(80);
   // text("press any key\nto restart", width / 2 - 3, height *.5);
   // fill(225);
