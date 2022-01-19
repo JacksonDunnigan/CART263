@@ -36,6 +36,11 @@ let maxTimer = 1000;
 let timer;
 // Score
 let score = 0;
+// Sounds
+let beep;
+let beep2;
+let victorySound;
+let gameOverSound;
 
 // preload()
 // Loads all the animal images and the sausage dog image
@@ -50,6 +55,13 @@ function preload() {
 
   // Load the sausage dog image
   sausageDogImage = loadImage(`${SAUSAGE_DOG_IMAGE}`);
+
+  // Load sounds
+  beep = loadSound('assets/sounds/beep.wav');
+  beep2 = loadSound('assets/sounds/beep 2.wav');
+  victorySound = loadSound('assets/sounds/victory.mp3');
+  gameOverSound = loadSound('assets/sounds/gameOver.mp3');
+
 }
 
 
@@ -121,7 +133,11 @@ function simulation() {
   // Updates the timer
   if (sausageDog.found == false){
     timer = max(timer - 1, 0);
+    if (timer % 60 == 0){
+      beep.play();
+    }
     if (timer <= 0){
+      gameOverSound.play();
       state = 'gameOver';
     }
   }
@@ -232,6 +248,7 @@ function updateSausageDog() {
 // the mouse was clicked.
 function mousePressed() {
   sausageDog.mousePressed();
+  beep2.play();
 
   // Changes states
   if (state === 'menu'){

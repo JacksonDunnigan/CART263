@@ -13,13 +13,11 @@ class SausageDog extends Animal {
     this.found = false;
     this.rotationSpeed = 0.25;
 
-    // Timer if you take too long
-    this.helpTimer = 0;
-    this.maxHelpTimer = 800;
+  
 
     // Victory timer
     this.victoryTimer = 0;
-    this.maxVictoryTimer = 120;
+    this.maxVictoryTimer = 100;
   }
 
   // update()
@@ -48,6 +46,7 @@ class SausageDog extends Animal {
   // Checks if this sausage dog was clicked and remembers it was found if so
   mousePressed() {
     if (!this.found && this.overlap(mouseX, mouseY)) {
+      victorySound.play()
       score += 1;
       this.found = true;
     }
