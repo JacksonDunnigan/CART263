@@ -48,6 +48,7 @@ class SausageDog extends Animal {
   // Checks if this sausage dog was clicked and remembers it was found if so
   mousePressed() {
     if (!this.found && this.overlap(mouseX, mouseY)) {
+      score += 1;
       this.found = true;
     }
   }

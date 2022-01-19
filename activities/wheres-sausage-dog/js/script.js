@@ -31,6 +31,11 @@ let sausageDogImage;
 let sausageDog;
 // State of the game
 let state = "menu";
+// Time limit vairables
+let maxTimer = 1000;
+let timer;
+// Score
+let score = 0;
 
 // preload()
 // Loads all the animal images and the sausage dog image
@@ -52,7 +57,7 @@ function preload() {
 // Creates all the animal objects and a sausage dog object
 function setup() {
   createCanvas(windowWidth, windowHeight);
-
+  timer = maxTimer;
   createAnimals();
   createSausageDog();
 }
@@ -74,7 +79,7 @@ function createAnimals() {
 // then return that created animal
 function createRandomAnimal() {
   let x = random(MARGIN, width-MARGIN);
-  let y = random(MARGIN, height-MARGIN);
+  let y = random(MARGIN, height-MARGIN*2);
   let animalImage = random(animalImages);
   let animal = new Animal(x, y, animalImage);
   return animal;
@@ -84,7 +89,7 @@ function createRandomAnimal() {
 // Creates a sausage dog at a random position
 function createSausageDog() {
   let x = random(MARGIN, width-MARGIN);
-  let y = random(MARGIN, height-MARGIN);
+  let y = random(MARGIN, height-MARGIN*2);
   sausageDog = new SausageDog(x, y, sausageDogImage);
 }
 
@@ -112,6 +117,35 @@ function simulation() {
   // Updates animals
   updateAnimals();
   updateSausageDog();
+
+  // Updates the timer
+  if (sausageDog.found == false){
+    timer = max(timer - 1, 0);
+    if (timer <= 0){
+      state = 'gameOver';
+    }
+  }
+
+  // Draws the timer
+  push();
+  fill(255);
+  noStroke();
+  rectMode(CORNER);
+  rect(0,height-25, width * (timer/maxTimer), 25);
+  pop();
+
+  // Draws the score
+  push();
+  textFont('courier');
+  textSize(42);
+  textAlign(CENTER,CENTER);
+  fill(80);
+  text("Score: "+ score, MARGIN*2.2-3, height - MARGIN );
+
+  fill(255);
+  text("Score: "+ score, MARGIN*2.2, height - MARGIN );
+
+  pop();
 }
 // Victory
 function victory() {
@@ -125,9 +159,33 @@ function victory() {
   text("You Found Him!", width / 2, height *.4);
   textSize(32);
   fill(80);
-  text("press any key to restart", width / 2 - 3, height *.47);
+  text("press any key to continue", width / 2 - 3, height *.47);
   fill(225);
-  text("press any key to restart", width / 2, height *.47);
+  text("press any key to continue", width / 2, height *.47);
+  imageMode(CENTER);
+  image(sausageDogImage, width / 2, height *.55);
+  pop();
+}
+
+// Game over
+function gameOver(){
+  push();
+  textFont('courier');
+  textSize(86);
+  textAlign(CENTER,CENTER);
+  fill(80);
+  text("Game Over", width / 2 - 4, height *.4 );
+  fill(255);
+  text("Game Over", width / 2, height *.4);
+  textSize(32);
+  fill(80);
+  text("you had a score of: "+ score, width / 2 - 3, height *.47);
+  fill(225);
+  text("you had a score of: "+ score, width / 2, height *.47);
+  // fill(80);
+  // text("press any key\nto restart", width / 2 - 3, height *.5);
+  // fill(225);
+  // text("press any key\nto restart", width / 2, height *.5);
   imageMode(CENTER);
   image(sausageDogImage, width / 2, height *.55);
   pop();
@@ -145,6 +203,8 @@ function draw() {
     simulation();
   } else if (state === 'victory'){
     victory();
+  } else if (state === 'gameOver'){
+    gameOver();
   }
 }
 
@@ -153,10 +213,11 @@ function draw() {
 function updateAnimals() {
   // Loop through all animals
   for (let i = 0; i < animals.length; i++) {
-    // Update the current animal
+    // Updates the current animal
     animals[i].update();
     bubbleSort();
   }
+
 }
 
 // updateSausageDog()
@@ -179,8 +240,15 @@ function mousePressed() {
     for (var i = 0; i < animals.length; i++){
       animals.splice(i);
     }
-
     state = 'simulation'
+    setup();
+  } else if (state === 'gameOver'){
+    for (var i = 0; i < animals.length; i++){
+      animals.splice(i);
+    }
+    score = 0;
+    maxTimer = max(maxTimer - 50, 500);
+    state = 'simulation';
     setup();
   }
 }
