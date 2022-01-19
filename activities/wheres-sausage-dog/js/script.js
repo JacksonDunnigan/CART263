@@ -155,6 +155,7 @@ function updateAnimals() {
   for (let i = 0; i < animals.length; i++) {
     // Update the current animal
     animals[i].update();
+    bubbleSort();
   }
 }
 
@@ -188,5 +189,29 @@ function mousePressed() {
 function keyPressed() {
   if (state === 'menu') {
     state = 'simulation';
+  }
+}
+
+// bubble sort
+function bubbleSort() {
+  let i = 0;
+  let j = 0;
+  for(let k = 0;k<animals.length;k++){
+    if(i<animals.length){
+      let temp = animals[j].y;
+      if(animals[j].y > animals[j+1].y){
+        animals[j].y = animals[j+1].y;
+        animals[j+1].y = temp;
+      }
+      j++;
+
+      if(j>=animals.length-i-1){
+        j = 0;
+        i++;
+      }
+    }
+    else{
+      noLoop();
+    }
   }
 }

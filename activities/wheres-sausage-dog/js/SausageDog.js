@@ -12,20 +12,34 @@ class SausageDog extends Animal {
 
     this.found = false;
     this.rotationSpeed = 0.25;
-    this.timer = 0;
-    this.maxTimer = 120;
+
+    // Timer if you take too long
+    this.helpTimer = 0;
+    this.maxHelpTimer = 800;
+
+    // Victory timer
+    this.victoryTimer = 0;
+    this.maxVictoryTimer = 120;
   }
 
   // update()
   // Calls the super update() and changes angle if found (to rotate!)
   update() {
     super.update();
+
+    // Help timer
+    this.helpTimer = min(this.helpTimer + 1,this.maxHelpTimer);
+    if (this.helpTimer == this.maxHelpTimer) {
+      this.helpTimer = 0;
+    }
+
+    // Logic for finding the dog
     if (this.found) {
-      this.timer = min(this.timer + 1, this.maxTimer);
+      this.victoryTimer = min(this.victoryTimer + 1, this.maxVictoryTimer);
       this.angle += this.rotationSpeed;
     }
     // Timer for switching to the end screen
-    if (this.timer == this.maxTimer) {
+    if (this.victoryTimer == this.maxVictoryTimer) {
       state = 'victory';
     }
   }
