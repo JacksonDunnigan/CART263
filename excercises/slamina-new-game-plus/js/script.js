@@ -154,9 +154,9 @@ let currentAnswer = `Click to begin.`;
 // The current animal name the user is trying to guess
 let currentAnimal = ``;
 
-let annyang;
-let responsiveVoice;
-let reverseAnimal;
+// let annyang;
+// let responsiveVoice;
+// let reverseAnimal;
 /**
 Create a canvas
 Set up annyang with the guessing command
