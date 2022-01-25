@@ -150,20 +150,29 @@ const animals = [
 const QUESTION_DELAY = 2000; // in milliseconds
 
 // The current answer to display (we use it initially to display the click instruction)
-let currentAnswer = `Click to begin.`;
+let currentAnswer;//= `Click to begin.`;
 // The current animal name the user is trying to guess
 let currentAnimal = ``;
 
-// let annyang;
-// let responsiveVoice;
-// let reverseAnimal;
-/**
-Create a canvas
+// Game state
+let state;
+
+// Score
+let score;
+let correct = false;
+
+// Timer
+let timer;
+let maxTimer = 800;
+
+/*Create a canvas
 Set up annyang with the guessing command
 Set text defaults
 */
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  state = 'menu';
+  score = 0;
 
   // Is annyang available?
   if (annyang) {
@@ -177,8 +186,9 @@ function setup() {
   }
 
   // Text defaults
+  textFont('helvetica');
+  // textStyle(NORMAL);
   textSize(102);
-  textStyle(BOLD);
   textAlign(CENTER);
 }
 
@@ -189,7 +199,46 @@ Display the current answer.
 function draw() {
   background(0);
 
-  displayAnswer();
+  // Main menu
+  if (state === 'menu') {
+    push();
+    textStyle(BOLD);
+    fill(255);
+    textSize(136);
+    text("Slamina", width / 2, height * .48);
+
+    textStyle(NORMAL);
+    textSize(32);
+    text("The animal guessing game", width / 2, height * .52);
+    pop();
+
+  // Simulation
+  } else if (state === 'simulation') {
+    timer = max(timer - 1, 0);
+    // if (timer % 60 == 0){
+    //   beep.play();
+    // }
+    if (timer <= 0){
+      // gameOverSound.play();
+      // state = 'gameOver';
+    }
+
+    // Draws words
+    displayAnswer();
+    push();
+    fill(255);
+    textSize(32);
+    text("Guess the reversed animal name with your voice", width * .5, height * .95);
+    text("Score: " + score, width * .075, height * .075);
+    pop();
+
+    // Draws timer bar
+    push();
+    noStroke();
+    rectMode(CORNER);
+    rect(0,height-25, width * (timer/maxTimer), 25);
+    pop();
+  }
 }
 
 /**
@@ -197,13 +246,23 @@ Display the current answer in red if incorrect and green if correct
 (Displays nothing if no guess entered yet)
 */
 function displayAnswer() {
+  push();
   if (currentAnswer === currentAnimal) {
     fill(0, 255, 0);
+
+    // Adds to the score
+    if (correct == false) {
+      correct = true;
+      score += 1;
+      timer = 0;
+    }
   }
   else {
     fill(255, 0, 0);
   }
+  textStyle(BOLD);
   text(currentAnswer, width / 2, height / 2);
+  pop();
 }
 
 /**
@@ -252,4 +311,11 @@ When the user clicks, go to the next question
 */
 function mousePressed() {
   nextQuestion();
+
+  // Changes states
+  if (state === 'menu') {
+    state = 'simulation';
+    timer = maxTimer;
+    console.log(1);
+  }
 }
