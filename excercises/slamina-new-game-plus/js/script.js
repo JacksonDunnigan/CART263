@@ -208,7 +208,7 @@ function setup() {
       'I think its a *animal': guessAnimal,
       'is it an *animal': guessAnimal,
       'is it a *animal': guessAnimal,
-      'is it *animal': guessAnimal
+      'is it *animal': guessAnimal,
 
 
     };
