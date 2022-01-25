@@ -166,6 +166,25 @@ let incorrect = false;
 let timer;
 let maxTimer = 800;
 
+// Sound
+let soundTick;
+let soundVictory;
+let soundGameOver;
+let soundBeep;
+
+
+// Loads the sounds
+function preload(){
+  soundTick = loadSound('assets/sounds/tick.wav');
+  soundVictory = loadSound('assets/sounds/victory.mp3');
+  soundGameOver = loadSound('assets/sounds/gameOver.mp3');
+  soundBeep = loadSound('assets/sounds/beep.wav');
+  soundTick.setVolume(0.25);
+  soundVictory.setVolume(0.3);
+  soundGameOver.setVolume(0.3);
+  soundBeep.setVolume(0.3);
+}
+
 /*Create a canvas
 Set up annyang with the guessing command
 Set text defaults
@@ -220,9 +239,9 @@ function draw() {
     if (correct == false) {
       timer = max(timer - 1, 0);
     }
-    // if (timer % 60 == 0){
-    //   beep.play();
-    // }
+    if (timer % 60 == 0 && timer > 0){
+      soundTick.play();
+    }
     // if (timer <= 0){
     //   // gameOverSound.play();
     //   state = 'gameOver';
@@ -255,21 +274,28 @@ Display the current answer in red if incorrect and green if correct
 */
 function displayAnswer() {
   push();
+
   // If the answer is correct
   if (currentAnswer === currentAnimal && incorrect == false) {
     // Adds to the score
     if (correct == false) {
+      soundVictory.play();
       correct = true;
       score += 1;
       timer = 0;
     }
     fill(0, 255, 0);
   }
+
   // If you run out of time
   else if (timer <= 0) {
+    if (incorrect == false) {
+      soundGameOver.play();
+    }
     incorrect = true;
     currentAnswer = currentAnimal;
     fill(255, 0, 0);
+
   // If you answer wrong
   } else {
     fill(255, 0, 0);
@@ -323,19 +349,24 @@ function nextQuestion() {
 
 }
 
-/**
-When the user clicks, go to the next question
-*/
+// Functionality to mouse clicking
 function mousePressed() {
-
+  soundBeep.play();
+  
   // Changes states
   if (state === 'menu') {
+    nextQuestion();
     state = 'simulation';
     timer = maxTimer;
-    console.log(1);
+    // console.log(1);
 
   } else if (state === 'simulation') {
-    nextQuestion();
+
+    // Goes to the next question if answered correctly
+    if (incorrect == true || correct == true) {
+      nextQuestion();
+    }
+    // Resets
     incorrect = false;
     correct = false;
   }
