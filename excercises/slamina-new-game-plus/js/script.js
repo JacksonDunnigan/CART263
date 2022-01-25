@@ -160,6 +160,7 @@ let state;
 // Score
 let score;
 let correct = false;
+let incorrect = false;
 
 // Timer
 let timer;
@@ -214,17 +215,23 @@ function draw() {
 
   // Simulation
   } else if (state === 'simulation') {
-    timer = max(timer - 1, 0);
+
+    // Timer
+    if (correct == false) {
+      timer = max(timer - 1, 0);
+    }
     // if (timer % 60 == 0){
     //   beep.play();
     // }
-    if (timer <= 0){
-      // gameOverSound.play();
-      // state = 'gameOver';
-    }
+    // if (timer <= 0){
+    //   // gameOverSound.play();
+    //   state = 'gameOver';
+    // }
+
+    // Updates and displays the answer
+    displayAnswer();
 
     // Draws words
-    displayAnswer();
     push();
     fill(255);
     textSize(32);
@@ -241,25 +248,33 @@ function draw() {
   }
 }
 
+
 /**
 Display the current answer in red if incorrect and green if correct
 (Displays nothing if no guess entered yet)
 */
 function displayAnswer() {
   push();
-  if (currentAnswer === currentAnimal) {
-    fill(0, 255, 0);
-
+  // If the answer is correct
+  if (currentAnswer === currentAnimal && incorrect == false) {
     // Adds to the score
     if (correct == false) {
       correct = true;
       score += 1;
       timer = 0;
     }
+    fill(0, 255, 0);
   }
-  else {
+  // If you run out of time
+  else if (timer <= 0) {
+    incorrect = true;
+    currentAnswer = currentAnimal;
+    fill(255, 0, 0);
+  // If you answer wrong
+  } else {
     fill(255, 0, 0);
   }
+
   textStyle(BOLD);
   text(currentAnswer, width / 2, height / 2);
   pop();
@@ -304,18 +319,24 @@ function nextQuestion() {
   currentAnswer = ``;
   currentAnimal = random(animals);
   sayAnimalBackwards(currentAnimal);
+  timer = maxTimer;
+
 }
 
 /**
 When the user clicks, go to the next question
 */
 function mousePressed() {
-  nextQuestion();
 
   // Changes states
   if (state === 'menu') {
     state = 'simulation';
     timer = maxTimer;
     console.log(1);
+
+  } else if (state === 'simulation') {
+    nextQuestion();
+    incorrect = false;
+    correct = false;
   }
 }
