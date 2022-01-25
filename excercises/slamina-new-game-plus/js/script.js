@@ -161,6 +161,7 @@ let state;
 let score;
 let correct = false;
 let incorrect = false;
+let guessed = false;
 
 // Timer
 let timer;
@@ -171,6 +172,7 @@ let soundTick;
 let soundVictory;
 let soundGameOver;
 let soundBeep;
+let soundWrong;
 
 
 // Loads the sounds
@@ -179,10 +181,12 @@ function preload(){
   soundVictory = loadSound('assets/sounds/victory.mp3');
   soundGameOver = loadSound('assets/sounds/gameOver.mp3');
   soundBeep = loadSound('assets/sounds/beep.wav');
-  soundTick.setVolume(0.25);
+  soundWrong = loadSound('assets/sounds/wrong.wav');
+  soundTick.setVolume(0.15);
   soundVictory.setVolume(0.3);
   soundGameOver.setVolume(0.3);
   soundBeep.setVolume(0.3);
+  soundWrong.setVolume(0.3);
 }
 
 /*Create a canvas
@@ -198,7 +202,13 @@ function setup() {
   if (annyang) {
     // Create the guessing command
     let commands = {
-      'I think it is *animal': guessAnimal
+      'I think it is *animal': guessAnimal,
+      'I think it is a *animal': guessAnimal,
+      'I think its *animal': guessAnimal,
+      'I think its a *animal': guessAnimal,
+      'is it an *animal': guessAnimal,
+      'is it a *animal': guessAnimal
+
     };
     // Setup annyang and start
     annyang.addCommands(commands);
@@ -273,7 +283,6 @@ Display the current answer in red if incorrect and green if correct
 (Displays nothing if no guess entered yet)
 */
 function displayAnswer() {
-  push();
 
   // If the answer is correct
   if (currentAnswer === currentAnimal && incorrect == false) {
@@ -284,7 +293,13 @@ function displayAnswer() {
       score += 1;
       timer = 0;
     }
+    push();
+    textStyle(BOLD);
+    fill(255);
+    text("I think it is ________", width / 2, height / 2);
     fill(0, 255, 0);
+    text(currentAnswer, width *.68, height / 2);
+    pop();
   }
 
   // If you run out of time
@@ -294,16 +309,39 @@ function displayAnswer() {
     }
     incorrect = true;
     currentAnswer = currentAnimal;
+    push();
+    fill(255);
+    textSize(32);
+    text('The correct word was', width/2, height*.4);
     fill(255, 0, 0);
+    textSize(88);
+    textStyle(BOLD);
+    text(currentAnimal, width/2, height/2);
+    pop()
 
-  // If you answer wrong
-  } else {
+  // If you answered wrong
+  } else if (currentAnswer !== ``) {
+    if (guessed == false){
+      guessed = true;
+      soundWrong.play();
+    }
+    push();
+    textStyle(BOLD);
+    fill(255);
+    text("I think it is ________", width / 2, height / 2);
     fill(255, 0, 0);
+    text(currentAnswer, width *.68, height / 2);
+    pop();
   }
 
-  textStyle(BOLD);
-  text(currentAnswer, width / 2, height / 2);
-  pop();
+  // If you havent answered yet
+  else {
+    push();
+    textStyle(BOLD);
+    fill(255);
+    text("I think it is ________", width / 2, height / 2);
+    pop();
+  }
 }
 
 /**
@@ -336,6 +374,7 @@ Sets the answer text to the guess.
 function guessAnimal(animal) {
   // Convert the guess to lowercase to match the answer format
   currentAnswer = animal.toLowerCase();
+  guessed = false;
 }
 
 /**
@@ -352,7 +391,7 @@ function nextQuestion() {
 // Functionality to mouse clicking
 function mousePressed() {
   soundBeep.play();
-  
+
   // Changes states
   if (state === 'menu') {
     nextQuestion();
@@ -365,6 +404,8 @@ function mousePressed() {
     // Goes to the next question if answered correctly
     if (incorrect == true || correct == true) {
       nextQuestion();
+    } else {
+      sayAnimalBackwards(currentAnimal);
     }
     // Resets
     incorrect = false;
