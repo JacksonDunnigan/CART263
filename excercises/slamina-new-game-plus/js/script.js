@@ -207,7 +207,9 @@ function setup() {
       'I think its *animal': guessAnimal,
       'I think its a *animal': guessAnimal,
       'is it an *animal': guessAnimal,
-      'is it a *animal': guessAnimal
+      'is it a *animal': guessAnimal,
+      'is it *animal': guessAnimal
+
 
     };
     // Setup annyang and start
