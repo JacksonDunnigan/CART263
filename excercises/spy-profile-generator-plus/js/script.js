@@ -25,6 +25,9 @@ let spyProfile = {
   secretWeapon: `**REDACTED**`,
   password: `**REDACTED**`
 };
+// Array of profiles
+let profileList = [];
+
 // Variables to store JSON data for generating the profile
 let tarotData;
 let objectsData;
@@ -52,6 +55,8 @@ function setup() {
   if (data) {
     // If so, ask for the password
     let password = prompt(`What's ya password?`);
+    // Prints the password for debugging
+    console.log(data.password);
     // Check if the password is correct
     if (password === data.password) {
       // If is is, then setup the spy profile with the data
@@ -60,7 +65,7 @@ function setup() {
   }
   else {
     // If there is no data, generate a spy profile for the user
-    generateSpyProfile();
+    obtainName();
   }
 }
 
@@ -77,9 +82,13 @@ function setupSpyProfile(data) {
 /**
 Generates a spy profile from JSON data
 */
-function generateSpyProfile() {
+function obtainName(){
   // Ask for the user's name and store it
   spyProfile.name = prompt(`What's ya name?`);
+  generateSpyProfile();
+}
+
+function generateSpyProfile() {
   // Generate an alias from a random instrument
   spyProfile.alias = `The ${random(instrumentsData.instruments)}`;
   // Generate a secret weapon from a random object
@@ -87,10 +96,22 @@ function generateSpyProfile() {
   // Generate a password from a random keyword for a random tarot card
   let card = random(tarotData.tarot_interpretations);
   spyProfile.password = random(card.keywords);
+
+  // Adds the name to a list
+  profileList.push(spyProfile);
+
   // Save the resulting profile to local storage
   localStorage.setItem(PROFILE_DATA_KEY, JSON.stringify(spyProfile));
 }
+// Whipes the profile
+function keyPressed() {
 
+  if (keyCode === 8) {
+    localStorage.setItem(PROFILE_DATA_KEY, null);
+    // console.log(1);
+    generateSpyProfile()
+  }
+}
 /**
 Displays the current spy profile.
 */
@@ -99,10 +120,10 @@ function draw() {
 
   // Generate the profile as a string using the data
   let spyText = `** TOP SECRET SPY PROFILE **
-Name: ${spyProfile.name}
-Alias: ${spyProfile.alias}
-Secret Weapon: ${spyProfile.secretWeapon}
-Password: ${spyProfile.password}`;
+  Name: ${spyProfile.name}
+  Alias: ${spyProfile.alias}
+  Secret Weapon: ${spyProfile.secretWeapon}
+  Password: ${spyProfile.password}`;
 
   // Display the profile
   push();
