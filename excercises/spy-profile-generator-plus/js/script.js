@@ -28,6 +28,10 @@ let spyProfile = {
 // Array of profiles
 let profileList = [];
 
+// Defining the reset button
+let button;
+let accepted;
+
 // Variables to store JSON data for generating the profile
 let tarotData;
 let objectsData;
@@ -47,8 +51,23 @@ Creates a canvas then handles loading profile data, checking password,
 and generating a profile as necessary.
 */
 function setup() {
+
   // Create the canvas
   createCanvas(windowWidth, windowHeight);
+  background(0);
+
+  // Creates a button to reset the name
+  button = createButton('Reset Profile');
+  button.position(63, 235);
+  button.style('background-color',color(0,0,0));
+  button.style('font-size','22px');
+  button.style('color',color(0,255,0));
+  button.style('font-family','Courier New');
+  button.style('transition-duration','0.1s');
+  button.style('width','200px');
+  button.style('height','40px');
+  button.style('border', '2px solid #00FF00');
+
   // Try to load the data
   let data = JSON.parse(localStorage.getItem(PROFILE_DATA_KEY));
   // Check if there was data to load
@@ -60,12 +79,15 @@ function setup() {
     // Check if the password is correct
     if (password === data.password) {
       // If is is, then setup the spy profile with the data
+      accepted = true;
       setupSpyProfile(data);
+    } else {
+      accepted = false;
     }
   }
   else {
     // If there is no data, generate a spy profile for the user
-    obtainName();
+    generateSpyProfile();
   }
 }
 
@@ -82,13 +104,11 @@ function setupSpyProfile(data) {
 /**
 Generates a spy profile from JSON data
 */
-function obtainName(){
-  // Ask for the user's name and store it
-  spyProfile.name = prompt(`What's ya name?`);
-  generateSpyProfile();
-}
 
 function generateSpyProfile() {
+  if (spyProfile.name == null || spyProfile.name == `**REDACTED**`) {
+    spyProfile.name = prompt(`What's ya name?`);
+  }
   // Generate an alias from a random instrument
   spyProfile.alias = `The ${random(instrumentsData.instruments)}`;
   // Generate a secret weapon from a random object
@@ -104,19 +124,35 @@ function generateSpyProfile() {
   localStorage.setItem(PROFILE_DATA_KEY, JSON.stringify(spyProfile));
 }
 // Whipes the profile
-function keyPressed() {
+function resetName() {
 
-  if (keyCode === 8) {
+  if (accepted == true) {
     localStorage.setItem(PROFILE_DATA_KEY, null);
-    // console.log(1);
+    console.log(1);
     generateSpyProfile()
   }
+}
+// Changed the background
+function changeButton(){
+  button.style('background-color',color(0,255,0));
+  button.style('color',color(0,0,0));
+}
+function revertButton(){
+  button.style('background-color',color(0,0,0));
+  button.style('color',color(0,255,0));
+
 }
 /**
 Displays the current spy profile.
 */
 function draw() {
-  background(255);
+  background(0);
+
+  // Updates the button
+  // button.style('background-color',color(0,0,0));
+  button.mouseOver(changeButton);
+  button.mouseOut(revertButton);
+  button.mousePressed(resetName);
 
   // Generate the profile as a string using the data
   let spyText = `** TOP SECRET SPY PROFILE **
@@ -130,7 +166,7 @@ function draw() {
   textSize(32);
   textAlign(LEFT, TOP);
   textFont(`Courier, monospace`);
-  fill(0);
-  text(spyText, 0, 0);
+  fill(0,255,0);
+  text(spyText, 25, 25);
   pop();
 }
