@@ -31,7 +31,8 @@ let profileList = [];
 // Defining the reset button
 let button;
 let accepted;
-
+let currentName;
+// let state = ''
 // Variables to store JSON data for generating the profile
 let tarotData;
 let objectsData;
@@ -70,15 +71,18 @@ function setup() {
 
   // Try to load the data
   let data = JSON.parse(localStorage.getItem(PROFILE_DATA_KEY));
+
+
   // Check if there was data to load
   if (data) {
-    // If so, ask for the password
+
+    // If so, asks for the password
     let password = prompt(`What's ya password?`);
     // Prints the password for debugging
     console.log(data.password);
     // Check if the password is correct
     if (password === data.password) {
-      // If is is, then setup the spy profile with the data
+      // If it is, then setup the spy profile with the data
       accepted = true;
       setupSpyProfile(data);
     } else {
@@ -87,6 +91,8 @@ function setup() {
   }
   else {
     // If there is no data, generate a spy profile for the user
+    // Asks the name
+    currentName = prompt(`What's ya name?`);
     generateSpyProfile();
   }
 }
@@ -107,7 +113,7 @@ Generates a spy profile from JSON data
 
 function generateSpyProfile() {
   if (spyProfile.name == null || spyProfile.name == `**REDACTED**`) {
-    spyProfile.name = prompt(`What's ya name?`);
+    spyProfile.name = currentName;//prompt(`What's ya name?`);
   }
   // Generate an alias from a random instrument
   spyProfile.alias = `The ${random(instrumentsData.instruments)}`;
@@ -148,25 +154,24 @@ Displays the current spy profile.
 function draw() {
   background(0);
 
-  // Updates the button
-  // button.style('background-color',color(0,0,0));
-  button.mouseOver(changeButton);
-  button.mouseOut(revertButton);
-  button.mousePressed(resetName);
+    button.mouseOver(changeButton);
+    button.mouseOut(revertButton);
+    button.mousePressed(resetName);
 
-  // Generate the profile as a string using the data
-  let spyText = `** TOP SECRET SPY PROFILE **
-  Name: ${spyProfile.name}
-  Alias: ${spyProfile.alias}
-  Secret Weapon: ${spyProfile.secretWeapon}
-  Password: ${spyProfile.password}`;
+    // Generate the profile as a string using the data
+    let spyText = `** TOP SECRET SPY PROFILE **
+    Name: ${spyProfile.name}
+    Alias: ${spyProfile.alias}
+    Secret Weapon: ${spyProfile.secretWeapon}
+    Password: ${spyProfile.password}`;
 
-  // Display the profile
-  push();
-  textSize(32);
-  textAlign(LEFT, TOP);
-  textFont(`Courier, monospace`);
-  fill(0,255,0);
-  text(spyText, 25, 25);
-  pop();
+    // Display the profile
+    push();
+    textSize(32);
+    textAlign(LEFT, TOP);
+    textFont(`Courier, monospace`);
+    fill(0,255,0);
+    text(spyText, 25, 25);
+    pop();
+  // }
 }
