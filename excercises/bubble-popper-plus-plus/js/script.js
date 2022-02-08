@@ -72,8 +72,9 @@ function setupVideo(){
     y: height,
     size: 100,
     vx: 0,
-    vy: -2
-  }
+    vy: -2,
+    amplitude: 2
+  };
 }
 
 /**
@@ -222,8 +223,10 @@ function resetBubble() {
 Moves the bubble according to its velocity
 */
 function moveBubble() {
-  bubble.x += bubble.vx;
+
   bubble.y += bubble.vy;
+  bubble.x += sin(bubble.y/30) * bubble.amplitude;
+
 }
 
 /**
