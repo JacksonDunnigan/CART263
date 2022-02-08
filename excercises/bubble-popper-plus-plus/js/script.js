@@ -20,7 +20,8 @@ let modelName = `Handpose`;
 let handpose;
 // The current set of predictions made by Handpose once it's running
 let predictions = [];
-
+// Keeps track of the users score
+let score = 0;
 // The bubble we will be popping
 let bubble;
 // The pin
@@ -89,19 +90,22 @@ function draw() {
   else if (state === `running`) {
     running();
   }
+  else if (state === `gameOver`) {
+    gameOver();
+  }
 }
 
 // Mouse and keyboard clicking
 function mousePressed() {
   // Changes states
-  if (state === 'menu') {
+  if (state === 'menu' || state === 'gameOver') {
     state = 'loading';
     setupVideo();
   }
 }
 function keyPressed() {
   // Changes states
-  if (state === 'menu') {
+  if (state === 'menu' || state === 'gameOver') {
     state = 'loading';
     setupVideo();
   }
@@ -121,11 +125,28 @@ function menu() {
   text(`press any key to begin`, width / 2, height *.6);
   pop();
 }
+/**
+Game over screen
+*/
+function gameOver() {
+  background(255);
+  push();
+  textSize(48);
+  textStyle(BOLD);
+  textAlign(CENTER, CENTER);
+  text(`Game Over`, width / 2, height / 2);
+  textSize(28);
+  textStyle(NORMAL);
+  text(`you popped `+score+' bubbles', width / 2, height *.6);
+  pop();
+}
+
 
 /**
 Displays a simple loading screen with the loading model's name
 */
 function loading() {
+  score = 0;
   background(255);
   push();
   textSize(32);
@@ -141,7 +162,6 @@ If there is a hand it outlines it and highlights the tip of the index finger
 */
 function running() {
 
-  // Use this line to just see a black background. More theatrical!
   background(0);
 
   // Use these lines to see the video feed
@@ -157,6 +177,7 @@ function running() {
     let d = dist(pin.tip.x, pin.tip.y, bubble.x, bubble.y);
     if (d < bubble.size / 2) {
       // Pop!
+      score += 1
       resetBubble();
     }
     // Display the current position of the pin
@@ -168,6 +189,15 @@ function running() {
   moveBubble();
   checkOutOfBounds();
   displayBubble();
+
+  // Draws the users score
+  push();
+  textSize(24);
+  textStyle(BOLD);
+  fill(255);
+  textAlign(LEFT, TOP);
+  text(`Score: `+score, 15, 15);
+  pop();
 }
 
 /**
@@ -184,7 +214,7 @@ function updatePin(prediction) {
 Resets the bubble to the bottom of the screen in a new x position
 */
 function resetBubble() {
-  bubble.x = random(width);
+  bubble.x = random(bubble.size/2, width-(bubble.size/2));
   bubble.y = height;
 }
 
@@ -200,8 +230,10 @@ function moveBubble() {
 Resets the bubble if it moves off the top of the canvas
 */
 function checkOutOfBounds() {
-  if (bubble < 0) {
-    resetBubble();
+  if (bubble.y < 0) {
+    // console.log(0);
+    state = 'gameOver';
+    // resetBubble();
   }
 }
 
