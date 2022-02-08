@@ -24,6 +24,8 @@ let predictions = [];
 let score = 0;
 // The bubble we will be popping
 let bubble;
+// sound effects
+let soundPop;
 // The pin
 let pin = {
   tip: {
@@ -37,13 +39,17 @@ let pin = {
   }
 };
 
+// Load sounds
+function preload() {
+  soundPop = loadSound('assets/sounds/pop.mp3');
+  soundPop.setVolume(0.2);
+}
 
 /**
 Starts the webcam and the Handpose, creates a bubble object
 */
 function setup() {
   createCanvas(640, 480);
-
 }
 
 
@@ -180,6 +186,7 @@ function running() {
     if (d < bubble.size / 2) {
       // Pop!
       score += 1
+      soundPop.play();
       resetBubble();
     }
     // Display the current position of the pin
@@ -256,18 +263,18 @@ function displayBubble() {
 Displays the pin based on the tip and base coordinates. Draws
 a line between them and adds a red pinhead.
 */
-function displayPin() {
-  // Draw pin
-  push();
-  stroke(255);
-  strokeWeight(2);
-  line(pin.tip.x, pin.tip.y, pin.head.x, pin.head.y);
-  pop();
-
-  // Draw pinhead
-  push();
-  fill(255, 0, 0);
-  noStroke();
-  ellipse(pin.head.x, pin.head.y, pin.head.size);
-  pop();
-}
+// function displayPin() {
+//   // Draw pin
+//   push();
+//   stroke(255);
+//   strokeWeight(2);
+//   line(pin.tip.x, pin.tip.y, pin.head.x, pin.head.y);
+//   pop();
+//
+//   // Draw pinhead
+//   push();
+//   fill(255, 0, 0);
+//   noStroke();
+//   ellipse(pin.head.x, pin.head.y, pin.head.size);
+//   pop();
+// }
