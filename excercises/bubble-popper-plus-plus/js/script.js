@@ -11,7 +11,7 @@ https://learn.ml5js.org/#/reference/handpose
 "use strict";
 
 // Current state of program
-let state = `loading`; // loading, running
+let state = `menu`; // loading, running
 // User's webcam
 let video;
 // The name of our model
@@ -43,6 +43,10 @@ Starts the webcam and the Handpose, creates a bubble object
 function setup() {
   createCanvas(640, 480);
 
+}
+
+
+function setupVideo(){
   // Start webcam and hide the resulting HTML element
   video = createCapture(VIDEO);
   video.hide();
@@ -75,7 +79,11 @@ function setup() {
 Handles the two states of the program: loading, running
 */
 function draw() {
-  if (state === `loading`) {
+
+  if (state === `menu`) {
+    menu();
+  }
+  else if (state === `loading`) {
     loading();
   }
   else if (state === `running`) {
@@ -83,10 +91,42 @@ function draw() {
   }
 }
 
+// Mouse and keyboard clicking
+function mousePressed() {
+  // Changes states
+  if (state === 'menu') {
+    state = 'loading';
+    setupVideo();
+  }
+}
+function keyPressed() {
+  // Changes states
+  if (state === 'menu') {
+    state = 'loading';
+    setupVideo();
+  }
+}
+/**
+Displays a main menu to start the game
+*/
+function menu() {
+  background(255);
+  push();
+  textSize(48);
+  textStyle(BOLD);
+  textAlign(CENTER, CENTER);
+  text(`Super Bubble Popper`, width / 2, height / 2);
+  textSize(28);
+  textStyle(NORMAL);
+  text(`press any key to begin`, width / 2, height *.6);
+  pop();
+}
+
 /**
 Displays a simple loading screen with the loading model's name
 */
 function loading() {
+  background(255);
   push();
   textSize(32);
   textStyle(BOLD);
