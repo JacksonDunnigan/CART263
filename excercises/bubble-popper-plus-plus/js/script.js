@@ -73,6 +73,7 @@ function setupVideo(){
     size: 100,
     vx: 0,
     vy: -2,
+    vyMax: -5,
     amplitude: 2
   };
 }
@@ -182,7 +183,7 @@ function running() {
       resetBubble();
     }
     // Display the current position of the pin
-    displayPin();
+    // displayPin();
   }
 
   // Handle the bubble's movement and display (independent of hand detection
@@ -224,7 +225,7 @@ Moves the bubble according to its velocity
 */
 function moveBubble() {
 
-  bubble.y += bubble.vy;
+  bubble.y += max(bubble.vy - score/2,bubble.vyMax);
   bubble.x += sin(bubble.y/30) * bubble.amplitude;
 
 }
