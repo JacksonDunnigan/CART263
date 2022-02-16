@@ -190,7 +190,7 @@ function running() {
       resetBubble();
     }
     // Display the current position of the pin
-    // displayPin();
+    displayPin();
   }
 
   // Handle the bubble's movement and display (independent of hand detection
@@ -263,18 +263,18 @@ function displayBubble() {
 Displays the pin based on the tip and base coordinates. Draws
 a line between them and adds a red pinhead.
 */
-// function displayPin() {
-//   // Draw pin
-//   push();
-//   stroke(255);
-//   strokeWeight(2);
-//   line(pin.tip.x, pin.tip.y, pin.head.x, pin.head.y);
-//   pop();
-//
-//   // Draw pinhead
-//   push();
-//   fill(255, 0, 0);
-//   noStroke();
-//   ellipse(pin.head.x, pin.head.y, pin.head.size);
-//   pop();
-// }
+function displayPin() {
+  // Draw pin
+  push();
+  stroke(255);
+  strokeWeight(2);
+  line(pin.tip.x, pin.tip.y, pin.head.x, pin.head.y);
+  pop();
+
+  // Draw pinhead
+  push();
+  fill(255, 0, 0);
+  noStroke();
+  ellipse(pin.head.x, pin.head.y, pin.head.size);
+  pop();
+}
