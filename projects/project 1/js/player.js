@@ -9,13 +9,14 @@ class Player {
     this.yVelocity = 0;
     this.acceleration = 0.25;
     this.terminalXVelocity = 3.5;
-    this.terminalYVelocity = 3.5;
+    this.terminalYVelocity = 6;
     this.xDirection = 0;
     this.yDirection = 0;
     this.xCollide = false;
     this.yCollide = false;
     this.gravity = 0.3;
-    this.jumpVelocity = -5;
+    this.jumpVelocity = -6;
+    this.onGround = false;
 
     // Visual variables
     this.sprite = spritePlayer;
@@ -50,8 +51,10 @@ class Player {
       this.xDirection = 0;
     }
     // Jumping
-    if (keyIsDown(32) ) {
+    if (keyIsDown(32) && this.onGround) {
       this.yVelocity = this.jumpVelocity;
+      this.onGround = false;
+      console.log(1);
     }// && this.yCollide == false) {
 
     // // if (keyIsDown(UP_ARROW) || keyIsDown(87)) { // && this.yCollide == false) {
@@ -76,18 +79,10 @@ class Player {
       this.xVelocity = 0;
     }
 
-    // if (this.yDirection == 0) {
-    //   this.yVelocity = 0;
-    // }
     // Capping the x velocity
     this.xVelocity = constrain(this.xVelocity, -this.terminalXVelocity, this.terminalXVelocity);
     this.yVelocity = constrain(this.yVelocity, -this.terminalYVelocity, this.terminalYVelocity);
 
-  //
-  //   // Plays sound when walking
-  //   if ((this.xVelocity != 0 || this.yVelocity != 0) && frameCount % 20 == 0) {
-  //     soundMove.play();
-  //   }
   }
 
   xCollision(obj) {
@@ -95,11 +90,10 @@ class Player {
       this.x - this.size / 2 + this.xVelocity <=  obj.x + obj.size &&
       this.y  + this.yVelocity <= obj.y + obj.size &&
       this.y + this.size + 4 + this.yVelocity >= obj.y) {
-      this.xVelocity = 0;
+      // this.xVelocity = 0;
       this.xCollide = true;
       return true;
     }
-
     this.xCollide = false;
     return false;
   }
@@ -109,8 +103,9 @@ class Player {
       this.y + this.yVelocity <=  obj.y + obj.size &&
       this.x - this.size / 2 + this.xVelocity <= obj.x + obj.size &&
       this.x + this.size / 2 + this.xVelocity >= obj.x) {
-      this.yVelocity = 0;
+      // this.yVelocity = 0;
       this.yCollide = true;
+      this.onGround = true;
       return true;
     }
     this.yCollide = false;
@@ -128,36 +123,36 @@ class Player {
     // Switching between idle and moving states
 
     // Moving
-    if (this.xVelocity == 0 && this.yVelocity == 0) {
-
-      // Resets the timer when switching states
-      if (this.state == 1) {
-        this.state = 0;
-        this.timer = 0;
-      }
-
-      this.frameSpeed = 16;
-
-    // Idle
-    } else {
-
-      // Resets the timer when switching states
-      if (this.state == 0) {
-        this.state = 1;
-        this.timer = 0;
-      }
-
-      this.frameSpeed = 11;//floor(this.xVelocity)*5;
-    }
-
-    // Switches the current frame
-    this.timer += 1;
-    if (this.timer % this.frameSpeed == 0) {
-      this.tileIndex += 1;
-      if (this.tileIndex > 3) {
-        this.tileIndex = 0;
-      }
-    }
+    // if (this.xVelocity == 0 && this.yVelocity == 0) {
+    //
+    //   // Resets the timer when switching states
+    //   if (this.state == 1) {
+    //     this.state = 0;
+    //     this.timer = 0;
+    //   }
+    //
+    //   this.frameSpeed = 16;
+    //
+    // // Idle
+    // } else {
+    //
+    //   // Resets the timer when switching states
+    //   if (this.state == 0) {
+    //     this.state = 1;
+    //     this.timer = 0;
+    //   }
+    //
+    //   this.frameSpeed = 11;//floor(this.xVelocity)*5;
+    // }
+    //
+    // // Switches the current frame
+    // this.timer += 1;
+    // if (this.timer % this.frameSpeed == 0) {
+    //   this.tileIndex += 1;
+    //   if (this.tileIndex > 3) {
+    //     this.tileIndex = 0;
+    //   }
+    // }
 
     // Draws the sprite
     if (this.xVelocity < 0) {

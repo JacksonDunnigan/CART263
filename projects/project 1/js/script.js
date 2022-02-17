@@ -45,7 +45,7 @@ function setup() {
   createCanvas(800,600)
 
   // Creates the player
-  player = new Player(width / 2, height / 2);
+  player = new Player(width / 2, height * .6);
 
 
   // Defines the tile and object arrays
@@ -114,7 +114,7 @@ Simulation States
 function simulation() {
   // Background
   // background(spriteSkyBackground);
-  image(spriteSkyBackground, 0, 0, width*2, height);
+  image(spriteSkyBackground, 0, 0, width * 2, height);
 
 
   // Player collision
@@ -138,16 +138,16 @@ function simulation() {
       if (xCollide == false) {
         if (tiles[y][x] != null) {
           tiles[y][x].x -= player.xVelocity;
-          tiles[y][x].bboxX -= player.xVelocity;
+          // tiles[y][x].bboxX -= player.xVelocity;
         }
         // tiles[y][x].x -= player.xVelocity;
       }
 
       // Y collision
       if (yCollide == false) {
-        if (tiles[y][x] != null) {
+        if (tiles[y][x] != null && player.onGround == false) {
           tiles[y][x].y -= player.yVelocity;
-          tiles[y][x].bboxY -= player.yVelocity;
+          // tiles[y][x].bboxY -= player.yVelocity;
         }
         // tiles[y][x].y -= player.yVelocity;
       }
