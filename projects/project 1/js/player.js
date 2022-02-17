@@ -14,6 +14,8 @@ class Player {
     this.yDirection = 0;
     this.xCollide = false;
     this.yCollide = false;
+    this.gravity = 0.3;
+    this.jumpVelocity = -5;
 
     // Visual variables
     this.sprite = spritePlayer;
@@ -47,14 +49,18 @@ class Player {
     } else {
       this.xDirection = 0;
     }
+    // Jumping
+    if (keyIsDown(32) ) {
+      this.yVelocity = this.jumpVelocity;
+    }// && this.yCollide == false) {
 
-    if (keyIsDown(UP_ARROW) || keyIsDown(87)) { // && this.yCollide == false) {
-      this.yDirection = -1;
-    } else if (keyIsDown(DOWN_ARROW) || keyIsDown(83)){ //&& this.yCollide == false) {
-      this.yDirection = 1;
-    } else {
-      this.yDirection = 0;
-    }
+    // // if (keyIsDown(UP_ARROW) || keyIsDown(87)) { // && this.yCollide == false) {
+    //   this.yDirection = -1;
+    // } else if (keyIsDown(DOWN_ARROW) || keyIsDown(83)){ //&& this.yCollide == false) {
+    //   this.yDirection = 1;
+    // } else {
+    //   this.yDirection = 0;
+    // }
 
     // Adds acceleration to the velocity
     if (this.xCollide == false) {
@@ -62,7 +68,7 @@ class Player {
     }
 
     if (this.yCollide == false) {
-      this.yVelocity += this.yDirection * this.acceleration;
+      this.yVelocity += this.gravity;//this.yDirection * this.acceleration;
     }
 
     // Adds deceleration to the velocity
@@ -70,9 +76,9 @@ class Player {
       this.xVelocity = 0;
     }
 
-    if (this.yDirection == 0) {
-      this.yVelocity = 0;
-    }
+    // if (this.yDirection == 0) {
+    //   this.yVelocity = 0;
+    // }
     // Capping the x velocity
     this.xVelocity = constrain(this.xVelocity, -this.terminalXVelocity, this.terminalXVelocity);
     this.yVelocity = constrain(this.yVelocity, -this.terminalYVelocity, this.terminalYVelocity);
@@ -82,14 +88,13 @@ class Player {
   //   if ((this.xVelocity != 0 || this.yVelocity != 0) && frameCount % 20 == 0) {
   //     soundMove.play();
   //   }
-  // }
+  }
 
   xCollision(obj) {
-    if (this.xDirection != 0 &&
-      this.x + this.size / 2 + this.xVelocity >= obj.bboxX &&
-      this.x - this.size / 2 + this.xVelocity <=  obj.bboxX + obj.bboxWidth &&
-      this.y  + this.yVelocity <= obj.bboxY + obj.bboxHeight &&
-      this.y + this.size / 2 + this.yVelocity >= obj.bboxY) {
+    if (this.x + this.size / 2 + this.xVelocity >= obj.x &&
+      this.x - this.size / 2 + this.xVelocity <=  obj.x + obj.size &&
+      this.y  + this.yVelocity <= obj.y + obj.size &&
+      this.y + this.size + 4 + this.yVelocity >= obj.y) {
       this.xVelocity = 0;
       this.xCollide = true;
       return true;
@@ -100,11 +105,10 @@ class Player {
   }
 
   yCollision(obj) {
-    if (this.yDirection != 0 &&
-      this.y + this.size / 2 + this.yVelocity >= obj.bboxY &&
-      this.y  + this.yVelocity <=  obj.bboxY + obj.bboxHeight &&
-      this.x - this.size / 2 + this.xVelocity <= obj.bboxX + obj.bboxWidth &&
-      this.x + this.size / 2 + this.xVelocity >= obj.bboxX) {
+    if (this.y + this.size + 4 + this.yVelocity >= obj.y &&
+      this.y + this.yVelocity <=  obj.y + obj.size &&
+      this.x - this.size / 2 + this.xVelocity <= obj.x + obj.size &&
+      this.x + this.size / 2 + this.xVelocity >= obj.x) {
       this.yVelocity = 0;
       this.yCollide = true;
       return true;
