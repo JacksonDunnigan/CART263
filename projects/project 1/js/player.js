@@ -24,9 +24,9 @@ class Player {
     this.state = 0;
     this.frameSpeed = 16;
     this.timer = 0;
-    this.size = this.sprite.width * tileScale / 8;
-    this.spriteWidth = this.sprite.width * tileScale /2;
-    this.spriteHeight = this.sprite.height * tileScale /2;
+    // this.size = this.sprite.width * tileScale;
+    this.spriteWidth = this.sprite.width * tileScale / 4;
+    this.spriteHeight = this.sprite.height * tileScale;
 
     // Inventory
     // this.inventory = [];
@@ -144,26 +144,42 @@ class Player {
     //
     //   this.frameSpeed = 11;//floor(this.xVelocity)*5;
     // }
-    //
-    // // Switches the current frame
-    // this.timer += 1;
-    // if (this.timer % this.frameSpeed == 0) {
-    //   this.tileIndex += 1;
-    //   if (this.tileIndex > 3) {
-    //     this.tileIndex = 0;
-    //   }
-    // }
+
+    // Switches the current frame
+    this.timer += 1;
+    if (this.timer % this.frameSpeed == 0) {
+      this.tileIndex += 1;
+      if (this.tileIndex > 3) {
+        this.tileIndex = 0;
+      }
+    }
 
     // Draws the sprite
-    // if (this.xVelocity < 0) {
-    //   push();
-    //   scale(-1, 1);
-    //   image(this.sprite, -this.x, this.y, this.spriteWidth, this.spriteHeight, this.tileIndex * this.spriteWidth/4, this.state * this.spriteHeight/4, this.spriteWidth/4, this.spriteHeight/4);
-    //   pop();
-    // } else if (this.xVelocity >= 0) {
-    //   image(this.sprite, this.x, this.y, this.spriteWidth, this.spriteHeight, this.tileIndex * this.spriteWidth/4, this.state * this.spriteHeight/4, this.spriteWidth/4, this.spriteHeight/4);
-    // }
-    image(this.sprite, this.x, this.y, this.spriteWidth, this.spriteHeight);
+    if (this.xVelocity < 0) {
+      push();
+      scale(-1, 1);
+      image(this.sprite,
+            -this.x,
+            this.y,
+            this.spriteWidth,
+            this.spriteHeight,
+            this.tileIndex * this.spriteWidth / tileScale,
+            this.state * this.spriteHeight / tileScale,
+            this.spriteWidth / tileScale,
+            this.spriteHeight);
+      pop();
+    } else if (this.xVelocity >= 0) {
+      image(this.sprite,
+            this.x,
+            this.y,
+            this.spriteWidth,
+            this.spriteHeight,
+            this.tileIndex * this.spriteWidth / tileScale,
+            this.state * this.spriteHeight / tileScale,
+            this.spriteWidth / tileScale,
+            this.spriteHeight);
+    }
+    // image(this.sprite, this.x, this.y, this.spriteWidth, this.spriteHeight);
 
     pop();
   }
