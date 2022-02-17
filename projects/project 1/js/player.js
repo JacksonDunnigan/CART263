@@ -25,8 +25,8 @@ class Player {
     this.frameSpeed = 16;
     this.timer = 0;
     this.size = this.sprite.width * tileScale / 8;
-    this.spriteWidth = this.sprite.width * tileScale / 4;
-    this.spriteHeight = this.sprite.height * tileScale / 2;
+    this.spriteWidth = this.sprite.width * tileScale /2;
+    this.spriteHeight = this.sprite.height * tileScale /2;
 
     // Inventory
     // this.inventory = [];
@@ -86,10 +86,10 @@ class Player {
   }
 
   xCollision(obj) {
-    if (this.x + this.size / 2 + this.xVelocity >= obj.x &&
-      this.x - this.size / 2 + this.xVelocity <=  obj.x + obj.size &&
+    if (this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x &&
+      this.x - this.spriteWidth / 2 + this.xVelocity <=  obj.x + obj.size &&
       this.y  + this.yVelocity <= obj.y + obj.size &&
-      this.y + this.size + 4 + this.yVelocity >= obj.y) {
+      this.y + this.spriteHeight/2 + this.yVelocity >= obj.y) {
       // this.xVelocity = 0;
       this.xCollide = true;
       return true;
@@ -99,10 +99,10 @@ class Player {
   }
 
   yCollision(obj) {
-    if (this.y + this.size + 4 + this.yVelocity >= obj.y &&
+    if (this.y + this.spriteHeight/2 + this.yVelocity - 3 >= obj.y &&
       this.y + this.yVelocity <=  obj.y + obj.size &&
-      this.x - this.size / 2 + this.xVelocity <= obj.x + obj.size &&
-      this.x + this.size / 2 + this.xVelocity >= obj.x) {
+      this.x - this.spriteWidth / 2 + this.xVelocity <= obj.x + obj.size &&
+      this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x) {
       // this.yVelocity = 0;
       this.yCollide = true;
       this.onGround = true;
@@ -155,14 +155,15 @@ class Player {
     // }
 
     // Draws the sprite
-    if (this.xVelocity < 0) {
-      push();
-      scale(-1, 1);
-      image(this.sprite, -this.x, this.y, this.spriteWidth, this.spriteHeight, this.tileIndex * this.spriteWidth/4, this.state * this.spriteHeight/4, this.spriteWidth/4, this.spriteHeight/4);
-      pop();
-    } else if (this.xVelocity >= 0) {
-      image(this.sprite, this.x, this.y, this.spriteWidth, this.spriteHeight, this.tileIndex * this.spriteWidth/4, this.state * this.spriteHeight/4, this.spriteWidth/4, this.spriteHeight/4);
-    }
+    // if (this.xVelocity < 0) {
+    //   push();
+    //   scale(-1, 1);
+    //   image(this.sprite, -this.x, this.y, this.spriteWidth, this.spriteHeight, this.tileIndex * this.spriteWidth/4, this.state * this.spriteHeight/4, this.spriteWidth/4, this.spriteHeight/4);
+    //   pop();
+    // } else if (this.xVelocity >= 0) {
+    //   image(this.sprite, this.x, this.y, this.spriteWidth, this.spriteHeight, this.tileIndex * this.spriteWidth/4, this.state * this.spriteHeight/4, this.spriteWidth/4, this.spriteHeight/4);
+    // }
+    image(this.sprite, this.x, this.y, this.spriteWidth, this.spriteHeight);
 
     pop();
   }

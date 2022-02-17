@@ -10,7 +10,7 @@ This project is inspired by fantastic Mr. Fox
 
 // Generation variables
 let tileSize = 16
-let tileScale = 4;
+let tileScale = 5;
 let tileFinalSize = tileSize * tileScale;
 let mapSize = 128;
 let state = 'title';
@@ -34,7 +34,9 @@ function preload() {
   spriteBackground = loadImage('assets/images/menuBackground.png');
   spriteSkyBackground = loadImage('assets/images/skyBackground.png');
   spriteDirtTiles = loadImage('assets/images/dirtTiles.png');
-  spritePlayer = loadImage('assets/images/player.png');
+  spritePlayer = loadImage('assets/images/playerStanding.png');
+  // spritePlayer = loadImage('assets/images/player.png');
+
 }
 
 
@@ -45,7 +47,7 @@ function setup() {
   createCanvas(800,600)
 
   // Creates the player
-  player = new Player(width / 2, height * .6);
+  player = new Player(width / 2, height *.6);
 
 
   // Defines the tile and object arrays
@@ -62,7 +64,7 @@ function setup() {
   }
 
   // Generates the map
-  for (var y = mapSize/2 + 3; y < mapSize; y++) {
+  for (var y = mapSize/2 + 4; y < mapSize; y++) {
     for (var x = 0; x < mapSize; x++) {
 
       //Generates tiles
