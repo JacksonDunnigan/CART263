@@ -130,15 +130,16 @@ function simulation() {
   // Player collision
   var xCollide = false;
   var yCollide = false;
-  for (var y = 0; y < tiles.length; y++) {
-    for (var x = 0; x < tiles[y].length; x++) {
-      if (tiles[y][x] != null) {
-        xCollide = player.xCollision(tiles[y][x]);
-        yCollide = player.yCollision(tiles[y][x]);
+  // if (player.digging == false) {
+    for (var y = 0; y < tiles.length; y++) {
+      for (var x = 0; x < tiles[y].length; x++) {
+        if (tiles[y][x] != null) {
+          xCollide = player.xCollision(tiles[y][x]);
+          yCollide = player.yCollision(tiles[y][x]);
+        }
       }
     }
-  }
-
+  // }
 
   // Moving tiles
   for (var y = 0; y < tiles.length; y++) {
@@ -155,7 +156,7 @@ function simulation() {
 
       // Y collision
       if (yCollide == false) {
-        if (tiles[y][x] != null && player.onGround == false) {
+        if (tiles[y][x] != null && (player.onGround == false || player.digging == true)) {
           tiles[y][x].y -= player.yVelocity;
           // tiles[y][x].bboxY -= player.yVelocity;
         }

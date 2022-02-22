@@ -24,20 +24,15 @@ class Player {
     this.state = 0;
     this.frameSpeed = 22;
     this.timer = 0;
-    // this.size = this.sprite.width * tileScale;
     this.spriteWidth = this.sprite.width * tileScale / 4;
     this.spriteHeight = this.sprite.height * tileScale / 2;
 
-    // Inventory
-    // this.inventory = [];
-    // this.inventorySize = 24;
-    //
-    //
-    // // Synth
-    // soundMove.volume(0.25);
+    // Digging
+    this.digging = false;
+    this.diggingVelocity = 5;
+    this.nonDiggingVelocity = 6;
+
   }
-
-
 
   // Moving and interaction logic
   move() {
@@ -50,36 +45,72 @@ class Player {
     } else {
       this.xDirection = 0;
     }
-    // Jumping
-    if (keyIsDown(32) && this.onGround) {
-      this.yVelocity = this.jumpVelocity;
-      this.onGround = false;
-      console.log(1);
-    }// && this.yCollide == false) {
 
-    // // if (keyIsDown(UP_ARROW) || keyIsDown(87)) { // && this.yCollide == false) {
-    //   this.yDirection = -1;
-    // } else if (keyIsDown(DOWN_ARROW) || keyIsDown(83)){ //&& this.yCollide == false) {
-    //   this.yDirection = 1;
-    // } else {
-    //   this.yDirection = 0;
-    // }
+    // Input for Digging
+    if (this.digging == true) {
+      if (keyIsDown(UP_ARROW) || keyIsDown(87)) { // && this.yCollide == false) {
+        this.yDirection = -1;
+      } else if (keyIsDown(DOWN_ARROW) || keyIsDown(83)){ //&& this.yCollide == false) {
+        this.yDirection = 1;
+      } else {
+        this.yDirection = 0;
+      }
 
-    // Adds acceleration to the velocity
-    if (this.xCollide == false) {
+    // Allows jumping when not digging
+    } else {
+      // Jumping
+      if (keyIsDown(32) && this.onGround) {
+        this.yVelocity = this.jumpVelocity;
+        this.onGround = false;
+        console.log(1);
+      }
+
+      // Switching to digging mode
+      if (keyIsDown(DOWN_ARROW) || keyIsDown(83)){ //&& this.yCollide == false) {
+        this.yCollide = false;
+        this.xCollide = false;
+        this.digging = true;
+        this.terminalYVelocity = this.diggingVelocity;
+        this.terminalXVelocity = this.diggingVelocity;
+
+      }
+    }
+
+
+    // Adds acceleration and velocity
+    if (this.digging == true) {
+      // X velocity
       this.xVelocity += this.xDirection * this.acceleration;
+
+      // Y velocity
+      this.yVelocity += this.yDirection * this.acceleration;
+      // console.log(this.yCollide);
+      // Stops moving
+      if (this.yDirection == 0) {
+        this.yVelocity = 0;
+      }
+      if (this.xDirection == 0) {
+        this.xVelocity = 0;
+      }
+    } else {
+      // X velocity
+      if (this.xCollide == false) {
+        this.xVelocity += this.xDirection * this.acceleration;
+      }
+
+      // Y velocity and gravity
+      if (this.yCollide == false) {
+        this.yVelocity += this.gravity;
+      }
+
+      // Stops moving
+      if (this.xDirection == 0) {
+        this.xVelocity = 0;
+      }
     }
 
-    if (this.yCollide == false) {
-      this.yVelocity += this.gravity;//this.yDirection * this.acceleration;
-    }
 
-    // Adds deceleration to the velocity
-    if (this.xDirection == 0) {
-      this.xVelocity = 0;
-    }
-
-    // Capping the x velocity
+    // Capping the x and y velocity
     this.xVelocity = constrain(this.xVelocity, -this.terminalXVelocity, this.terminalXVelocity);
     this.yVelocity = constrain(this.yVelocity, -this.terminalYVelocity, this.terminalYVelocity);
 
@@ -89,7 +120,8 @@ class Player {
     if (this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x &&
       this.x - this.spriteWidth / 2 + this.xVelocity <=  obj.x + obj.size &&
       this.y  + this.yVelocity <= obj.y + obj.size &&
-      this.y + this.spriteHeight/2 + this.yVelocity >= obj.y) {
+      this.y + this.spriteHeight/2 + this.yVelocity >= obj.y &&
+      this.digging == false) {
       // this.xVelocity = 0;
       this.xCollide = true;
       return true;
@@ -102,7 +134,8 @@ class Player {
     if (this.y + this.spriteHeight/2 + this.yVelocity - 3 >= obj.y &&
       this.y + this.yVelocity <=  obj.y + obj.size &&
       this.x - this.spriteWidth / 2 + this.xVelocity <= obj.x + obj.size &&
-      this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x) {
+      this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x &&
+      this.digging == false) {
       // this.yVelocity = 0;
       this.yCollide = true;
       this.onGround = true;
