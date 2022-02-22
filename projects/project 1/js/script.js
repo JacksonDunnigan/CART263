@@ -171,15 +171,18 @@ function simulation() {
         // X collision
         if (tiles[y][x] != null && player.xVelocity != 0) {
           tiles[y][x].x -= player.xVelocity;
-          tiles[y][x].y -= tiles[y][x].y % tileFinalSize;
+          // tiles[y][x].y -= (tiles[y][x].y - player.spriteHeight * .4) % tileFinalSize;
         }
 
         // Y collision
         if (tiles[y][x] != null && player.yVelocity != 0) {
           tiles[y][x].y -= player.yVelocity;
-          tiles[y][x].x -= tiles[y][x].x % tileFinalSize;
+          // tiles[y][x].x -= (tiles[y][x].x - player.spriteWidth * .4) % tileFinalSize
         }
-
+        // if (tiles[y][x] != null) {
+        //   tiles[y][x].x -= tiles[y][x].x % tileFinalSize - (player.spriteWidth * .4);
+        //   tiles[y][x].y -= tiles[y][x].y % tileFinalSize;
+        // }
       }
       // Draws the tiles
       if (tiles[y][x] != null

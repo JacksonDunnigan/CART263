@@ -56,15 +56,23 @@ class Player {
 
     // Digging movement
     if (this.digging) {
-      if (keyIsDown(RIGHT_ARROW) || keyIsDown(68) || keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
-        this.xVelocity = this.xDirection * this.terminalXVelocity;
-        this.yDirection = 0;
-        this.yVelocity = 0
+      if (keyIsDown(UP_ARROW) == false && keyIsDown(87) == false && keyIsDown(DOWN_ARROW) == false && keyIsDown(83) == false) {
+        if (keyIsDown(RIGHT_ARROW) || keyIsDown(68) || keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
+          if (this.xVelocity == 0) {
+            this.xVelocity = this.xDirection * this.terminalXVelocity;
+            this.yDirection = 0;
+            this.yVelocity = 0
+          }
+        }
       }
-      if (keyIsDown(UP_ARROW) || keyIsDown(87) || keyIsDown(DOWN_ARROW) || keyIsDown(83)){
-        this.yVelocity = this.yDirection * this.terminalYVelocity;
-        this.xDirection = 0;
-        this.xVelocity = 0
+      if (keyIsDown(RIGHT_ARROW) == false && keyIsDown(68) == false && keyIsDown(LEFT_ARROW) == false && keyIsDown(65) == false) {
+        if (keyIsDown(UP_ARROW) || keyIsDown(87) || keyIsDown(DOWN_ARROW) || keyIsDown(83)) {
+          if (this.yVelocity == 0) {
+            this.yVelocity = this.yDirection * this.terminalYVelocity;
+            this.xDirection = 0;
+            this.xVelocity = 0
+          }
+        }
       }
     }
 
