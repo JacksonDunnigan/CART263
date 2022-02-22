@@ -8,8 +8,10 @@ class Player {
     this.xVelocity = 0;
     this.yVelocity = 0;
     this.acceleration = 0.25;
-    this.terminalXVelocity = 3.5;
-    this.terminalYVelocity = 6;
+    this.normalXvelocity = 3.5
+    this.normalYvelocity = 6;
+    this.terminalXVelocity = this.normalXvelocity;
+    this.terminalYVelocity = this.normalYvelocity;
     this.xDirection = 0;
     this.yDirection = 0;
     this.xCollide = false;
@@ -30,7 +32,6 @@ class Player {
     // Digging
     this.digging = false;
     this.diggingVelocity = 5;
-    this.nonDiggingVelocity = 6;
 
   }
 
@@ -45,46 +46,49 @@ class Player {
     } else {
       this.xDirection = 0;
     }
-
-    // Input for Digging
-    if (this.digging == true) {
-      if (keyIsDown(UP_ARROW) || keyIsDown(87)) { // && this.yCollide == false) {
-        this.yDirection = -1;
-      } else if (keyIsDown(DOWN_ARROW) || keyIsDown(83)){ //&& this.yCollide == false) {
-        this.yDirection = 1;
-      } else {
-        this.yDirection = 0;
-      }
-
-    // Allows jumping when not digging
+    if (keyIsDown(UP_ARROW) || keyIsDown(87)) { // && this.yCollide == false) {
+      this.yDirection = -1;
+    } else if (keyIsDown(DOWN_ARROW) || keyIsDown(83)){ //&& this.yCollide == false) {
+      this.yDirection = 1;
     } else {
-      // Jumping
-      if (keyIsDown(32) && this.onGround) {
+      this.yDirection = 0;
+    }
+
+    // Jumping
+    if (keyIsDown(32) && this.onGround && this.digging == false) {
+      this.yVelocity = this.jumpVelocity;
+      this.onGround = false;
+      // console.log(1);
+    }
+
+
+    // Switching out of digging mode
+    if (this.digging == true) {
+      if (this.xCollide == false && this.yCollide == false && this.yVelocity < 0) {
+        this.digging = false;
+        this.terminalYVelocity = this.normalYvelocity;
+        this.terminalXVelocity = this.normalXvelocity;
         this.yVelocity = this.jumpVelocity;
         this.onGround = false;
-        console.log(1);
       }
 
-      // Switching to digging mode
-      if (keyIsDown(DOWN_ARROW) || keyIsDown(83)){ //&& this.yCollide == false) {
-        this.yCollide = false;
-        this.xCollide = false;
+    // Switching to digging mode
+    } else {
+      if ((keyIsDown(DOWN_ARROW) || keyIsDown(83)) && this.onGround == true){ //&& this.yCollide == false) {
         this.digging = true;
         this.terminalYVelocity = this.diggingVelocity;
         this.terminalXVelocity = this.diggingVelocity;
-
       }
     }
 
 
-    // Adds acceleration and velocity
+    // Acceleration and velocity
     if (this.digging == true) {
       // X velocity
       this.xVelocity += this.xDirection * this.acceleration;
-
       // Y velocity
       this.yVelocity += this.yDirection * this.acceleration;
-      // console.log(this.yCollide);
+      console.log('x'+this.xCollide + ' y'+this.yCollide);
       // Stops moving
       if (this.yDirection == 0) {
         this.yVelocity = 0;
@@ -97,33 +101,32 @@ class Player {
       if (this.xCollide == false) {
         this.xVelocity += this.xDirection * this.acceleration;
       }
-
-      // Y velocity and gravity
+      // Gravity
       if (this.yCollide == false) {
         this.yVelocity += this.gravity;
       }
-
-      // Stops moving
+      // Stops the movement
       if (this.xDirection == 0) {
         this.xVelocity = 0;
       }
     }
 
-
-    // Capping the x and y velocity
+    // Capping velocity
     this.xVelocity = constrain(this.xVelocity, -this.terminalXVelocity, this.terminalXVelocity);
     this.yVelocity = constrain(this.yVelocity, -this.terminalYVelocity, this.terminalYVelocity);
 
   }
 
   xCollision(obj) {
-    if (this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x &&
+    if (this.x + this.spriteWidth / 2 + this.xVelocity + 1>= obj.x &&
       this.x - this.spriteWidth / 2 + this.xVelocity <=  obj.x + obj.size &&
-      this.y  + this.yVelocity <= obj.y + obj.size &&
-      this.y + this.spriteHeight/2 + this.yVelocity >= obj.y &&
-      this.digging == false) {
-      // this.xVelocity = 0;
+      this.y  - this.spriteHeight / 2 + this.yVelocity <= obj.y + obj.size &&
+      this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y) {//&&
+
       this.xCollide = true;
+      if (this.digging == false) {
+        this.xVelocity = 0;
+      }
       return true;
     }
     this.xCollide = false;
@@ -131,14 +134,16 @@ class Player {
   }
 
   yCollision(obj) {
-    if (this.y + this.spriteHeight/2 + this.yVelocity - 3 >= obj.y &&
-      this.y + this.yVelocity <=  obj.y + obj.size &&
+    if (this.y + this.spriteHeight / 2 + this.yVelocity +1>= obj.y &&
+      this.y - this.spriteHeight / 2 + this.yVelocity <=  obj.y + obj.size &&
       this.x - this.spriteWidth / 2 + this.xVelocity <= obj.x + obj.size &&
-      this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x &&
-      this.digging == false) {
-      // this.yVelocity = 0;
+      this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x) {// &&
+
       this.yCollide = true;
-      this.onGround = true;
+      if (this.digging == false) {
+        this.onGround = true;
+        this.yVelocity = 0;
+      }
       return true;
     }
     this.yCollide = false;
@@ -188,29 +193,32 @@ class Player {
     }
 
     // Draws the sprite
-    if (this.xVelocity < 0) {
-      push();
-      scale(-1, 1);
-      image(this.sprite,
-            -this.x,
-            this.y,
-            this.spriteWidth,
-            this.spriteHeight,
-            this.tileIndex * this.spriteWidth / tileScale,
-            this.state * this.spriteHeight / tileScale,
-            this.spriteWidth / tileScale,
-            this.spriteHeight / tileScale);
-      pop();
-    } else if (this.xVelocity >= 0) {
-      image(this.sprite,
-            this.x,
-            this.y,
-            this.spriteWidth,
-            this.spriteHeight,
-            this.tileIndex * this.spriteWidth / tileScale,
-            this.state * this.spriteHeight / tileScale,
-            this.spriteWidth / tileScale,
-            this.spriteHeight / tileScale);
+    if (this.digging == false){
+
+      if (this.xVelocity < 0) {
+        push();
+        scale(-1, 1);
+        image(this.sprite,
+              -this.x,
+              this.y,
+              this.spriteWidth,
+              this.spriteHeight,
+              this.tileIndex * this.spriteWidth / tileScale,
+              this.state * this.spriteHeight / tileScale,
+              this.spriteWidth / tileScale,
+              this.spriteHeight / tileScale);
+        pop();
+      } else if (this.xVelocity >= 0) {
+        image(this.sprite,
+              this.x,
+              this.y,
+              this.spriteWidth,
+              this.spriteHeight,
+              this.tileIndex * this.spriteWidth / tileScale,
+              this.state * this.spriteHeight / tileScale,
+              this.spriteWidth / tileScale,
+              this.spriteHeight / tileScale);
+      }
     }
     // image(this.sprite, this.x, this.y, this.spriteWidth, this.spriteHeight);
 

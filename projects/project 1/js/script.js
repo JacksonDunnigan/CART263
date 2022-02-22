@@ -133,12 +133,15 @@ function simulation() {
   // if (player.digging == false) {
     for (var y = 0; y < tiles.length; y++) {
       for (var x = 0; x < tiles[y].length; x++) {
-        if (tiles[y][x] != null) {
+        if (tiles[y][x] != null && (xCollide == false && yCollide == false)) {
           xCollide = player.xCollision(tiles[y][x]);
           yCollide = player.yCollision(tiles[y][x]);
         }
       }
     }
+    player.xCollide = xCollide;
+    player.yCollide = yCollide;
+
   // }
 
   // Moving tiles
@@ -146,7 +149,7 @@ function simulation() {
     for (var x = 0; x < tiles[y].length; x++) {
 
       // X collision
-      if (xCollide == false) {
+      if (xCollide == false || player.digging == true) {
         if (tiles[y][x] != null) {
           tiles[y][x].x -= player.xVelocity;
           // tiles[y][x].bboxX -= player.xVelocity;
@@ -155,9 +158,12 @@ function simulation() {
       }
 
       // Y collision
-      if (yCollide == false) {
+      if (yCollide == false || player.digging == true) {
         if (tiles[y][x] != null && (player.onGround == false || player.digging == true)) {
           tiles[y][x].y -= player.yVelocity;
+          // if (player.yCollide == true) {
+          //
+          // }
           // tiles[y][x].bboxY -= player.yVelocity;
         }
         // tiles[y][x].y -= player.yVelocity;
