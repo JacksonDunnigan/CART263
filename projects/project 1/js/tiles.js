@@ -6,6 +6,7 @@ class Tile {
     this.size = size;
     this.tileIndex = type;
     this.sprite = spriteDirtTiles;
+    this.boundingBox = false
     // this.bboxX = this.x + tileSize;
     // this.bboxY = this.y - tileSize * 2;
     // this.bboxWidth = tileSize;
@@ -17,6 +18,13 @@ class Tile {
   display() {
     push();
     image(this.sprite, this.x, this.y, this.size, this.size, this.tileIndex * tileSize, 0, tileSize, tileSize);
+
+    // Bounding box for debbugging
+    if (this.boundingBox){
+      noFill()
+      stroke(255,0,0,127);
+      rect(this.x, this.y, this.size, this.size);
+    }
     pop();
   }
 }

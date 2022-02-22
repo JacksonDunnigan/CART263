@@ -10,9 +10,9 @@ This project is inspired by fantastic Mr. Fox
 
 // Generation variables
 let tileSize = 32
-let tileScale = 3;
+let tileScale = 2.5;
 let tileFinalSize = tileSize * tileScale;
-let mapSize = 128;
+let mapSize = 32;
 let state = 'title';
 let tiles = [];
 let objects = [];
@@ -23,6 +23,7 @@ let spriteBackground;
 let spriteSkyBackground;
 let spriteDirtTiles;
 let spritePlayer;
+let spriteDust;
 
 // Defines Objects
 let player;
@@ -35,6 +36,8 @@ function preload() {
   spriteSkyBackground = loadImage('assets/images/skyBackground.png');
   spriteDirtTiles = loadImage('assets/images/dirtTiles.png');
   spritePlayer = loadImage('assets/images/player.png');
+  spriteDust = loadImage('assets/images/dust.png');
+
   // spritePlayer = loadImage('assets/images/player.png');
 
 }
@@ -49,17 +52,11 @@ function setup() {
   // Creates the player
   player = new Player(width / 2, height *.55);
 
-
   // Defines the tile and object arrays
   for (var y = 0; y < mapSize; y++) {
     tiles[y] = [];
-    // objects[y] = [];
-
-    // grid[y] = [];
     for (var x = 0; x < mapSize; x++) {
       tiles[y].push(null);
-      // objects[y].push(null);
-      // grid[y].push(null);
     }
   }
 
@@ -83,6 +80,33 @@ function setup() {
     }
   }
 }
+
+/**
+Aligns the tiles
+*/
+function alignTiles() {
+  for (var y = 0; y < tiles.length; y++) {
+    for (var x = 0; x < tiles[y].length; x++) {
+      if (tiles[y][x] != null) {
+        // Moving y tiles
+        // if (tiles[y][x].y % tileFinalSize < tileFinalSize/2){
+        //   tiles[y][x].y -= tiles[y][x].y % tileFinalSize;
+        // }
+        // else {
+        //   tiles[y][x].y += tiles[y][x].y % tileFinalSize;
+        // }
+        // Moving x tiles
+        if (tiles[y][x].x % tileFinalSize < tileFinalSize/2){
+          tiles[y][x].x -= tiles[y][x].x % tileFinalSize + tileFinalSize/2;
+        }
+        else {
+          tiles[y][x].x += (tiles[y][x].x % tileFinalSize) - tileFinalSize/2;
+        }
+      }
+    }
+  }
+}
+
 
 /**
 Draws the game
@@ -118,29 +142,31 @@ function title() {
   pop();
 }
 
+
 /**
 Simulation States
 */
 function simulation() {
-  // Background
-  // background(spriteSkyBackground);
   image(spriteSkyBackground, 0, 0, width * 2, height);
-
 
   // Player collision
   var xCollide = false;
   var yCollide = false;
-  // if (player.digging == false) {
+
   for (var y = 0; y < tiles.length; y++) {
     for (var x = 0; x < tiles[y].length; x++) {
+      // if (tiles[y][x].tileIndex != 5) {
       if (tiles[y][x] != null && (xCollide == false && yCollide == false)) {
         xCollide = player.xCollision(tiles[y][x]);
         yCollide = player.yCollision(tiles[y][x]);
 
         // Digging holes
         if (player.digging == true && (xCollide == true || yCollide == true)){
-          //give the player a grid position
-          tiles[y][x].tileIndex = 3;
+
+          //Changes the tiles to be dug out
+          tiles[y][x].tileIndex = 5;
+          player.diggingY = tiles[y][x].y + tileFinalSize/2;
+          player.diggingX = tiles[y][x].x + tileFinalSize/2;
         }
       }
     }
@@ -153,36 +179,27 @@ function simulation() {
     for (var x = 0; x < tiles[y].length; x++) {
 
       // Non digging movement
-      if (player.digging == false) {
+      if (player.digging == false && tiles[y][x] != null) {
         // X collision
         if (xCollide == false) {
-          if (tiles[y][x] != null) {
-            tiles[y][x].x -= player.xVelocity;
-          }
+          tiles[y][x].x -= player.xVelocity;
         }
         // Y collision
         if (yCollide == false) {
-          if (tiles[y][x] != null && (player.onGround == false || player.digging == true)) {
+          if (player.onGround == false || player.digging == true) {
             tiles[y][x].y -= player.yVelocity;
           }
         }
       // Digging movement
       } else {
-        // X collision
+        // Snaps the y values to the player
         if (tiles[y][x] != null && player.xVelocity != 0) {
           tiles[y][x].x -= player.xVelocity;
-          // tiles[y][x].y -= (tiles[y][x].y - player.spriteHeight * .4) % tileFinalSize;
         }
-
-        // Y collision
+        // Snaps the x values to the player
         if (tiles[y][x] != null && player.yVelocity != 0) {
           tiles[y][x].y -= player.yVelocity;
-          // tiles[y][x].x -= (tiles[y][x].x - player.spriteWidth * .4) % tileFinalSize
         }
-        // if (tiles[y][x] != null) {
-        //   tiles[y][x].x -= tiles[y][x].x % tileFinalSize - (player.spriteWidth * .4);
-        //   tiles[y][x].y -= tiles[y][x].y % tileFinalSize;
-        // }
       }
       // Draws the tiles
       if (tiles[y][x] != null

@@ -3,13 +3,13 @@ class Player {
   constructor(x, y) {
 
     // Physics variables
-    this.x = x;
-    this.y = y;
+    this.x = x;//- x % tileFinalSize;
+    this.y = y;// - y % tileFinalSize;
     this.xVelocity = 0;
     this.yVelocity = 0;
     this.acceleration = 0.25;
-    this.normalXvelocity = 3.5
-    this.normalYvelocity = 6;
+    this.normalXvelocity = 4.5;
+    this.normalYvelocity = 7;
     this.terminalXVelocity = this.normalXvelocity;
     this.terminalYVelocity = this.normalYvelocity;
     this.xDirection = 0;
@@ -17,22 +17,37 @@ class Player {
     this.xCollide = false;
     this.yCollide = false;
     this.gravity = 0.3;
-    this.jumpVelocity = -6;
+    this.jumpVelocity = -this.normalYvelocity;
     this.onGround = false;
 
     // Visual variables
-    this.sprite = spritePlayer;
+    this.normalSprite = spritePlayer;
+    this.diggingSprite = spriteDust;
+    this.sprite = this.normalSprite;
     this.tileIndex = 0;
     this.state = 0;
     this.frameSpeed = 22;
     this.timer = 0;
-    this.spriteWidth = this.sprite.width * tileScale / 4;
-    this.spriteHeight = this.sprite.height * tileScale / 2;
+    this.initialSpriteWidth = this.sprite.width * tileScale / 4;
+    this.initialSpriteHeight = this.sprite.height * tileScale / 2;
+    this.spriteWidth = this.initialSpriteWidth;
+    this.spriteHeight = this.initialSpriteHeight;
+    this.boundingBox = false;
+    this.frameAmountWalking = 3;
+    this.frameAmountDigging = 13;
+    this.frameAmount = this.frameAmountWalking;
 
     // Digging
     this.digging = false;
     this.diggingVelocity = 7;
+    this.diggingX = x;
+    this.diggingY = y;
+  }
 
+  // Updating the sprite
+  updateSprite() {
+    this.spriteWidth = this.sprite.width * tileScale / 4;
+    this.spriteHeight = this.sprite.height * tileScale / 2;
   }
 
   // Moving and interaction logic
@@ -86,6 +101,10 @@ class Player {
     if (this.digging == true) {
       if (this.xCollide == false && this.yCollide == false && this.yVelocity < 0) {
         this.digging = false;
+        this.sprite = this.normalSprite;
+        this.spriteWidth = this.initialSpriteWidth;
+        this.spriteHeight = this.initialSpriteHeight;
+        this.frameAmount = this.frameAmountWalking;
         this.terminalYVelocity = this.normalYvelocity;
         this.terminalXVelocity = this.normalXvelocity;
         this.yVelocity = this.jumpVelocity;
@@ -95,9 +114,18 @@ class Player {
     // Switching to digging mode
     } else {
       if ((keyIsDown(DOWN_ARROW) || keyIsDown(83)) && this.onGround == true){
-        this.digging = true;
-        this.terminalYVelocity = this.diggingVelocity;
-        this.terminalXVelocity = this.diggingVelocity;
+        if (keyIsDown(RIGHT_ARROW) == false && keyIsDown(68) == false && keyIsDown(LEFT_ARROW) == false && keyIsDown(65) == false) {
+          this.digging = true;
+          this.sprite = this.diggingSprite;
+          this.spriteWidth = this.sprite.width * tileScale / 14;
+          this.spriteHeight = this.sprite.height * tileScale;
+          this.frameAmount = this.frameAmountDigging;
+          this.terminalYVelocity = this.diggingVelocity;
+          this.terminalXVelocity = this.diggingVelocity;
+          this.yVelocity = this.terminalYVelocity;
+          this.xVelocity = 0;
+          // alignTiles();
+        }
       }
     }
 
@@ -133,11 +161,11 @@ class Player {
       if (this.x + this.spriteWidth / 2 + this.xVelocity + 1>= obj.x &&
         this.x - this.spriteWidth / 2 + this.xVelocity <=  obj.x + obj.size &&
         this.y  - this.spriteHeight / 2 + this.yVelocity <= obj.y + obj.size &&
-        this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y) {//&&
-
-        this.xCollide = true;
-        this.xVelocity = 0;
-        return true;
+        this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y &&
+        obj.tileIndex != 5) {
+          this.xCollide = true;
+          this.xVelocity = 0;
+          return true;
       }
       this.xCollide = false;
       return false;
@@ -159,33 +187,40 @@ class Player {
   yCollision(obj) {
     // Colliding when walking
     if (this.digging == false) {
-      if (this.y + this.spriteHeight / 2 + this.yVelocity +1>= obj.y &&
-        this.y - this.spriteHeight / 2 + this.yVelocity <=  obj.y + obj.size &&
-        this.x - this.spriteWidth / 2 + this.xVelocity <= obj.x + obj.size &&
-        this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x) {
+      if (this.y + this.initialSpriteHeight / 2 + this.yVelocity +1>= obj.y &&
+        this.y - this.initialSpriteHeight / 2 + this.yVelocity <=  obj.y + obj.size &&
+        this.x - this.initialSpriteWidth / 2 + this.xVelocity <= obj.x + obj.size &&
+        this.x + this.initialSpriteWidth / 2 + this.xVelocity >= obj.x &&
+        obj.tileIndex != 5) {
 
+
+        // if (obj.tileIndex != 5) {
         this.yCollide = true;
         this.onGround = true;
         this.yVelocity = 0;
-
         return true;
+
+        // }
       }
+      this.onGround = false;
       this.yCollide = false;
       return false;
     }
     // Colliding when Digging
     else {
-      if (this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y &&
-        this.y + this.spriteHeight / 4 + this.yVelocity <=  obj.y + obj.size &&
-        this.x - this.spriteWidth / 4 + this.xVelocity <= obj.x + obj.size &&
-        this.x + this.spriteWidth / 4 + this.xVelocity >= obj.x) {
-        this.xCollide = true;
+      if (this.y + this.initialSpriteHeight / 2 + this.yVelocity >= obj.y &&
+        this.y + this.initialSpriteHeight / 4 + this.yVelocity <=  obj.y + obj.size &&
+        this.x - this.initialSpriteWidth / 4 + this.xVelocity <= obj.x + obj.size &&
+        this.x + this.initialSpriteWidth / 4 + this.xVelocity >= obj.x) {
+        this.yCollide = true;
         return true;
       }
-      this.xCollide = false;
+      this.yCollide = false;
       return false;
     }
   }
+
+
 
   // Draws the player
   display() {
@@ -194,10 +229,13 @@ class Player {
     noSmooth();
     imageMode(CENTER);
 
-    // Switching between idle and moving states
+    // Switching between animation states
 
+    // Digging
+    if (this.digging == true) {
+      this.frameSpeed = 1;
     // Idle
-    if (this.xVelocity == 0) {
+    } else if (this.xVelocity == 0) {
 
       // Resets the timer when switching states
       if (this.state == 1) {
@@ -223,14 +261,13 @@ class Player {
     this.timer += 1;
     if (this.timer % this.frameSpeed == 0) {
       this.tileIndex += 1;
-      if (this.tileIndex > 3) {
+      if (this.tileIndex > this.frameAmount) {
         this.tileIndex = 0;
       }
     }
 
     // Draws the sprite
     if (this.digging == false){
-
       if (this.xVelocity < 0) {
         push();
         scale(-1, 1);
@@ -255,52 +292,39 @@ class Player {
               this.spriteWidth / tileScale,
               this.spriteHeight / tileScale);
       }
-
-
-      // Draws the players bounding box
-      noFill();
-      rect(this.x - this.spriteWidth / 2,
-          this.y - this.spriteHeight / 2,
-          this.spriteWidth,
-          this.spriteHeight);
     } else {
-      // Draws the players bounding box
-      noFill();
-      rect(this.x - this.spriteWidth / 4,
-          this.y,
-          this.spriteWidth / 2,
-          this.spriteHeight / 2);
+      image(this.sprite,
+            this.diggingX,
+            this.diggingY,
+            this.spriteWidth,
+            this.spriteHeight,
+            this.tileIndex * this.spriteWidth / tileScale,
+            this.state * this.spriteHeight / tileScale,
+            this.spriteWidth / tileScale,
+            this.spriteHeight / tileScale);
+
     }
 
 
-
-      // if (this.y + this.spriteHeight / 2 + this.yVelocity +1>= obj.y &&
-      //   this.y - this.spriteHeight / 2 + this.yVelocity <=  obj.y + obj.size &&
-      //   this.x - this.spriteWidth / 2 + this.xVelocity <= obj.x + obj.size &&
-      //   this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x) {// &&
-
-
-    // image(this.sprite, this.x, this.y, this.spriteWidth, this.spriteHeight);
+    // Draws the players bounding box for debbugging
+    if (this.digging == false){
+      if (this.boundingBox == true) {
+        noFill();
+        rect(this.x - this.spriteWidth / 2,
+            this.y - this.spriteHeight / 2,
+            this.spriteWidth,
+            this.spriteHeight);
+      }
+    } else {
+      if (this.boundingBox == true) {
+        noFill();
+        rect(this.x - this.spriteWidth / 4,
+            this.y,
+            this.spriteWidth / 2,
+            this.spriteHeight / 2);
+      }
+    }
 
     pop();
   }
 }
-
-// Shadow object
-// class Shadow {
-//   constructor(x, y) {
-//     this.x = x;
-//     this.y = y;
-//     this.spriteWidth = spriteShadow.width * tileScale;
-//     this.spriteHeight= spriteShadow.height * tileScale;
-//   }
-//
-//
-//   // Draws the shadow
-//   display() {
-//     push();
-//     imageMode(CENTER);
-//     image(spriteShadow, this.x + tileSize/8, this.y + this.spriteHeight * 2, this.spriteWidth, this.spriteHeight);
-//     pop();
-//   }
-// }
