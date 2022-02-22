@@ -31,7 +31,7 @@ class Player {
 
     // Digging
     this.digging = false;
-    this.diggingVelocity = 5;
+    this.diggingVelocity = 7;
 
   }
 
@@ -54,13 +54,25 @@ class Player {
       this.yDirection = 0;
     }
 
+    // Digging movement
+    if (this.digging) {
+      if (keyIsDown(RIGHT_ARROW) || keyIsDown(68) || keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
+        this.xVelocity = this.xDirection * this.terminalXVelocity;
+        this.yDirection = 0;
+        this.yVelocity = 0
+      }
+      if (keyIsDown(UP_ARROW) || keyIsDown(87) || keyIsDown(DOWN_ARROW) || keyIsDown(83)){
+        this.yVelocity = this.yDirection * this.terminalYVelocity;
+        this.xDirection = 0;
+        this.xVelocity = 0
+      }
+    }
+
     // Jumping
     if (keyIsDown(32) && this.onGround && this.digging == false) {
       this.yVelocity = this.jumpVelocity;
       this.onGround = false;
-      // console.log(1);
     }
-
 
     // Switching out of digging mode
     if (this.digging == true) {
@@ -74,7 +86,7 @@ class Player {
 
     // Switching to digging mode
     } else {
-      if ((keyIsDown(DOWN_ARROW) || keyIsDown(83)) && this.onGround == true){ //&& this.yCollide == false) {
+      if ((keyIsDown(DOWN_ARROW) || keyIsDown(83)) && this.onGround == true){
         this.digging = true;
         this.terminalYVelocity = this.diggingVelocity;
         this.terminalXVelocity = this.diggingVelocity;
@@ -83,20 +95,7 @@ class Player {
 
 
     // Acceleration and velocity
-    if (this.digging == true) {
-      // X velocity
-      this.xVelocity += this.xDirection * this.acceleration;
-      // Y velocity
-      this.yVelocity += this.yDirection * this.acceleration;
-      console.log('x'+this.xCollide + ' y'+this.yCollide);
-      // Stops moving
-      if (this.yDirection == 0) {
-        this.yVelocity = 0;
-      }
-      if (this.xDirection == 0) {
-        this.xVelocity = 0;
-      }
-    } else {
+    if (this.digging == false) {
       // X velocity
       if (this.xCollide == false) {
         this.xVelocity += this.xDirection * this.acceleration;
@@ -118,37 +117,63 @@ class Player {
   }
 
   xCollision(obj) {
-    if (this.x + this.spriteWidth / 2 + this.xVelocity + 1>= obj.x &&
-      this.x - this.spriteWidth / 2 + this.xVelocity <=  obj.x + obj.size &&
-      this.y  - this.spriteHeight / 2 + this.yVelocity <= obj.y + obj.size &&
-      this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y) {//&&
+    // Colliding when walking
+    if (this.digging == false) {
+      if (this.x + this.spriteWidth / 2 + this.xVelocity + 1>= obj.x &&
+        this.x - this.spriteWidth / 2 + this.xVelocity <=  obj.x + obj.size &&
+        this.y  - this.spriteHeight / 2 + this.yVelocity <= obj.y + obj.size &&
+        this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y) {//&&
 
-      this.xCollide = true;
-      if (this.digging == false) {
+        this.xCollide = true;
         this.xVelocity = 0;
+        return true;
       }
-      return true;
+      this.xCollide = false;
+      return false;
     }
-    this.xCollide = false;
-    return false;
+    // Colliding when Digging
+    else {
+      if (this.x + this.spriteWidth / 2 + this.xVelocity + 1>= obj.x &&
+        this.x - this.spriteWidth / 2 + this.xVelocity <=  obj.x + obj.size &&
+        this.y  - this.spriteHeight / 2 + this.yVelocity <= obj.y + obj.size &&
+        this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y) {//&&
+        this.xCollide = true;
+        return true;
+      }
+      this.xCollide = false;
+      return false;
+    }
   }
 
   yCollision(obj) {
-    if (this.y + this.spriteHeight / 2 + this.yVelocity +1>= obj.y &&
-      this.y - this.spriteHeight / 2 + this.yVelocity <=  obj.y + obj.size &&
-      this.x - this.spriteWidth / 2 + this.xVelocity <= obj.x + obj.size &&
-      this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x) {// &&
+    // Colliding when walking
+    if (this.digging == false) {
+      if (this.y + this.spriteHeight / 2 + this.yVelocity +1>= obj.y &&
+        this.y - this.spriteHeight / 2 + this.yVelocity <=  obj.y + obj.size &&
+        this.x - this.spriteWidth / 2 + this.xVelocity <= obj.x + obj.size &&
+        this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x) {// &&
 
-      this.yCollide = true;
-      if (this.digging == false) {
+        this.yCollide = true;
         this.onGround = true;
         this.yVelocity = 0;
-      }
-      return true;
-    }
-    this.yCollide = false;
-    return false;
 
+        return true;
+      }
+      this.yCollide = false;
+      return false;
+    }
+    // Colliding when Digging
+    else {
+      if (this.x + this.spriteWidth / 2 + this.xVelocity + 1>= obj.x &&
+        this.x - this.spriteWidth / 2 + this.xVelocity <=  obj.x + obj.size &&
+        this.y  - this.spriteHeight / 2 + this.yVelocity <= obj.y + obj.size &&
+        this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y) {//&&
+        this.xCollide = true;
+        return true;
+      }
+      this.xCollide = false;
+      return false;
+    }
   }
 
   // Draws the player
@@ -220,6 +245,20 @@ class Player {
               this.spriteHeight / tileScale);
       }
     }
+
+
+    // Draws the players bounding box
+    noFill();
+    rect(this.x - this.spriteWidth / 2,
+        this.y - this.spriteHeight / 2,
+        this.spriteWidth,
+        this.spriteHeight);
+      // if (this.y + this.spriteHeight / 2 + this.yVelocity +1>= obj.y &&
+      //   this.y - this.spriteHeight / 2 + this.yVelocity <=  obj.y + obj.size &&
+      //   this.x - this.spriteWidth / 2 + this.xVelocity <= obj.x + obj.size &&
+      //   this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x) {// &&
+
+
     // image(this.sprite, this.x, this.y, this.spriteWidth, this.spriteHeight);
 
     pop();

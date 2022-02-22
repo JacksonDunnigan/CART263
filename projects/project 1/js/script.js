@@ -136,6 +136,12 @@ function simulation() {
         if (tiles[y][x] != null && (xCollide == false && yCollide == false)) {
           xCollide = player.xCollision(tiles[y][x]);
           yCollide = player.yCollision(tiles[y][x]);
+
+          // Digging holes
+          if (player.digging == true && (xCollide == true || yCollide == true)){
+            //give the player a grid position
+            tiles[y][x].tileIndex = 3;
+          }
         }
       }
     }
@@ -179,6 +185,6 @@ function simulation() {
   }
 
   // Draws the players
-  player.display();
   player.move();
+  player.display();
 }
