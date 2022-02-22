@@ -22,11 +22,11 @@ class Player {
     this.sprite = spritePlayer;
     this.tileIndex = 0;
     this.state = 0;
-    this.frameSpeed = 16;
+    this.frameSpeed = 22;
     this.timer = 0;
     // this.size = this.sprite.width * tileScale;
     this.spriteWidth = this.sprite.width * tileScale / 4;
-    this.spriteHeight = this.sprite.height * tileScale;
+    this.spriteHeight = this.sprite.height * tileScale / 2;
 
     // Inventory
     // this.inventory = [];
@@ -122,28 +122,28 @@ class Player {
 
     // Switching between idle and moving states
 
+    // Idle
+    if (this.xVelocity == 0) {
+
+      // Resets the timer when switching states
+      if (this.state == 1) {
+        this.state = 0;
+        this.timer = 0;
+      }
+
+      this.frameSpeed = 16;
+
     // Moving
-    // if (this.xVelocity == 0 && this.yVelocity == 0) {
-    //
-    //   // Resets the timer when switching states
-    //   if (this.state == 1) {
-    //     this.state = 0;
-    //     this.timer = 0;
-    //   }
-    //
-    //   this.frameSpeed = 16;
-    //
-    // // Idle
-    // } else {
-    //
-    //   // Resets the timer when switching states
-    //   if (this.state == 0) {
-    //     this.state = 1;
-    //     this.timer = 0;
-    //   }
-    //
-    //   this.frameSpeed = 11;//floor(this.xVelocity)*5;
-    // }
+    } else {
+
+      // Resets the timer when switching states
+      if (this.state == 0) {
+        this.state = 1;
+        this.timer = 0;
+      }
+
+      this.frameSpeed = 10;//floor(this.xVelocity)*5;
+    }
 
     // Switches the current frame
     this.timer += 1;
@@ -166,7 +166,7 @@ class Player {
             this.tileIndex * this.spriteWidth / tileScale,
             this.state * this.spriteHeight / tileScale,
             this.spriteWidth / tileScale,
-            this.spriteHeight);
+            this.spriteHeight / tileScale);
       pop();
     } else if (this.xVelocity >= 0) {
       image(this.sprite,
@@ -177,7 +177,7 @@ class Player {
             this.tileIndex * this.spriteWidth / tileScale,
             this.state * this.spriteHeight / tileScale,
             this.spriteWidth / tileScale,
-            this.spriteHeight);
+            this.spriteHeight / tileScale);
     }
     // image(this.sprite, this.x, this.y, this.spriteWidth, this.spriteHeight);
 

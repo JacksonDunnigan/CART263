@@ -9,7 +9,7 @@ This project is inspired by fantastic Mr. Fox
 
 
 // Generation variables
-let tileSize = 16
+let tileSize = 32
 let tileScale = 3;
 let tileFinalSize = tileSize * tileScale;
 let mapSize = 128;
@@ -44,7 +44,7 @@ function preload() {
 Sets up the map and classes
 */
 function setup() {
-  createCanvas(800,600)
+  createCanvas(1000,700)
 
   // Creates the player
   player = new Player(width / 2, height *.55);
@@ -67,11 +67,19 @@ function setup() {
   for (var y = mapSize/2 + 5; y < mapSize; y++) {
     for (var x = 0; x < mapSize; x++) {
 
-      //Generates tiles
-      tiles[y][x] = new Tile((x - (mapSize/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
-                            (y - (mapSize/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
-                            tileFinalSize,
-                            floor(random(8)));
+      // Generates grass tiles
+      if (tiles[y-1][x] == null) {
+        tiles[y][x] = new Tile((x - (mapSize/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
+                              (y - (mapSize/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
+                              tileFinalSize,
+                              2);
+      // Generates dirt tiles
+      } else {
+        tiles[y][x] = new Tile((x - (mapSize/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
+                              (y - (mapSize/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
+                              tileFinalSize,
+                              1);
+      }
     }
   }
 }
