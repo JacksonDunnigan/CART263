@@ -131,50 +131,56 @@ function simulation() {
   var xCollide = false;
   var yCollide = false;
   // if (player.digging == false) {
-    for (var y = 0; y < tiles.length; y++) {
-      for (var x = 0; x < tiles[y].length; x++) {
-        if (tiles[y][x] != null && (xCollide == false && yCollide == false)) {
-          xCollide = player.xCollision(tiles[y][x]);
-          yCollide = player.yCollision(tiles[y][x]);
+  for (var y = 0; y < tiles.length; y++) {
+    for (var x = 0; x < tiles[y].length; x++) {
+      if (tiles[y][x] != null && (xCollide == false && yCollide == false)) {
+        xCollide = player.xCollision(tiles[y][x]);
+        yCollide = player.yCollision(tiles[y][x]);
 
-          // Digging holes
-          if (player.digging == true && (xCollide == true || yCollide == true)){
-            //give the player a grid position
-            tiles[y][x].tileIndex = 3;
-          }
+        // Digging holes
+        if (player.digging == true && (xCollide == true || yCollide == true)){
+          //give the player a grid position
+          tiles[y][x].tileIndex = 3;
         }
       }
     }
-    player.xCollide = xCollide;
-    player.yCollide = yCollide;
-
-  // }
+  }
+  player.xCollide = xCollide;
+  player.yCollide = yCollide;
 
   // Moving tiles
   for (var y = 0; y < tiles.length; y++) {
     for (var x = 0; x < tiles[y].length; x++) {
 
-      // X collision
-      if (xCollide == false || player.digging == true) {
-        if (tiles[y][x] != null) {
+      // Non digging movement
+      if (player.digging == false) {
+        // X collision
+        if (xCollide == false) {
+          if (tiles[y][x] != null) {
+            tiles[y][x].x -= player.xVelocity;
+          }
+        }
+        // Y collision
+        if (yCollide == false) {
+          if (tiles[y][x] != null && (player.onGround == false || player.digging == true)) {
+            tiles[y][x].y -= player.yVelocity;
+          }
+        }
+      // Digging movement
+      } else {
+        // X collision
+        if (tiles[y][x] != null && player.xVelocity != 0) {
           tiles[y][x].x -= player.xVelocity;
-          // tiles[y][x].bboxX -= player.xVelocity;
+          tiles[y][x].y -= tiles[y][x].y % tileFinalSize;
         }
-        // tiles[y][x].x -= player.xVelocity;
-      }
 
-      // Y collision
-      if (yCollide == false || player.digging == true) {
-        if (tiles[y][x] != null && (player.onGround == false || player.digging == true)) {
+        // Y collision
+        if (tiles[y][x] != null && player.yVelocity != 0) {
           tiles[y][x].y -= player.yVelocity;
-          // if (player.yCollide == true) {
-          //
-          // }
-          // tiles[y][x].bboxY -= player.yVelocity;
+          tiles[y][x].x -= tiles[y][x].x % tileFinalSize;
         }
-        // tiles[y][x].y -= player.yVelocity;
-      }
 
+      }
       // Draws the tiles
       if (tiles[y][x] != null
         && tiles[y][x].x + tileFinalSize > 0 && tiles[y][x].x < width

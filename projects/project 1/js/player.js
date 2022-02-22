@@ -111,8 +111,11 @@ class Player {
     }
 
     // Capping velocity
-    this.xVelocity = constrain(this.xVelocity, -this.terminalXVelocity, this.terminalXVelocity);
-    this.yVelocity = constrain(this.yVelocity, -this.terminalYVelocity, this.terminalYVelocity);
+    // if (this.digging == false) {
+      this.xVelocity = constrain(this.xVelocity, -this.terminalXVelocity, this.terminalXVelocity);
+      this.yVelocity = constrain(this.yVelocity, -this.terminalYVelocity, this.terminalYVelocity);
+    // }
+
 
   }
 
@@ -133,9 +136,9 @@ class Player {
     }
     // Colliding when Digging
     else {
-      if (this.x + this.spriteWidth / 2 + this.xVelocity + 1>= obj.x &&
-        this.x - this.spriteWidth / 2 + this.xVelocity <=  obj.x + obj.size &&
-        this.y  - this.spriteHeight / 2 + this.yVelocity <= obj.y + obj.size &&
+      if (this.x + this.spriteWidth / 4 + this.xVelocity>= obj.x &&
+        this.x - this.spriteWidth / 4 + this.xVelocity <=  obj.x + obj.size &&
+        this.y + this.spriteHeight / 4 + this.yVelocity <= obj.y + obj.size &&
         this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y) {//&&
         this.xCollide = true;
         return true;
@@ -151,7 +154,7 @@ class Player {
       if (this.y + this.spriteHeight / 2 + this.yVelocity +1>= obj.y &&
         this.y - this.spriteHeight / 2 + this.yVelocity <=  obj.y + obj.size &&
         this.x - this.spriteWidth / 2 + this.xVelocity <= obj.x + obj.size &&
-        this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x) {// &&
+        this.x + this.spriteWidth / 2 + this.xVelocity >= obj.x) {
 
         this.yCollide = true;
         this.onGround = true;
@@ -164,10 +167,10 @@ class Player {
     }
     // Colliding when Digging
     else {
-      if (this.x + this.spriteWidth / 2 + this.xVelocity + 1>= obj.x &&
-        this.x - this.spriteWidth / 2 + this.xVelocity <=  obj.x + obj.size &&
-        this.y  - this.spriteHeight / 2 + this.yVelocity <= obj.y + obj.size &&
-        this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y) {//&&
+      if (this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y &&
+        this.y + this.spriteHeight / 4 + this.yVelocity <=  obj.y + obj.size &&
+        this.x - this.spriteWidth / 4 + this.xVelocity <= obj.x + obj.size &&
+        this.x + this.spriteWidth / 4 + this.xVelocity >= obj.x) {
         this.xCollide = true;
         return true;
       }
@@ -244,15 +247,25 @@ class Player {
               this.spriteWidth / tileScale,
               this.spriteHeight / tileScale);
       }
+
+
+      // Draws the players bounding box
+      noFill();
+      rect(this.x - this.spriteWidth / 2,
+          this.y - this.spriteHeight / 2,
+          this.spriteWidth,
+          this.spriteHeight);
+    } else {
+      // Draws the players bounding box
+      noFill();
+      rect(this.x - this.spriteWidth / 4,
+          this.y,
+          this.spriteWidth / 2,
+          this.spriteHeight / 2);
     }
 
 
-    // Draws the players bounding box
-    noFill();
-    rect(this.x - this.spriteWidth / 2,
-        this.y - this.spriteHeight / 2,
-        this.spriteWidth,
-        this.spriteHeight);
+
       // if (this.y + this.spriteHeight / 2 + this.yVelocity +1>= obj.y &&
       //   this.y - this.spriteHeight / 2 + this.yVelocity <=  obj.y + obj.size &&
       //   this.x - this.spriteWidth / 2 + this.xVelocity <= obj.x + obj.size &&
