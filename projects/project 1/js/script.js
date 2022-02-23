@@ -24,6 +24,8 @@ let spriteSkyBackground;
 let spriteDirtTiles;
 let spritePlayer;
 let spriteDust;
+let spriteHills;
+let spriteHills2;
 
 // Defines Objects
 let player;
@@ -37,6 +39,8 @@ function preload() {
   spriteDirtTiles = loadImage('assets/images/dirtTiles.png');
   spritePlayer = loadImage('assets/images/player.png');
   spriteDust = loadImage('assets/images/dust.png');
+  spriteHills =  loadImage('assets/images/hills.png');
+  spriteHills2 =  loadImage('assets/images/hills2.png');
 
   // spritePlayer = loadImage('assets/images/player.png');
 
@@ -88,14 +92,6 @@ function alignTiles() {
   for (var y = 0; y < tiles.length; y++) {
     for (var x = 0; x < tiles[y].length; x++) {
       if (tiles[y][x] != null) {
-        // Moving y tiles
-        // if (tiles[y][x].y % tileFinalSize < tileFinalSize/2){
-        //   tiles[y][x].y -= tiles[y][x].y % tileFinalSize;
-        // }
-        // else {
-        //   tiles[y][x].y += tiles[y][x].y % tileFinalSize;
-        // }
-        // Moving x tiles
         if (tiles[y][x].x % tileFinalSize < tileFinalSize/2){
           tiles[y][x].x -= tiles[y][x].x % tileFinalSize + tileFinalSize/2;
         }
@@ -148,6 +144,8 @@ Simulation States
 */
 function simulation() {
   image(spriteSkyBackground, 0, 0, width * 2, height);
+  image(spriteHills2, 0, height*.45, width * 2, height);
+  image(spriteHills, 0, height*.5, width * 2, height);
 
   // Player collision
   var xCollide = false;

@@ -8,16 +8,16 @@ class Player {
     this.xVelocity = 0;
     this.yVelocity = 0;
     this.acceleration = 0.25;
-    this.normalXvelocity = 4.5;
-    this.normalYvelocity = 7;
-    this.terminalXVelocity = this.normalXvelocity;
-    this.terminalYVelocity = this.normalYvelocity;
+    this.normalXVelocity = 4.5;
+    this.normalYVelocity = 8;
+    this.terminalXVelocity = this.normalXVelocity;
+    this.terminalYVelocity = this.normalYVelocity;
     this.xDirection = 0;
     this.yDirection = 0;
     this.xCollide = false;
     this.yCollide = false;
     this.gravity = 0.3;
-    this.jumpVelocity = -this.normalYvelocity;
+    this.jumpVelocity = -this.normalYVelocity;
     this.onGround = false;
 
     // Visual variables
@@ -105,8 +105,8 @@ class Player {
         this.spriteWidth = this.initialSpriteWidth;
         this.spriteHeight = this.initialSpriteHeight;
         this.frameAmount = this.frameAmountWalking;
-        this.terminalYVelocity = this.normalYvelocity;
-        this.terminalXVelocity = this.normalXvelocity;
+        this.terminalYVelocity = this.normalYVelocity;
+        this.terminalXVelocity = this.normalXVelocity;
         this.yVelocity = this.jumpVelocity;
         this.onGround = false;
       }
@@ -147,21 +147,18 @@ class Player {
     }
 
     // Capping velocity
-    // if (this.digging == false) {
-      this.xVelocity = constrain(this.xVelocity, -this.terminalXVelocity, this.terminalXVelocity);
-      this.yVelocity = constrain(this.yVelocity, -this.terminalYVelocity, this.terminalYVelocity);
-    // }
-
+    this.xVelocity = constrain(this.xVelocity, -this.terminalXVelocity, this.terminalXVelocity);
+    this.yVelocity = constrain(this.yVelocity, -this.terminalYVelocity, this.terminalYVelocity);
 
   }
 
   xCollision(obj) {
     // Colliding when walking
     if (this.digging == false) {
-      if (this.x + this.spriteWidth / 2 + this.xVelocity + 1>= obj.x &&
-        this.x - this.spriteWidth / 2 + this.xVelocity <=  obj.x + obj.size &&
-        this.y  - this.spriteHeight / 2 + this.yVelocity <= obj.y + obj.size &&
-        this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y &&
+      if (this.x + this.spriteWidth / 4 + this.xVelocity >= obj.x &&
+        this.x - this.spriteWidth / 4 + this.xVelocity <=  obj.x + obj.size &&
+        this.y  - this.spriteHeight / 2 + 8 + this.yVelocity <= obj.y + obj.size &&
+        this.y + this.spriteHeight / 2 + this.yVelocity  >= obj.y &&
         obj.tileIndex != 5) {
           this.xCollide = true;
           this.xVelocity = 0;
@@ -187,20 +184,15 @@ class Player {
   yCollision(obj) {
     // Colliding when walking
     if (this.digging == false) {
-      if (this.y + this.initialSpriteHeight / 2 + this.yVelocity +1>= obj.y &&
-        this.y - this.initialSpriteHeight / 2 + this.yVelocity <=  obj.y + obj.size &&
-        this.x - this.initialSpriteWidth / 2 + this.xVelocity <= obj.x + obj.size &&
-        this.x + this.initialSpriteWidth / 2 + this.xVelocity >= obj.x &&
+      if (this.y + this.initialSpriteHeight / 2 + this.yVelocity + 1 >= obj.y &&
+        this.y - this.initialSpriteHeight / 2 + 8 + this.yVelocity <=  obj.y + obj.size &&
+        this.x - this.initialSpriteWidth / 4 + this.xVelocity <= obj.x + obj.size &&
+        this.x + this.initialSpriteWidth / 4 + this.xVelocity >= obj.x &&
         obj.tileIndex != 5) {
-
-
-        // if (obj.tileIndex != 5) {
-        this.yCollide = true;
-        this.onGround = true;
-        this.yVelocity = 0;
-        return true;
-
-        // }
+          this.yCollide = true;
+          this.onGround = true;
+          this.yVelocity = 0;
+          return true;
       }
       this.onGround = false;
       this.yCollide = false;
@@ -235,7 +227,7 @@ class Player {
     if (this.digging == true) {
       this.frameSpeed = 1;
     // Idle
-    } else if (this.xVelocity == 0) {
+    } else if (this.xVelocity == 0 && this.xDirection == 0) {
 
       // Resets the timer when switching states
       if (this.state == 1) {
@@ -268,7 +260,7 @@ class Player {
 
     // Draws the sprite
     if (this.digging == false){
-      if (this.xVelocity < 0) {
+      if (this.xVelocity < 0 || this.xDirection == -1) {
         push();
         scale(-1, 1);
         image(this.sprite,
@@ -281,7 +273,7 @@ class Player {
               this.spriteWidth / tileScale,
               this.spriteHeight / tileScale);
         pop();
-      } else if (this.xVelocity >= 0) {
+      } else if (this.xVelocity >= 0 || this.xDirection == 1) {
         image(this.sprite,
               this.x,
               this.y,
