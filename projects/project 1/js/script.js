@@ -221,6 +221,7 @@ function simulation() {
               player.diggingX = tiles[y][x].x + tileFinalSize/2;
               player.digCount = max(player.digCount - 1, 0);
               soundDig.play();
+              player.currentTile = tiles[y][x];
 
               // Game over if out of digs
               if (player.digCount <= 0) {
@@ -279,6 +280,10 @@ function simulation() {
   // Draws the players
   player.move();
   player.display();
+  if (player.currentTile != null) {
+    player.currentTile.display();
+
+  }
 }
 
 /**

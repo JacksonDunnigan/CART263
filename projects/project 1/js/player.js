@@ -39,11 +39,12 @@ class Player {
 
     // Digging
     this.digging = false;
-    this.diggingVelocity = 6;
+    this.diggingVelocity = 5;
     this.diggingX = x;
     this.diggingY = y;
-    this.maxDigCount = 40;
+    this.maxDigCount = 50;
     this.digCount = this.maxDigCount;
+    this.currentTile;
   }
 
   // Updating the sprite
@@ -116,9 +117,9 @@ class Player {
         soundJump.play();
         this.digging = false;
         this.digCount = this.maxDigCount;
-        this.sprite = this.normalSprite;
-        this.spriteWidth = this.initialSpriteWidth;
-        this.spriteHeight = this.initialSpriteHeight;
+        // this.sprite = this.normalSprite;
+        // this.spriteWidth = this.initialSpriteWidth;
+        // this.spriteHeight = this.initialSpriteHeight;
         this.frameAmount = this.frameAmountWalking;
         this.terminalYVelocity = this.normalYVelocity;
         this.terminalXVelocity = this.normalXVelocity;
@@ -134,10 +135,10 @@ class Player {
         && keyIsDown(LEFT_ARROW) == false
         && keyIsDown(65) == false) {
           this.digging = true;
-          this.sprite = this.diggingSprite;
-          this.spriteWidth = this.sprite.width * tileScale / 14;
-          this.spriteHeight = this.sprite.height * tileScale;
-          this.frameAmount = this.frameAmountDigging;
+          // this.sprite = this.diggingSprite;
+          // this.spriteWidth = this.sprite.width * tileScale / 14;
+          // this.spriteHeight = this.sprite.height * tileScale;
+          // this.frameAmount = this.frameAmountDigging;
           this.terminalYVelocity = this.diggingVelocity;
           this.terminalXVelocity = this.diggingVelocity;
           this.yVelocity = this.terminalYVelocity;
@@ -287,7 +288,7 @@ class Player {
     this.timer += 1;
     if (this.timer % this.frameSpeed == 0) {
       this.tileIndex += 1;
-      if (this.state == 1 && this.tileIndex % 2 == 0) {
+      if (this.state == 1 && this.tileIndex % 2 == 0 && abs(this.yVelocity) < 1) {
         soundWalk.play();
       }
       if (this.tileIndex > this.frameAmount) {
@@ -296,7 +297,7 @@ class Player {
     }
 
     // Draws the sprite
-    if (this.digging == false){
+    if (this.digging == false) {
       if (this.xVelocity < 0 || this.xDirection == -1) {
         push();
         scale(-1, 1);
@@ -321,18 +322,19 @@ class Player {
               this.spriteWidth / tileScale,
               this.spriteHeight / tileScale);
       }
-    } else {
-      image(this.sprite,
-            this.diggingX,
-            this.diggingY,
-            this.spriteWidth,
-            this.spriteHeight,
-            this.tileIndex * this.spriteWidth / tileScale,
-            this.state * this.spriteHeight / tileScale,
-            this.spriteWidth / tileScale,
-            this.spriteHeight / tileScale);
-
     }
+    // } else {
+    //   image(this.sprite,
+    //         this.diggingX,
+    //         this.diggingY,
+    //         this.spriteWidth,
+    //         this.spriteHeight,
+    //         this.tileIndex * this.spriteWidth / tileScale,
+    //         this.state * this.spriteHeight / tileScale,
+    //         this.spriteWidth / tileScale,
+    //         this.spriteHeight / tileScale);
+    //
+    // }
 
     // Draws the dig count
     push();
