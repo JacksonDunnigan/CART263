@@ -32,7 +32,7 @@ class Player {
     this.initialSpriteHeight = this.sprite.height * tileScale / 2;
     this.spriteWidth = this.initialSpriteWidth;
     this.spriteHeight = this.initialSpriteHeight;
-    this.boundingBox = false;
+    this.boundingBox = true;
     this.frameAmountWalking = 3;
     this.frameAmountDigging = 13;
     this.frameAmount = this.frameAmountWalking;
@@ -158,8 +158,8 @@ class Player {
       if (this.x + this.spriteWidth / 4 + this.xVelocity >= obj.x &&
         this.x - this.spriteWidth / 4 + this.xVelocity <=  obj.x + obj.size &&
         this.y  - this.spriteHeight / 2 + 8 + this.yVelocity <= obj.y + obj.size &&
-        this.y + this.spriteHeight / 2 + this.yVelocity  >= obj.y &&
-        obj.tileIndex != 5) {
+        this.y + this.spriteHeight / 2 + this.yVelocity  >= obj.y) {// &&
+        // obj.tileIndex != 5) {
           this.xCollide = true;
           this.xVelocity = 0;
           return true;
@@ -174,6 +174,9 @@ class Player {
         this.y + this.spriteHeight / 4 + this.yVelocity <= obj.y + obj.size &&
         this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y) {//&&
         this.xCollide = true;
+        if (obj.tileIndex == 4 && this.xVelocity != 0){
+          this.xVelocity *= -1;
+        }
         return true;
       }
       this.xCollide = false;
@@ -187,8 +190,8 @@ class Player {
       if (this.y + this.initialSpriteHeight / 2 + this.yVelocity + 1 >= obj.y &&
         this.y - this.initialSpriteHeight / 2 + 8 + this.yVelocity <=  obj.y + obj.size &&
         this.x - this.initialSpriteWidth / 4 + this.xVelocity <= obj.x + obj.size &&
-        this.x + this.initialSpriteWidth / 4 + this.xVelocity >= obj.x &&
-        obj.tileIndex != 5) {
+        this.x + this.initialSpriteWidth / 4 + this.xVelocity >= obj.x) { //&&
+        // obj.tileIndex != 5) {
           this.yCollide = true;
           this.onGround = true;
           this.yVelocity = 0;
@@ -205,6 +208,11 @@ class Player {
         this.x - this.initialSpriteWidth / 4 + this.xVelocity <= obj.x + obj.size &&
         this.x + this.initialSpriteWidth / 4 + this.xVelocity >= obj.x) {
         this.yCollide = true;
+        if (obj.tileIndex == 4 && this.yVelocity != 0){
+          console.log(this.yVelocity);
+
+          this.yVelocity *= -1;
+        }
         return true;
       }
       this.yCollide = false;
