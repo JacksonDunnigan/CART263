@@ -14,13 +14,11 @@ class Tile {
   }
   // Timer
   move() {
-    // if (this.tileIndex != this.originalTileIndex) {
     this.timer = max(this.timer - 1, 0);
     if (this.timer <= 0) {
       this.tileIndex = this.originalTileIndex;
       this.timer = 0;
     }
-
   }
 
   // Draws the tile
@@ -28,18 +26,13 @@ class Tile {
     push();
 
     // Changes and draws the current tile
-    // if (this.originalTileIndex != 4){
-      image(this.sprite, this.x, this.y, this.size, this.size, this.tileIndex * tileSize, 0, tileSize, tileSize);
-    // } else {
-    //   image(this.sprite, this.x, this.y, this.size, this.size, this.originalTileIndex * tileSize, 0, tileSize, tileSize);
-    // }
+    image(this.sprite, this.x, this.y, this.size, this.size, this.tileIndex * tileSize, 0, tileSize, tileSize);
 
     // Timer for digging
     if (this.timer > 0){
       push();
-      // max(this.timer * 2 - 60, 0)
-      var tempOpacity = max(255 - this.timer * 2 - 60, 0); //max(this.timer * 2 - 60, 0) - (max(this.timer * 2 - 60, 0) % 20);
-      tint(255, tempOpacity); // Display at half opacity
+      var tempOpacity = max(255 - this.timer * 2 - 60, 0);
+      tint(255, tempOpacity);
       image(this.sprite, this.x, this.y, this.size, this.size, this.originalTileIndex * tileSize, 0, tileSize, tileSize);
       pop();
     }

@@ -32,7 +32,7 @@ class Player {
     this.initialSpriteHeight = this.sprite.height * tileScale / 2;
     this.spriteWidth = this.initialSpriteWidth;
     this.spriteHeight = this.initialSpriteHeight;
-    this.boundingBox = true;
+    this.boundingBox = false;
     this.frameAmountWalking = 3;
     this.frameAmountDigging = 13;
     this.frameAmount = this.frameAmountWalking;
@@ -56,16 +56,16 @@ class Player {
   move() {
 
     // Keyboard input
-    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)){ // && this.xCollide == false) {
+    if (keyIsDown(RIGHT_ARROW) || keyIsDown(68)) {
       this.xDirection = 1;
-    } else if (keyIsDown(LEFT_ARROW) || keyIsDown(65)){ //&& this.xCollide == false) {
+    } else if (keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
       this.xDirection = -1;
     } else {
       this.xDirection = 0;
     }
-    if (keyIsDown(UP_ARROW) || keyIsDown(87)) { // && this.yCollide == false) {
+    if (keyIsDown(UP_ARROW) || keyIsDown(87)) {
       this.yDirection = -1;
-    } else if (keyIsDown(DOWN_ARROW) || keyIsDown(83)){ //&& this.yCollide == false) {
+    } else if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) {
       this.yDirection = 1;
     } else {
       this.yDirection = 0;
@@ -73,7 +73,10 @@ class Player {
 
     // Digging movement
     if (this.digging) {
-      if (keyIsDown(UP_ARROW) == false && keyIsDown(87) == false && keyIsDown(DOWN_ARROW) == false && keyIsDown(83) == false) {
+      if (keyIsDown(UP_ARROW) == false
+      && keyIsDown(87) == false
+      && keyIsDown(DOWN_ARROW) == false
+      && keyIsDown(83) == false) {
         if (keyIsDown(RIGHT_ARROW) || keyIsDown(68) || keyIsDown(LEFT_ARROW) || keyIsDown(65)) {
           if (this.xVelocity == 0) {
             this.xVelocity = this.xDirection * this.terminalXVelocity;
@@ -82,7 +85,10 @@ class Player {
           }
         }
       }
-      if (keyIsDown(RIGHT_ARROW) == false && keyIsDown(68) == false && keyIsDown(LEFT_ARROW) == false && keyIsDown(65) == false) {
+      if (keyIsDown(RIGHT_ARROW) == false
+      && keyIsDown(68) == false
+      && keyIsDown(LEFT_ARROW) == false
+      && keyIsDown(65) == false) {
         if (keyIsDown(UP_ARROW) || keyIsDown(87) || keyIsDown(DOWN_ARROW) || keyIsDown(83)) {
           if (this.yVelocity == 0) {
             this.yVelocity = this.yDirection * this.terminalYVelocity;
@@ -94,14 +100,20 @@ class Player {
     }
 
     // Jumping
-    if (keyIsDown(32) && this.onGround && this.digging == false) {
+    if (keyIsDown(32)
+    && this.onGround
+    && this.digging == false) {
+      soundJump.play();
       this.yVelocity = this.jumpVelocity;
       this.onGround = false;
     }
 
     // Switching out of digging mode
     if (this.digging == true) {
-      if (this.xCollide == false && this.yCollide == false && this.yVelocity < 0) {
+      if (this.xCollide == false
+        && this.yCollide == false
+        && this.yVelocity < 0) {
+        soundJump.play();
         this.digging = false;
         this.digCount = this.maxDigCount;
         this.sprite = this.normalSprite;
@@ -117,7 +129,10 @@ class Player {
     // Switching to digging mode
     } else {
       if ((keyIsDown(DOWN_ARROW) || keyIsDown(83)) && this.onGround == true){
-        if (keyIsDown(RIGHT_ARROW) == false && keyIsDown(68) == false && keyIsDown(LEFT_ARROW) == false && keyIsDown(65) == false) {
+        if (keyIsDown(RIGHT_ARROW) == false
+        && keyIsDown(68) == false
+        && keyIsDown(LEFT_ARROW) == false
+        && keyIsDown(65) == false) {
           this.digging = true;
           this.sprite = this.diggingSprite;
           this.spriteWidth = this.sprite.width * tileScale / 14;
@@ -179,6 +194,7 @@ class Player {
         this.xCollide = true;
         if (obj.tileIndex == 4 && this.xVelocity != 0){
           this.xVelocity *= -1;
+          soundBeep.play();
         }
         return true;
       }
@@ -193,8 +209,11 @@ class Player {
       if (this.y + this.initialSpriteHeight / 2 + this.yVelocity + 1 >= obj.y &&
         this.y - this.initialSpriteHeight / 2 + 8 + this.yVelocity <=  obj.y + obj.size &&
         this.x - this.initialSpriteWidth / 4 + this.xVelocity <= obj.x + obj.size &&
-        this.x + this.initialSpriteWidth / 4 + this.xVelocity >= obj.x) { //&&
-        // obj.tileIndex != 5) {
+        this.x + this.initialSpriteWidth / 4 + this.xVelocity >= obj.x) {
+
+          if (this.onGround == false && this.yVelocity == this.terminalYVelocity){
+            soundDig.play();
+          }
           this.yCollide = true;
           this.onGround = true;
           this.yVelocity = 0;
@@ -212,9 +231,9 @@ class Player {
         this.x + this.initialSpriteWidth / 4 + this.xVelocity >= obj.x) {
         this.yCollide = true;
         if (obj.tileIndex == 4 && this.yVelocity != 0){
-          console.log(this.yVelocity);
-
+          // console.log(this.yVelocity);
           this.yVelocity *= -1;
+          soundBeep.play();
         }
         return true;
       }
@@ -237,6 +256,7 @@ class Player {
     // Digging
     if (this.digging == true) {
       this.frameSpeed = 1;
+
     // Idle
     } else if (this.xVelocity == 0 && this.xDirection == 0) {
 
@@ -244,6 +264,7 @@ class Player {
       if (this.state == 1) {
         this.state = 0;
         this.timer = 0;
+        this.tileIndex = 0;
       }
 
       this.frameSpeed = 16;
@@ -255,15 +276,20 @@ class Player {
       if (this.state == 0) {
         this.state = 1;
         this.timer = 0;
+        this.tileIndex = 0;
+        soundWalk.play();
       }
 
-      this.frameSpeed = 10;//floor(this.xVelocity)*5;
+      this.frameSpeed = 10;
     }
 
     // Switches the current frame
     this.timer += 1;
     if (this.timer % this.frameSpeed == 0) {
       this.tileIndex += 1;
+      if (this.state == 1 && this.tileIndex % 2 == 0) {
+        soundWalk.play();
+      }
       if (this.tileIndex > this.frameAmount) {
         this.tileIndex = 0;
       }

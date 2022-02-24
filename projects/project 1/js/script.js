@@ -33,7 +33,8 @@ let spriteHills2;
 let soundWalk;
 let soundDig;
 let soundJump;
-let soundRock;
+let soundDeath;
+let soundBeep;
 
 // Fonts
 let pixelFont;
@@ -51,11 +52,15 @@ function preload() {
   spriteDirtTiles = loadImage('assets/images/dirtTiles.png');
   spritePlayer = loadImage('assets/images/player.png');
   spriteDust = loadImage('assets/images/dust.png');
-  spriteHills =  loadImage('assets/images/hills.png');
-  spriteHills2 =  loadImage('assets/images/hills2.png');
+  spriteHills = loadImage('assets/images/hills.png');
+  spriteHills2 = loadImage('assets/images/hills2.png');
 
   // Loads Sounds
-
+  soundWalk = loadSound('assets/sounds/walk.wav');
+  soundDig = loadSound('assets/sounds/dig.wav');
+  soundJump = loadSound('assets/sounds/jump.wav');
+  soundDeath = loadSound('assets/sounds/death.wav');
+  soundBeep = loadSound('assets/sounds/beep.wav');
 
   // Loads fonts
   pixelFont = loadFont('assets/Minecraftia.ttf');
@@ -155,16 +160,20 @@ Changing Game States
 function mousePressed() {
   if (state === `title`) {
     state = `simulation`;
+    soundBeep.play();
   } else if (state === `gameOver`) {
     state = `title`;
+    soundBeep.play();
     setup();
   }
 }
 function keyPressed() {
   if (state === `title`) {
     state = `simulation`;
+    soundBeep.play();
   } else if (state === `gameOver`) {
     state = `title`;
+    soundBeep.play();
     setup();
   }
 }
@@ -200,25 +209,30 @@ function simulation() {
 
           // Digs a hole
           if (player.digging == true &&
+            tiles[y][x].timer <= 100 &&
+            // tiles[y][x].tileIndex != 4 &&
             tiles[y][x].tileIndex != 4 &&
-            tiles[y][x].tileIndex != 5 &&
             (xCollide == true || yCollide == true)) {
 
-            //Changes the tiles to be dug out
-            tiles[y][x].tileIndex = 5;
-            tiles[y][x].timer = tiles[y][x].maxTimer;
-            player.diggingY = tiles[y][x].y + tileFinalSize/2;
-            player.diggingX = tiles[y][x].x + tileFinalSize/2;
-            player.digCount = max(player.digCount - 1, 0);
-            if (player.digCount <= 0) {
-              state = 'gameOver';
-            }
+              //Changes the tiles to be dug out
+              tiles[y][x].tileIndex = 5;
+              tiles[y][x].timer = tiles[y][x].maxTimer;
+              player.diggingY = tiles[y][x].y + tileFinalSize/2;
+              player.diggingX = tiles[y][x].x + tileFinalSize/2;
+              player.digCount = max(player.digCount - 1, 0);
+              soundDig.play();
 
+              // Game over if out of digs
+              if (player.digCount <= 0) {
+                state = 'gameOver';
+                soundDeath.play();
+            }
           }
         }
       }
     }
   }
+
   player.xCollide = xCollide;
   player.yCollide = yCollide;
 
