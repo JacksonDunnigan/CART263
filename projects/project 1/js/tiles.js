@@ -53,7 +53,7 @@ class Tile {
 
 
       // Draws dust when digging
-      if (this.digIndex < this.frameAmount && this.timer > this.maxTimer - this.frameAmount){
+      if (this.digIndex < this.frameAmount && this.timer > this.maxTimer - this.frameAmount && state != `gameOver`){
         image(spriteDust,
             this.x - this.dustSpriteWidth/4,
             this.y - this.dustSpriteHeight/4,
@@ -69,7 +69,7 @@ class Tile {
 
 
     // Bounding box for debbugging
-    if (this.boundingBox){
+    if (this.boundingBox) {
       noFill()
       stroke(255,0,0,127);
       rect(this.x, this.y, this.size, this.size);

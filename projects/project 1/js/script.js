@@ -12,7 +12,7 @@ This project is inspired by fantastic Mr. Fox
 let tileSize = 32
 let tileScale = 2.5;
 let tileFinalSize = tileSize * tileScale;
-let mapWidth = 64;
+let mapWidth = 128;
 let mapHeight = 128;
 
 let state = 'title';
@@ -74,10 +74,12 @@ function preload() {
 Sets up the map and classes
 */
 function setup() {
-  createCanvas(1000,700)
+  createCanvas(1000, 700)
 
   // Creates the player
-  player = new Player(width / 2, height *.55 + 12);
+  // if (player == null) {
+  player = new Player(width / 2, height * .55 + 12);
+  // }
 
   // Defines the tile and object arrays
   for (var y = 0; y < mapHeight; y++) {
@@ -98,11 +100,11 @@ function setup() {
                               tileFinalSize,
                               2);
       // Generates rock tiles
-    } else if (y >= mapHeight -6 || floor(random(24)) == 1) {
-        tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
-                              (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
-                              tileFinalSize,
-                              4);
+      } else if (y >= mapHeight -6 || floor(random(24)) == 1) {
+          tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
+                                (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
+                                tileFinalSize,
+                                4);
 
       // Generates spikes
 
@@ -113,7 +115,6 @@ function setup() {
                               tileFinalSize,
                               1);
       }
-
     }
   }
 }
@@ -164,6 +165,13 @@ function mousePressed() {
     state = `simulation`;
     soundBeep.play();
   } else if (state === `gameOver`) {
+
+    // Clears the map
+    for (var y = 0; y < tiles.length; y++) {
+      for (var x = 0; x < tiles[y].length; x++) {
+        tiles[y].splice(x);
+      }
+    }
     state = `title`;
     soundBeep.play();
     setup();
@@ -174,6 +182,13 @@ function keyPressed() {
     state = `simulation`;
     soundBeep.play();
   } else if (state === `gameOver`) {
+
+    // Clears the map
+    for (var y = 0; y < tiles.length; y++) {
+      for (var x = 0; x < tiles[y].length; x++) {
+        tiles[y].splice(x);
+      }
+    }
     state = `title`;
     soundBeep.play();
     setup();
@@ -184,10 +199,32 @@ function keyPressed() {
 Menu state
 */
 function title() {
-  // push();
-  background(spriteBackground);
-  // pop();
-}
+  image(spriteSkyBackground, 0, 0, width * 2, height);
+  image(spriteHills2, 0, height*.45, width * 2, height);
+  image(spriteHills, 0, height*.5, width * 2, height);
+  push();
+  textFont();
+  fill(255);
+  stroke(0);
+  strokeWeight(1);
+  textFont(pixelFont, 64);
+  text('Fantastic Mr.Fox', width * .08, height * .24);
+  textSize(24);
+  text('press any key to play', width * .08, height * .26);
+  pop();
+
+  player.display();
+  for (var y = 0; y < tiles.length; y++) {
+    for (var x = 0; x < tiles[y].length; x++) {
+      if (tiles[y][x] != null &&
+        tiles[y][x].x + tileFinalSize > 0 && tiles[y][x].x < width &&
+        tiles[y][x].y + tileFinalSize > 0 && tiles[y][x].y < height) {
+          tiles[y][x].display();
+        }
+      }
+    }
+  }
+
 
 
 /**
@@ -281,29 +318,40 @@ function simulation() {
 
   // Draws the players
   player.move();
-  player.display();
   if (player.currentTile != null) {
     player.currentTile.display();
 
   }
+  player.display();
+
 }
 
 /**
 Game over*/
 function gameOver() {
-  // Clears the map
+  image(spriteSkyBackground, 0, 0, width * 2, height);
+  image(spriteHills2, 0, height*.45, width * 2, height);
+  image(spriteHills, 0, height*.5, width * 2, height);
+
+  // Draws the tiles
   for (var y = 0; y < tiles.length; y++) {
     for (var x = 0; x < tiles[y].length; x++) {
-      tiles[y].splice(x);
+      if (tiles[y][x] != null &&
+        tiles[y][x].x + tileFinalSize > 0 && tiles[y][x].x < width &&
+        tiles[y][x].y + tileFinalSize > 0 && tiles[y][x].y < height) {
+          tiles[y][x].display();
+      }
     }
   }
-
-  background(255,198,0);
   push();
-  fill(255,0,0);
+  fill(255);
   textAlign(CENTER);
-  textFont('Helvetica', 56);
+  stroke(0);
+  strokeWeight(3);
+  textFont(pixelFont, 56);
   textStyle(BOLD);
   text('Game Over', width/2, height/2);
   pop();
+
+
 }
