@@ -29,6 +29,8 @@ class Tile {
       this.currentOpacity = max(255 - this.timer * 2 - 60, 0);
       if (this.digIndex < this.frameAmount) {
         this.digIndex += 1;
+      } else if (this.digIndex >= this.frameAmount){
+        this.digIndex = 0;
       }
     }
   }
@@ -51,7 +53,7 @@ class Tile {
 
 
       // Draws dust when digging
-      if (this.digIndex < this.frameAmount){
+      if (this.digIndex < this.frameAmount && this.timer > this.maxTimer - this.frameAmount){
         image(spriteDust,
             this.x - this.dustSpriteWidth/4,
             this.y - this.dustSpriteHeight/4,

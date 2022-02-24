@@ -337,14 +337,16 @@ class Player {
     // }
 
     // Draws the dig count
-    push();
-    fill(255);
-    stroke(0);
-    strokeWeight(3);
-    textFont(pixelFont, 42);
-    text(this.digCount, 40, 100);
-    pop();
-
+    if (this.digging == true) {
+      push();
+      fill(255);
+      stroke(0);
+      strokeWeight(3);
+      textFont(pixelFont, 36);
+      text(this.digCount, this.x + tileFinalSize * .9 + this.xVelocity * 5, this.y + tileFinalSize * .1 + this.yVelocity * 2);
+      image(spriteShovel,  this.x + tileFinalSize * .4 + this.xVelocity * 5, this.y - tileFinalSize * .3 + this.yVelocity * 2, spriteShovel.width * tileScale * 1.5, spriteShovel.height * tileScale * 1.5)
+      pop();
+    }
 
     // Draws the players bounding box for debbugging
     if (this.digging == false){

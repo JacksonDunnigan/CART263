@@ -28,6 +28,7 @@ let spritePlayer;
 let spriteDust;
 let spriteHills;
 let spriteHills2;
+let spriteShovel;
 
 // Sounds
 let soundWalk;
@@ -54,6 +55,7 @@ function preload() {
   spriteDust = loadImage('assets/images/dust.png');
   spriteHills = loadImage('assets/images/hills.png');
   spriteHills2 = loadImage('assets/images/hills2.png');
+  spriteShovel = loadImage('assets/images/shovel.png');
 
   // Loads Sounds
   soundWalk = loadSound('assets/sounds/walk.wav');
