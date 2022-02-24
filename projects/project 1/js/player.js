@@ -39,9 +39,11 @@ class Player {
 
     // Digging
     this.digging = false;
-    this.diggingVelocity = 7;
+    this.diggingVelocity = 6;
     this.diggingX = x;
     this.diggingY = y;
+    this.maxDigCount = 40;
+    this.digCount = this.maxDigCount;
   }
 
   // Updating the sprite
@@ -101,6 +103,7 @@ class Player {
     if (this.digging == true) {
       if (this.xCollide == false && this.yCollide == false && this.yVelocity < 0) {
         this.digging = false;
+        this.digCount = this.maxDigCount;
         this.sprite = this.normalSprite;
         this.spriteWidth = this.initialSpriteWidth;
         this.spriteHeight = this.initialSpriteHeight;
@@ -304,6 +307,15 @@ class Player {
             this.spriteHeight / tileScale);
 
     }
+
+    // Draws the dig count
+    push();
+    fill(255);
+    stroke(0);
+    strokeWeight(3);
+    textFont(pixelFont, 42);
+    text(this.digCount, 40, 100);
+    pop();
 
 
     // Draws the players bounding box for debbugging

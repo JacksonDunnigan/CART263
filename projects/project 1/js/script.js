@@ -29,6 +29,15 @@ let spriteDust;
 let spriteHills;
 let spriteHills2;
 
+// Sounds
+let soundWalk;
+let soundDig;
+let soundJump;
+let soundRock;
+
+// Fonts
+let pixelFont;
+
 // Defines Objects
 let player;
 
@@ -36,6 +45,7 @@ let player;
 Loads Sprites and audio
 */
 function preload() {
+  // Loads sprites
   spriteBackground = loadImage('assets/images/menuBackground.png');
   spriteSkyBackground = loadImage('assets/images/skyBackground.png');
   spriteDirtTiles = loadImage('assets/images/dirtTiles.png');
@@ -44,7 +54,11 @@ function preload() {
   spriteHills =  loadImage('assets/images/hills.png');
   spriteHills2 =  loadImage('assets/images/hills2.png');
 
-  // spritePlayer = loadImage('assets/images/player.png');
+  // Loads Sounds
+
+
+  // Loads fonts
+  pixelFont = loadFont('assets/Minecraftia.ttf');
 
 }
 
@@ -130,6 +144,9 @@ function draw() {
   else if (state === `simulation`) {
     simulation();
   }
+  else if (state === `gameOver`) {
+    gameOver();
+  }
 }
 
 /**
@@ -138,6 +155,17 @@ Changing Game States
 function mousePressed() {
   if (state === `title`) {
     state = `simulation`;
+  } else if (state === `gameOver`) {
+    state = `title`;
+    setup();
+  }
+}
+function keyPressed() {
+  if (state === `title`) {
+    state = `simulation`;
+  } else if (state === `gameOver`) {
+    state = `title`;
+    setup();
   }
 }
 
@@ -145,9 +173,9 @@ function mousePressed() {
 Menu state
 */
 function title() {
-  push();
+  // push();
   background(spriteBackground);
-  pop();
+  // pop();
 }
 
 
@@ -165,21 +193,28 @@ function simulation() {
 
   for (var y = 0; y < tiles.length; y++) {
     for (var x = 0; x < tiles[y].length; x++) {
-      // if (tiles[y][x].tileIndex != 5) {
       if (tiles[y][x] != null) {
-          if(xCollide == false && yCollide == false) {
-            xCollide = player.xCollision(tiles[y][x]);
-            yCollide = player.yCollision(tiles[y][x]);
+        if(xCollide == false && yCollide == false) {
+          xCollide = player.xCollision(tiles[y][x]);
+          yCollide = player.yCollision(tiles[y][x]);
 
-            // Digging holes
-            if (player.digging == true && tiles[y][x].tileIndex != 4 &&(xCollide == true || yCollide == true)){
+          // Digs a hole
+          if (player.digging == true &&
+            tiles[y][x].tileIndex != 4 &&
+            tiles[y][x].tileIndex != 5 &&
+            (xCollide == true || yCollide == true)) {
 
-              //Changes wthe tiles to be dug out
-              tiles[y][x].tileIndex = 5;
-              tiles[y][x].timer = tiles[y][x].maxTimer;
-              player.diggingY = tiles[y][x].y + tileFinalSize/2;
-              player.diggingX = tiles[y][x].x + tileFinalSize/2;
+            //Changes the tiles to be dug out
+            tiles[y][x].tileIndex = 5;
+            tiles[y][x].timer = tiles[y][x].maxTimer;
+            player.diggingY = tiles[y][x].y + tileFinalSize/2;
+            player.diggingX = tiles[y][x].x + tileFinalSize/2;
+            player.digCount = max(player.digCount - 1, 0);
+            if (player.digCount <= 0) {
+              state = 'gameOver';
             }
+
+          }
         }
       }
     }
@@ -230,4 +265,24 @@ function simulation() {
   // Draws the players
   player.move();
   player.display();
+}
+
+/**
+Game over*/
+function gameOver() {
+  // Clears the map
+  for (var y = 0; y < tiles.length; y++) {
+    for (var x = 0; x < tiles[y].length; x++) {
+      tiles[y].splice(x);
+    }
+  }
+
+  background(255,198,0);
+  push();
+  fill(255,0,0);
+  textAlign(CENTER);
+  textFont('Helvetica', 56);
+  textStyle(BOLD);
+  text('Game Over', width/2, height/2);
+  pop();
 }
