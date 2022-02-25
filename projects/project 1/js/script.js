@@ -14,7 +14,7 @@ let tileScale = 2.5;
 let tileFinalSize = tileSize * tileScale;
 let mapWidth = 128;
 let mapHeight = 128;
-
+let startHeight = mapHeight/2 + 3;
 let state = 'title';
 let tiles = [];
 let objects = [];
@@ -29,6 +29,7 @@ let spriteDust;
 let spriteHills;
 let spriteHills2;
 let spriteShovel;
+let spriteBottle;
 
 // Sounds
 let soundWalk;
@@ -56,6 +57,7 @@ function preload() {
   spriteHills = loadImage('assets/images/hills.png');
   spriteHills2 = loadImage('assets/images/hills2.png');
   spriteShovel = loadImage('assets/images/shovel.png');
+  spriteBottle = loadImage('assets/images/bottle.png');
 
   // Loads Sounds
   soundWalk = loadSound('assets/sounds/walk.wav');
@@ -66,9 +68,7 @@ function preload() {
 
   // Loads fonts
   pixelFont = loadFont('assets/Minecraftia.ttf');
-
 }
-
 
 /**
 Sets up the map and classes
@@ -77,9 +77,7 @@ function setup() {
   createCanvas(1000, 700)
 
   // Creates the player
-  // if (player == null) {
   player = new Player(width / 2, height * .55 + 12);
-  // }
 
   // Defines the tile and object arrays
   for (var y = 0; y < mapHeight; y++) {
@@ -90,7 +88,7 @@ function setup() {
   }
 
   // Generates the map
-  for (var y = mapHeight/2 + 3; y < mapHeight; y++) {
+  for (var y = startHeight; y < mapHeight; y++) {
     for (var x = 0; x < mapWidth; x++) {
 
       // Generates grass tiles
@@ -100,14 +98,24 @@ function setup() {
                               tileFinalSize,
                               2);
       // Generates rock tiles
-      } else if (y >= mapHeight -6 || floor(random(24)) == 1) {
-          tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
-                                (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
-                                tileFinalSize,
-                                4);
+      } else if (y >= mapHeight -25 || floor(random(24)) == 1) {
+            tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
+                                  (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
+                                  tileFinalSize,
+                                  4);
 
-      // Generates spikes
-
+      // Generates bottles
+      } else if (y >= startHeight + 5 && floor(random(120)) == 1) {
+            tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
+                                  (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
+                                  tileFinalSize,
+                                  3);
+      // Generates shovels
+      } else if (y >= startHeight + 5 && floor(random(110)) == 1) {
+              tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
+                                    (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
+                                    tileFinalSize,
+                                    6);
       // Generates dirt tiles
       } else {
         tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
@@ -249,9 +257,19 @@ function simulation() {
           // Digs a hole
           if (player.digging == true &&
             tiles[y][x].timer <= 100 &&
-            // tiles[y][x].tileIndex != 4 &&
             tiles[y][x].tileIndex != 4 &&
             (xCollide == true || yCollide == true)) {
+
+              // Picking up shovels
+              if (tiles[y][x].tileIndex == 6) {
+                player.digCount += 10;
+                tiles[y][x].originalTileIndex = 1;
+              }
+              // Collecting Bottles
+              if (tiles[y][x].tileIndex == 3) {
+                player.bottleCount += 1;
+                tiles[y][x].originalTileIndex = 1;
+              }
 
               //Changes the tiles to be dug out
               tiles[y][x].tileIndex = 5;
@@ -261,6 +279,11 @@ function simulation() {
               player.digCount = max(player.digCount - 1, 0);
               soundDig.play();
               player.currentTile = tiles[y][x];
+
+
+
+
+              // Picking up cider
 
               // Game over if out of digs
               if (player.digCount <= 0) {

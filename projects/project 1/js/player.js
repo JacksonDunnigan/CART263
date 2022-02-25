@@ -3,8 +3,8 @@ class Player {
   constructor(x, y) {
 
     // Physics variables
-    this.x = x;//- x % tileFinalSize;
-    this.y = y;// - y % tileFinalSize;
+    this.x = x;
+    this.y = y;
     this.xVelocity = 0;
     this.yVelocity = 0;
     this.acceleration = 0.25;
@@ -45,6 +45,9 @@ class Player {
     this.maxDigCount = 50;
     this.digCount = this.maxDigCount;
     this.currentTile;
+    this.bottleCount = 0;
+
+
   }
 
   // Updating the sprite
@@ -135,15 +138,10 @@ class Player {
         && keyIsDown(LEFT_ARROW) == false
         && keyIsDown(65) == false) {
           this.digging = true;
-          // this.sprite = this.diggingSprite;
-          // this.spriteWidth = this.sprite.width * tileScale / 14;
-          // this.spriteHeight = this.sprite.height * tileScale;
-          // this.frameAmount = this.frameAmountDigging;
           this.terminalYVelocity = this.diggingVelocity;
           this.terminalXVelocity = this.diggingVelocity;
           this.yVelocity = this.terminalYVelocity;
           this.xVelocity = 0;
-          // alignTiles();
         }
       }
     }
@@ -253,7 +251,6 @@ class Player {
     imageMode(CENTER);
 
     // Switching between animation states
-
     // Digging
     if (this.digging == true) {
       this.frameSpeed = 1;
@@ -267,7 +264,6 @@ class Player {
         this.timer = 0;
         this.tileIndex = 0;
       }
-
       this.frameSpeed = 16;
 
     // Moving
@@ -280,7 +276,6 @@ class Player {
         this.tileIndex = 0;
         soundWalk.play();
       }
-
       this.frameSpeed = 10;
     }
 
@@ -323,18 +318,6 @@ class Player {
               this.spriteHeight / tileScale);
       }
     }
-    // } else {
-    //   image(this.sprite,
-    //         this.diggingX,
-    //         this.diggingY,
-    //         this.spriteWidth,
-    //         this.spriteHeight,
-    //         this.tileIndex * this.spriteWidth / tileScale,
-    //         this.state * this.spriteHeight / tileScale,
-    //         this.spriteWidth / tileScale,
-    //         this.spriteHeight / tileScale);
-    //
-    // }
 
     // Draws the dig count
     if (this.digging == true) {
@@ -345,6 +328,18 @@ class Player {
       textFont(pixelFont, 36);
       text(this.digCount, this.x + tileFinalSize * .9 + this.xVelocity * 5, this.y + tileFinalSize * .1 + this.yVelocity * 2);
       image(spriteShovel,  this.x + tileFinalSize * .4 + this.xVelocity * 5, this.y - tileFinalSize * .3 + this.yVelocity * 2, spriteShovel.width * tileScale * 1.5, spriteShovel.height * tileScale * 1.5)
+      pop();
+    }
+
+    // Draws the score
+    if (state === 'simulation'){
+      push();
+      fill(255);
+      stroke(0);
+      strokeWeight(3);
+      textFont(pixelFont, 36);
+      text(this.bottleCount, tileFinalSize * 1.6, tileFinalSize * 1.25);
+      image(spriteBottle,  tileFinalSize*.75, tileFinalSize*.75, spriteShovel.width * tileScale * 3, spriteShovel.height * tileScale * 3);
       pop();
     }
 
@@ -366,7 +361,6 @@ class Player {
             this.spriteHeight / 2);
       }
     }
-
     pop();
   }
 }
