@@ -37,6 +37,7 @@ let soundDig;
 let soundJump;
 let soundDeath;
 let soundBeep;
+let soundInteract;
 
 // Fonts
 let pixelFont;
@@ -65,6 +66,7 @@ function preload() {
   soundJump = loadSound('assets/sounds/jump.wav');
   soundDeath = loadSound('assets/sounds/death.wav');
   soundBeep = loadSound('assets/sounds/beep.wav');
+  soundInteract = loadSound('assets/sounds/interaction.wav');
 
   // Loads fonts
   pixelFont = loadFont('assets/Minecraftia.ttf');
@@ -111,7 +113,7 @@ function setup() {
                                   tileFinalSize,
                                   3);
       // Generates shovels
-      } else if (y >= startHeight + 5 && floor(random(110)) == 1) {
+      } else if (y >= startHeight + 5 && floor(random(80)) == 1) {
               tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
                                     (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
                                     tileFinalSize,
@@ -208,18 +210,8 @@ Menu state
 */
 function title() {
   image(spriteSkyBackground, 0, 0, width * 2, height);
-  image(spriteHills2, 0, height*.45, width * 2, height);
-  image(spriteHills, 0, height*.5, width * 2, height);
-  push();
-  textFont();
-  fill(255);
-  stroke(0);
-  strokeWeight(1);
-  textFont(pixelFont, 64);
-  text('Fantastic Mr.Fox', width * .08, height * .24);
-  textSize(24);
-  text('press any key to play', width * .08, height * .26);
-  pop();
+  image(spriteHills2, 0, height * .45, width * 2, height);
+  image(spriteHills, 0, height * .5, width * 2, height);
 
   player.display();
   for (var y = 0; y < tiles.length; y++) {
@@ -231,6 +223,19 @@ function title() {
         }
       }
     }
+    push();
+    textFont();
+    fill(255);
+    stroke(0);
+    strokeWeight(1);
+    textAlign(CENTER);
+    textFont(pixelFont, 64);
+    text('Super Cider Stealer', width /2, height * .24);
+    textSize(28);
+    text('dig up as much cider as you can', width /2, height * .26);
+    // textSize(12);
+    text('press any key to play', width /2, height * .95);
+    pop();
   }
 
 
@@ -262,13 +267,15 @@ function simulation() {
 
               // Picking up shovels
               if (tiles[y][x].tileIndex == 6) {
-                player.digCount += 10;
+                player.digCount += 15;
                 tiles[y][x].originalTileIndex = 1;
+                soundInteract.play();
               }
-              // Collecting Bottles
+              // Collecting Cider
               if (tiles[y][x].tileIndex == 3) {
                 player.bottleCount += 1;
                 tiles[y][x].originalTileIndex = 1;
+                soundInteract.play();
               }
 
               //Changes the tiles to be dug out
@@ -280,10 +287,6 @@ function simulation() {
               soundDig.play();
               player.currentTile = tiles[y][x];
 
-
-
-
-              // Picking up cider
 
               // Game over if out of digs
               if (player.digCount <= 0) {
