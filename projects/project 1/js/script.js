@@ -34,6 +34,7 @@ let spriteBottle;
 // Sounds
 let soundWalk;
 let soundDig;
+let soundDig2;
 let soundJump;
 let soundDeath;
 let soundBeep;
@@ -63,6 +64,7 @@ function preload() {
   // Loads Sounds
   soundWalk = loadSound('assets/sounds/walk.wav');
   soundDig = loadSound('assets/sounds/dig.wav');
+  soundDig2 = loadSound('assets/sounds/dig2.wav');
   soundJump = loadSound('assets/sounds/jump.wav');
   soundDeath = loadSound('assets/sounds/death.wav');
   soundBeep = loadSound('assets/sounds/beep.wav');
@@ -267,7 +269,7 @@ function simulation() {
 
               // Picking up shovels
               if (tiles[y][x].tileIndex == 6) {
-                player.digCount += 15;
+                player.digCount += 10;
                 tiles[y][x].originalTileIndex = 1;
                 soundInteract.play();
               }
@@ -278,15 +280,20 @@ function simulation() {
                 soundInteract.play();
               }
 
-              //Changes the tiles to be dug out
-              tiles[y][x].tileIndex = 5;
+              // Changes the tiles to be dug out
               tiles[y][x].timer = tiles[y][x].maxTimer;
-              player.diggingY = tiles[y][x].y + tileFinalSize/2;
-              player.diggingX = tiles[y][x].x + tileFinalSize/2;
-              player.digCount = max(player.digCount - 1, 0);
-              soundDig.play();
               player.currentTile = tiles[y][x];
 
+              // Only digs if the tile hasn't already been dug out
+              if (tiles[y][x].tileIndex != 5) {
+                tiles[y][x].tileIndex = 5;
+                // player.diggingY = tiles[y][x].y + tileFinalSize/2;
+                // player.diggingX = tiles[y][x].x + tileFinalSize/2;
+                soundDig.play();
+                player.digCount = max(player.digCount - 1, 0);
+              } else {
+                soundDig2.play();
+              }
 
               // Game over if out of digs
               if (player.digCount <= 0) {

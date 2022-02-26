@@ -20,10 +20,10 @@ class Tile {
   // Timer
   move() {
     this.timer = max(this.timer - 1, 0);
-    if (this.timer <= 0) {
-      this.tileIndex = this.originalTileIndex;
-      this.timer = 0;
-    }
+    // if (this.timer <= 0) {
+    //   // this.tileIndex = this.originalTileIndex;
+    //   this.timer = 0;
+    // }
 
     if (this.timer > 0) {
       this.currentOpacity = max(255 - this.timer * 2 - 60, 0);
@@ -46,10 +46,10 @@ class Tile {
     if (this.timer > 0) {
 
       // Draws the dug out tiles
-      push();
-      tint(255, this.currentOpacity);
-      image(this.sprite, this.x, this.y, this.size, this.size, this.originalTileIndex * tileSize, 0, tileSize, tileSize);
-      pop();
+      // push();
+      // tint(255, this.currentOpacity);
+      // image(this.sprite, this.x, this.y, this.size, this.size, this.originalTileIndex * tileSize, 0, tileSize, tileSize);
+      // pop();
 
 
       // Draws dust when digging
@@ -63,6 +63,14 @@ class Tile {
             0,
             this.dustSpriteWidth / tileScale,
             this.dustSpriteHeight / tileScale);
+        push();
+        noFill();
+        var tempColour = color(255,255,255);
+        tempColour.setAlpha(110)
+        stroke(tempColour);
+        strokeWeight(3);
+        rect(this.x,this.y, this.size,this.size);
+        pop();
       }
     }
 
