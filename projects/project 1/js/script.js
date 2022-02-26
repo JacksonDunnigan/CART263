@@ -12,7 +12,7 @@ This project is inspired by fantastic Mr. Fox
 let tileSize = 32
 let tileScale = 2.5;
 let tileFinalSize = tileSize * tileScale;
-let mapWidth = 128;
+let mapWidth = 64;
 let mapHeight = 128;
 let startHeight = mapHeight/2 + 3;
 let state = 'title';
@@ -92,40 +92,51 @@ function setup() {
   }
 
   // Generates the map
-  for (var y = startHeight; y < mapHeight; y++) {
+  for (var y = 0; y < mapHeight; y++) {
     for (var x = 0; x < mapWidth; x++) {
 
-      // Generates grass tiles
-      if (tiles[y-1][x] == null) {
+      // Adds map edges
+      if (x <= 5 || x >= mapWidth - 6) {
         tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
                               (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
                               tileFinalSize,
-                              2);
-      // Generates rock tiles
-      } else if (y >= mapHeight -25 || floor(random(24)) == 1) {
-            tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
-                                  (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
-                                  tileFinalSize,
-                                  4);
+                              4);
+      }
 
-      // Generates bottles
-      } else if (y >= startHeight + 5 && floor(random(120)) == 1) {
+      if (y >= startHeight && tiles[y][x] == null) {
+          // Generates grass tiles
+          if (tiles[y-1][x] == null) {
             tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
                                   (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
                                   tileFinalSize,
-                                  3);
-      // Generates shovels
-      } else if (y >= startHeight + 5 && floor(random(80)) == 1) {
-              tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
-                                    (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
-                                    tileFinalSize,
-                                    6);
-      // Generates dirt tiles
-      } else {
-        tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
-                              (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
-                              tileFinalSize,
-                              1);
+                                  2);
+          // Generates rock tiles
+          } else if (y >= mapHeight -25 || floor(random(24)) == 1) {
+                tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
+                                      (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
+                                      tileFinalSize,
+                                      4);
+
+          // Generates bottles
+          } else if (y >= startHeight + 5 && floor(random(120)) == 1) {
+                tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
+                                      (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
+                                      tileFinalSize,
+                                      3);
+          // Generates shovels
+          } else if (y >= startHeight + 5 && floor(random(80)) == 1) {
+                  tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
+                                        (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
+                                        tileFinalSize,
+                                        6);
+          // Generates dirt tiles
+          } else {
+            tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
+                                  (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
+                                  tileFinalSize,
+                                  1);
+
+        }
       }
     }
   }
@@ -384,6 +395,14 @@ function gameOver() {
   textFont(pixelFont, 56);
   textStyle(BOLD);
   text('Game Over', width/2, height/2);
+  textFont(pixelFont, 24);
+  if (player.bottleCount != 1) {
+    text('you collected ' + player.bottleCount + " bottles", width/2, height*.55);
+  } else {
+    text('you collected ' + player.bottleCount + " bottle", width/2, height*.55);
+
+  }
+
   pop();
 
 

@@ -42,7 +42,7 @@ class Player {
     this.diggingVelocity = 5;
     this.diggingX = x;
     this.diggingY = y;
-    this.maxDigCount = 50;
+    this.maxDigCount = 25;
     this.digCount = this.maxDigCount;
     this.currentTile;
     this.bottleCount = 0;
@@ -192,6 +192,7 @@ class Player {
         this.y + this.spriteHeight / 2 + this.yVelocity >= obj.y) {//&&
         this.xCollide = true;
         if (obj.tileIndex == 4 && this.xVelocity != 0){
+          this.digCount = max(this.digCount - 5, 0);
           this.xVelocity *= -1;
           soundBeep.play();
         }
@@ -230,7 +231,7 @@ class Player {
         this.x + this.initialSpriteWidth / 4 + this.xVelocity >= obj.x) {
         this.yCollide = true;
         if (obj.tileIndex == 4 && this.yVelocity != 0){
-          // console.log(this.yVelocity);
+          this.digCount = max(this.digCount - 5, 0);
           this.yVelocity *= -1;
           soundBeep.play();
         }
@@ -322,7 +323,13 @@ class Player {
     // Draws the dig count
     if (this.digging == true) {
       push();
-      fill(255);
+      if (this.digCount > 15){
+        fill(0,255,0);
+      } else if (this.digCount > 8) {
+        fill(255,240,0);
+      } else {
+        fill(240,0,0);
+      }
       stroke(0);
       strokeWeight(3);
       textFont(pixelFont, 36);
