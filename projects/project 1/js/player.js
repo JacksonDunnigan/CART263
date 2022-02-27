@@ -195,6 +195,10 @@ class Player {
           this.digCount = max(this.digCount - 5, 0);
           this.xVelocity *= -1;
           soundBeep.play();
+        } else if (obj.tileIndex == 7 && this.yVelocity != 0){
+          this.digCount = 0;
+          this.yVelocity *= -1;
+          soundBeep.play();
         }
         return true;
       }
@@ -232,6 +236,10 @@ class Player {
         this.yCollide = true;
         if (obj.tileIndex == 4 && this.yVelocity != 0){
           this.digCount = max(this.digCount - 5, 0);
+          this.yVelocity *= -1;
+          soundBeep.play();
+        } else if (obj.tileIndex == 7 && this.yVelocity != 0){
+          this.digCount = 0;
           this.yVelocity *= -1;
           soundBeep.play();
         }
@@ -339,7 +347,7 @@ class Player {
     }
 
     // Draws the score
-    if (state === 'simulation'){
+    if (state === 'simulation') {
       push();
       fill(255);
       stroke(0);
@@ -351,7 +359,7 @@ class Player {
     }
 
     // Draws the players bounding box for debbugging
-    if (this.digging == false){
+    if (this.digging == false) {
       if (this.boundingBox == true) {
         noFill();
         rect(this.x - this.spriteWidth / 2,

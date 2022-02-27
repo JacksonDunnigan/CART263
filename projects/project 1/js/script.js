@@ -30,6 +30,7 @@ let spriteHills;
 let spriteHills2;
 let spriteShovel;
 let spriteBottle;
+let spriteSign;
 
 // Sounds
 let soundWalk;
@@ -60,6 +61,7 @@ function preload() {
   spriteHills2 = loadImage('assets/images/hills2.png');
   spriteShovel = loadImage('assets/images/shovel.png');
   spriteBottle = loadImage('assets/images/bottle.png');
+  spriteSign = loadImage('assets/images/sign.png')
 
   // Loads Sounds
   soundWalk = loadSound('assets/sounds/walk.wav');
@@ -129,6 +131,12 @@ function setup() {
                                         (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
                                         tileFinalSize,
                                         6);
+          // Generates Spikes
+        } else if (y >= startHeight + 5 && floor(random(150)) == 1) {
+                  tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
+                                        (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
+                                        tileFinalSize,
+                                        7);
           // Generates dirt tiles
           } else {
             tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
@@ -137,6 +145,19 @@ function setup() {
                                   1);
 
         }
+      }
+
+
+      // Creates a sign
+      // console.log(int(floor(player.x)),int(floor(player.y))d);
+      if (x == 34 && y == 65) {
+        // if (x == int(floor(player.x/tileFinalSize)) && floor(y) == int(floor(player.y/tileFinalSize))){
+
+        // console.log(int(floor(player.x/tileScale),int(floor(player.y/tileScale))));
+        tiles[y][x] = new Tile((x - (mapWidth/2) + floor(width / tileFinalSize) / 2) * tileFinalSize ,
+                              (y - (mapHeight/2) + floor(height / tileFinalSize) / 2) * tileFinalSize,
+                              tileFinalSize,
+                              8);
       }
     }
   }
@@ -204,17 +225,6 @@ function keyPressed() {
   if (state === `title`) {
     state = `simulation`;
     soundBeep.play();
-  } else if (state === `gameOver`) {
-
-    // Clears the map
-    for (var y = 0; y < tiles.length; y++) {
-      for (var x = 0; x < tiles[y].length; x++) {
-        tiles[y].splice(x);
-      }
-    }
-    state = `title`;
-    soundBeep.play();
-    setup();
   }
 }
 
@@ -240,12 +250,17 @@ function title() {
     textFont();
     fill(255);
     stroke(0);
-    strokeWeight(1);
+    strokeWeight(2);
     textAlign(CENTER);
-    textFont(pixelFont, 64);
-    text('Super Cider Stealer', width /2, height * .24);
-    textSize(28);
-    text('dig up as much cider as you can', width /2, height * .26);
+    textFont(pixelFont, 28);
+    text('Fantastic Mr. Foxes', width /2, height * .125);
+    textSize(64);
+    strokeWeight(4);
+    text('Super Cider Stealer', width /2, height * .255);
+    textSize(24);
+    strokeWeight(2);
+
+    text('dig up as much cider as you can', width /2, height * .27);
     // textSize(12);
     text('press any key to play', width /2, height * .95);
     pop();
@@ -267,7 +282,7 @@ function simulation() {
 
   for (var y = 0; y < tiles.length; y++) {
     for (var x = 0; x < tiles[y].length; x++) {
-      if (tiles[y][x] != null) {
+      if (tiles[y][x] != null && tiles[y][x].tileIndex!=8) {
         if(xCollide == false && yCollide == false) {
           xCollide = player.xCollision(tiles[y][x]);
           yCollide = player.yCollision(tiles[y][x]);

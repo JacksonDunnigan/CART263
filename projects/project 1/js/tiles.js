@@ -40,7 +40,13 @@ class Tile {
     push();
 
     // Changes and draws the current tile
-    image(this.sprite, this.x, this.y, this.size, this.size, this.tileIndex * tileSize, 0, tileSize, tileSize);
+    if (this.tileIndex != 8) {
+      image(this.sprite, this.x, this.y, this.size, this.size, this.tileIndex * tileSize, 0, tileSize, tileSize);
+    } else {
+      // console.log(1;)
+      image(spriteSign, this.x, this.y, spriteSign.width*tileScale, spriteSign.height*tileScale);
+
+    }
 
     // Timer for digging
     if (this.timer > 0) {
