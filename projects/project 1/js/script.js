@@ -21,7 +21,7 @@ let objects = [];
 let grid = [];
 
 // Sprite Variables
-let spriteBackground;
+// let spriteBackground;
 let spriteSkyBackground;
 let spriteDirtTiles;
 let spritePlayer;
@@ -52,7 +52,7 @@ Loads Sprites and audio
 */
 function preload() {
   // Loads sprites
-  spriteBackground = loadImage('assets/images/menuBackground.png');
+  // spriteBackground = loadImage('assets/images/menuBackground.png');
   spriteSkyBackground = loadImage('assets/images/skyBackground.png');
   spriteDirtTiles = loadImage('assets/images/dirtTiles.png');
   spritePlayer = loadImage('assets/images/player.png');
