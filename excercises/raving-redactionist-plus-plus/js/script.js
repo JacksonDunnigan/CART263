@@ -10,6 +10,7 @@ secrets become revealed!
 
 // Sounds
 var soundMarker = new Audio('assets/sounds/marker.wav');
+var soundOffice = new Audio('assets/sounds/office.mp3');
 
 // The chance a span will be revealed per update
 const REVEAL_PROBABILITY = 0.1;
@@ -20,12 +21,7 @@ let $secrets;
 
 
 
-/**
-Loads all the sounds
-*/
-// function preload() {
-//   soundMarker = new Audio('assets/sounds/marker.wav');
-// }
+
 setup();
 
 /**
@@ -38,6 +34,10 @@ function setup() {
   $secrets.on(`click`, redact);
   // Set an interval of 500 milliseconds to attempt the revelation of secrets
   setInterval(revelation, UPDATE_FREQUENCY);
+
+  // Loops audio
+  soundOffice.play();
+  soundOffice.loop = true;
 };
 
 /**
