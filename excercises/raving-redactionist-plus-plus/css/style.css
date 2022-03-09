@@ -10,6 +10,11 @@ body {
   margin-top: 100px;
 }
 
+/* Removes the mouse in paragraphs */
+p {
+  cursor: default; /* or the one which you would like to have */
+}
+
 /* Redacted elements need to be blanked out */
 .redacted {
   background-color: black; /* Black background */

@@ -8,15 +8,24 @@ secrets become revealed!
 
 "use strict";
 
+// Sounds
+var soundMarker = new Audio('assets/sounds/marker.wav');
 
 // The chance a span will be revealed per update
 const REVEAL_PROBABILITY = 0.1;
 // How often to update the spans (potentially revealing them)
 const UPDATE_FREQUENCY = 500;
-
 // A place to store the jQuery selection of all secrets
 let $secrets;
 
+
+
+/**
+Loads all the sounds
+*/
+// function preload() {
+//   soundMarker = new Audio('assets/sounds/marker.wav');
+// }
 setup();
 
 /**
@@ -36,6 +45,10 @@ When a secret is clicked we remove its revealed class and add the redacted class
 thus blacking it out
 */
 function redact() {
+  // $('audio#pop')[0].pause();
+  // $('audio#pop')[0].currentTime = 0;
+  // var audio = new Audio('assets/sounds/marker.wav');
+  soundMarker.play();
   $(this).removeClass(`revealed`);
   $(this).addClass(`redacted`);
 }
