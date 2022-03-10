@@ -45,7 +45,7 @@ When a secret is clicked we remove its revealed class and add the redacted class
 thus blacking it out
 */
 function redact() {
-  if ($(this).hasClass('removed') == false && $(this).hasClass(`revealed`)) {
+  if ($(this).hasClass(`revealed`)) {
     soundMarker.play();
     $(this).removeClass(`revealed`);
     $(this).addClass(`redacted`);
@@ -81,17 +81,21 @@ function attemptReveal() {
 
       // Removes the text if you are out of time
       $(this).delay(4000).queue(function() {  // Wait for 6 seconds
-        if ($(this).hasClass('removed') == false && $(this).hasClass('fade-out') == true) {
-          $(this).removeClass("fade-out").dequeue();
-          $(this).removeClass("revealed").dequeue();
-          $(this).addClass("removed").dequeue();
-        }
+        // if ($(this).hasClass('fade-out') == true) {
+          $(this).remove();
+          // $(this).removeClass("fade-out").dequeue();
+          // $(this).removeClass("revealed").dequeue();
+          // $(this).addClass("removed").dequeue();
+        // }
       });
+      // if(!$(this).is(':animated')) {
+      //   $(this).animate({opacity: 'toggle'}, 1000);
+      // }
     }
   }
   // Fades out the text
   if ($(this).hasClass('fade-out') == false
-  && $(this).hasClass('removed') == false
+  // && $(this).hasClass('removed') == false
   && $(this).hasClass('revealed') == true) {
     $(this).addClass(`fade-out`);
   }
