@@ -13,11 +13,13 @@ var soundMarker = new Audio('assets/sounds/marker.wav');
 var soundOffice = new Audio('assets/sounds/office.mp3');
 
 // The chance a span will be revealed per update
-const REVEAL_PROBABILITY = 0.1;
+const REVEAL_PROBABILITY = 0.05;
 // How often to update the spans (potentially revealing them)
 const UPDATE_FREQUENCY = 500;
 // A place to store the jQuery selection of all secrets
 let $secrets;
+
+let score = 0;
 
 
 setup();
@@ -43,8 +45,11 @@ When a secret is clicked we remove its revealed class and add the redacted class
 thus blacking it out
 */
 function redact() {
-  if ($(this).hasClass(`revealed`) && $(this).hasClass('removed') == false) {
+  if ($(this).hasClass(`revealed`)
+  && $(this).css("opacity") > .1) {
     soundMarker.play();
+    score += 1;
+
     $(this).removeClass(`revealed`);
     $(this).addClass(`redacted`);
 
@@ -60,7 +65,15 @@ using jQuery`s each() function which calls the specified function on _each_ of t
 elements in the selection
 */
 function revelation() {
+  // Updates score
+  // if ($secrets.length > 0) {
+  // }
+  // console.log($secrets.length);
+  document.getElementById('score').innerHTML = "Score: " + score;
+
+  // Ineraction
   $secrets.each(attemptReveal);
+  // console.log($secrets.each(attemptReveal));
 }
 
 /**
@@ -71,19 +84,21 @@ by each(), "this" refers to the current element that each has selected.
 function attemptReveal() {
   let r = Math.random();
   if (r < REVEAL_PROBABILITY && $(this).hasClass('removed') == false) {
-    if ($(this).hasClass('removed') == false) {
-      $(this).removeClass(`redacted`);
-      $(this).addClass(`revealed`);
+    $(this).removeClass(`redacted`);
+    $(this).addClass(`revealed`);
 
-      // Removes the text if you are out of time
-      if ($(this).hasClass('animation') == false) {
-        $(this).addClass('animation');
-        $(this).delay(4000).queue(function() {  // Wait for 6 seconds
-          if ($(this).hasClass('animation')){
-            $(this).addClass('removed');
-          }
-        });
-      }
+    // Removes the text if you are out of time
+    if ($(this).hasClass('animation') == false) {
+      $(this).addClass('animation');
     }
+    //   $(this).delay(4000).queue(function() {  // Wait for 6 seconds
+    //     if ($(this).hasClass('animation')){
+    //       // $secrets.splice($secrets.index($(this)));
+    //       // console.log($secrets.index($(this)));
+    //       $(this).remove();
+    //
+    //     }
+    //   });
+    // }
   }
 }
