@@ -18,10 +18,11 @@ const REVEAL_PROBABILITY = 0.05;
 const UPDATE_FREQUENCY = 500;
 // A place to store the jQuery selection of all secrets
 let $secrets;
-
+// Keeps score
 let score = 0;
-
-
+// Game over
+let gameOver = false;
+let removed = false;
 setup();
 
 /**
@@ -46,7 +47,7 @@ thus blacking it out
 */
 function redact() {
   if ($(this).hasClass(`revealed`)
-  && $(this).css("opacity") > .1) {
+  && $(this).css("opacity") > .025) {
     soundMarker.play();
     score += 1;
 
@@ -65,15 +66,26 @@ using jQuery`s each() function which calls the specified function on _each_ of t
 elements in the selection
 */
 function revelation() {
-  // Updates score
-  // if ($secrets.length > 0) {
-  // }
-  // console.log($secrets.length);
-  document.getElementById('score').innerHTML = "Score: " + score;
+
 
   // Ineraction
-  $secrets.each(attemptReveal);
-  // console.log($secrets.each(attemptReveal));
+  if (gameOver == false) {
+    $secrets.each(attemptReveal);
+
+    // Updates score
+    document.getElementById('score').innerHTML = "Score: " + score;
+
+  // Displaying game over
+  } else {
+    if (removed == false){
+      removed = true;
+      document.getElementById('top-secret-document').remove();
+
+      document.getElementById('game-over').style.visibility = "visible";
+
+      // $('game-over').show();
+    }
+  }
 }
 
 /**
@@ -82,6 +94,13 @@ redacted class and adding the revealed class. Because this function is called
 by each(), "this" refers to the current element that each has selected.
 */
 function attemptReveal() {
+
+  // Game Over
+  if ($(this).css("opacity") < 0.025) {
+    gameOver = true;
+  }
+
+  // Reveals words
   let r = Math.random();
   if (r < REVEAL_PROBABILITY && $(this).hasClass('removed') == false) {
     $(this).removeClass(`redacted`);
@@ -91,14 +110,5 @@ function attemptReveal() {
     if ($(this).hasClass('animation') == false) {
       $(this).addClass('animation');
     }
-    //   $(this).delay(4000).queue(function() {  // Wait for 6 seconds
-    //     if ($(this).hasClass('animation')){
-    //       // $secrets.splice($secrets.index($(this)));
-    //       // console.log($secrets.index($(this)));
-    //       $(this).remove();
-    //
-    //     }
-    //   });
-    // }
   }
 }
