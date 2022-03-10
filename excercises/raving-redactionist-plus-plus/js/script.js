@@ -1,9 +1,7 @@
 /**
 Raving Redactionist
-Pippin Barr
-You are redacting a document, but it keeps becoming unredacted!
-Click the secret information to hide it, don`t let all the
-secrets become revealed!
+Jackson Dunnigan
+Redact all the messages to hide them from the soviets!
 */
 
 "use strict";
