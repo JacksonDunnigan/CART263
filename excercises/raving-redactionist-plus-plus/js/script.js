@@ -11,6 +11,7 @@ secrets become revealed!
 // Sounds
 var soundMarker = new Audio('assets/sounds/marker.wav');
 var soundOffice = new Audio('assets/sounds/office.mp3');
+var soundSoviet = new Audio('assets/sounds/soviet.wav');
 
 // The chance a span will be revealed per update
 const REVEAL_PROBABILITY = 0.05;
@@ -79,11 +80,12 @@ function revelation() {
   } else {
     if (removed == false){
       removed = true;
+      document.getElementById('game-over').style.visibility = "visible";
+      document.getElementById("game-over-score").innerHTML = String("Score: " + score);
       document.getElementById('top-secret-document').remove();
 
-      document.getElementById('game-over').style.visibility = "visible";
-
-      // $('game-over').show();
+      // Game over music
+      soundSoviet.play();
     }
   }
 }
