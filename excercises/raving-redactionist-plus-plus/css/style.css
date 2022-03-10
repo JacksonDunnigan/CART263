@@ -27,3 +27,27 @@ p {
   text-decoration: underline; /* underlined! */
   color: red; /* Emergency! */
 }
+
+/* Removing the text permanatly */
+.removed {
+  opacity: 0;
+}
+
+/* Fading in and out */
+.fade-out {
+  animation: fadeOut ease 6s;
+  animation-fill-mode: forwards;
+
+}
+@keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  50% {
+    opacity:.7;
+  }
+  100% {
+    opacity:0;
+
+  }
+}
