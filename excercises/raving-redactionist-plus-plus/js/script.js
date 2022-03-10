@@ -13,7 +13,7 @@ var soundMarker = new Audio('assets/sounds/marker.wav');
 var soundOffice = new Audio('assets/sounds/office.mp3');
 
 // The chance a span will be revealed per update
-const REVEAL_PROBABILITY = 0.07;
+const REVEAL_PROBABILITY = 0.1;
 // How often to update the spans (potentially revealing them)
 const UPDATE_FREQUENCY = 500;
 // A place to store the jQuery selection of all secrets
@@ -75,25 +75,25 @@ by each(), "this" refers to the current element that each has selected.
 function attemptReveal() {
   let r = Math.random();
   if (r < REVEAL_PROBABILITY) {
-    if ($(this).hasClass('removed') == false  ) {
+    if ($(this).hasClass('removed') == false) {
       $(this).removeClass(`redacted`);
       $(this).addClass(`revealed`);
 
       // Removes the text if you are out of time
       $(this).delay(6000).queue(function() {  // Wait for 6 seconds
-          if ($(this).hasClass('removed') == false && $(this).hasClass('fade-out') == true){
-            $(this).removeClass("fade-out").dequeue();
-            $(this).addClass("removed").dequeue();
-            $(this).removeClass("revealed").dequeue();
-
-          }
+        if ($(this).hasClass('removed') == false && $(this).hasClass('fade-out') == true) {
+          $(this).removeClass("fade-out").dequeue();
+          $(this).removeClass("revealed").dequeue();
+          $(this).addClass("removed").dequeue();
+        }
       });
     }
   } else {
     // Fades out the text
-    if ($(this).hasClass('fade-out') == false && $(this).hasClass('revealed') == true ) {
+    if ($(this).hasClass('fade-out') == false
+    && $(this).hasClass('removed') == false
+    && $(this).hasClass('revealed') == true ) {
       $(this).addClass(`fade-out`);
     }
-
   }
 }

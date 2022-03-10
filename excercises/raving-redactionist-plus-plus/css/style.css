@@ -24,7 +24,7 @@ p {
 /* Revealed elements need to be highlighted because it's a disaster! */
 .revealed {
   background-color: transparent; /* No background */
-  text-decoration: underline; /* underlined! */
+  /* text-decoration: underline; /* underlined! */
   color: red; /* Emergency! */
 }
 
@@ -35,16 +35,13 @@ p {
 
 /* Fading in and out */
 .fade-out {
-  animation: fadeOut ease 6s;
+  animation: fadeOut ease 4s;
   animation-fill-mode: forwards;
 
 }
 @keyframes fadeOut {
   0% {
     opacity:1;
-  }
-  50% {
-    opacity:.7;
   }
   100% {
     opacity:0;
