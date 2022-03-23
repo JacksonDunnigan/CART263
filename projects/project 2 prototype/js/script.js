@@ -1,6 +1,28 @@
+// Bar Tending Simulator
+// By Jacksonn Dunnigan
+// Student ID: 40212769
+
+"use strict";
+
+let spriteBackground;
+
+
+// Loads the images
+// preload() {
+//   spriteBackground = loadImage('assets/images/background.png');
+//
+// }
+
 window.addEventListener('load', function() {
 
+
+  // Canvas
   var canvas = document.getElementById('canvas');
+
+  // Map variables
+  let screenWidth = 800;
+  let screenHeight = 600;
+  let world;
 
   // module aliases
   var Engine = Matter.Engine,
@@ -11,7 +33,17 @@ window.addEventListener('load', function() {
       Events = Matter.Events,
       World = Matter.World,
       MouseConstraint = Matter.MouseConstraint,
-      Mouse = Matter.Mouse;
+      Mouse = Matter.Mouse,
+      Bounds = Matter.Bounds,
+      Composites = Matter.Composites,
+      Composite = Matter.Composite,
+      Constraint = Matter.Constraint,
+      Vertices = Matter.Vertices,
+      Common = Matter.Common;
+
+  // provide concave decomposition support library
+  // Common.setDecomp(require('poly-decomp'));
+
 
   // create an engine
   var engine = Engine.create();
@@ -22,26 +54,50 @@ window.addEventListener('load', function() {
       element: document.body,
       engine: engine,
       options: {
-           width: 800,
-           height: 600,
+           width: screenWidth,
+           height: screenHeight,
            showAngleIndicator: true,
        }
   });
 
-  // create two boxes and a ground
-  var boxA = Bodies.rectangle(400, 200, 80, 80);
-  var boxB = Bodies.rectangle(450, 50, 80, 80);
-  var ground = Bodies.rectangle(400, 610, 810, 60, { isStatic: true });
+  // create objects
+  // var vertices = [
+  //       {x : 0 , y : 0},
+  //       {x : 0 , y : 50},
+  //       {x : 25 , y : 25},
+  //       {x : 50 , y : 50},
+  //       {x : 50 , y : 0}
+  //     ]
 
+  var shakerLid = Composite.create();
+  Composite.addBody(shakerLid, Bodies.trapezoid(120, 275, 108, 35, .6, 200));
+  Composite.addBody(shakerLid, Bodies.rectangle(120, 200, 45, 35));
 
-  // add mouse control
-  // Events.on(engine, 'afterUpdate', function() {
-  //   if (mouseConstraint.mouse.button === -1) {
-  //           rock = Bodies.polygon(170, 450, 7, 20, rockOptions);
-  //           World.add(engine.world, rock);
-  //           elastic.bodyB = rock;
-  //       }
-  //   });
+  var shaker = Bodies.trapezoid(120, 475, 80, 190, -.35, 200);
+  var boxA = Bodies.rectangle(350, 475, 80, 80);
+  var boxB = Bodies.rectangle(450, 475, 80, 80);
+  var ground = Bodies.rectangle(400, 575, 810, 150, { isStatic: true });
+
+  // Composite.add(shakerLid, object) ;
+  // var shakerLidA
+  // var shakerLidB
+
+  // Composite.add(ropeB, Constraint.create({
+  //     bodyB: ropeB.bodies[0],
+  //     pointB: { x: -20, y: 0 },
+  //     pointA: { x: ropeB.bodies[0].position.x, y: ropeB.bodies[0].position.y },
+  //     stiffness: 0.5
+  // }));
+  var ice = Composites.stack(650, 400, 5, 3, 0, 0, function(x, y) {
+    return Bodies.rectangle(x, y, 25, 25, {
+      // render: {
+      //   fillStyle: 'orange',
+      //   strokeStyle: 'black'
+      // }
+    });
+  });
+  var objectList = [boxA, boxB, shaker,shakerLid, ground, ice]
+
   var mouse = Mouse.create(render.canvas),
       mouseConstraint = MouseConstraint.create(engine, {
           mouse: mouse,
@@ -59,7 +115,7 @@ window.addEventListener('load', function() {
   render.mouse = mouse;
 
   // add all of the bodies to the world
-  Composite.add(engine.world, [boxA, boxB, ground]);
+  Composite.add(engine.world, objectList);
 
   // run the renderer
   Render.run(render);
