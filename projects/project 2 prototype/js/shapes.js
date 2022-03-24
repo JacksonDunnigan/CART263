@@ -9,34 +9,22 @@ class Shapes {
     this.body;
   }
 
-  // Draws the shape
-  // display() {
-  //   var pos = this.body.position;
-  //   var angle = this.body.angle;
-  //   push();
-  //   translate(pos.x, pos.y);
-  //   rotate(angle);
-  //   rectMode(CENTER);
-  //   rect(0, 0, this.w, this.h);
-  //   pop();
-  // }
+// Displays the shape
   display() {
     var pos = this.body.position;
     var angle = this.body.angle;
     push();
     translate(pos.x, pos.y);
-    // rotate(angle);
     rectMode(CENTER);
-    // console.log(this.body.vertices[1].y);
     quad(this.body.vertices[1].x - pos.x, this.body.vertices[1].y - pos.y,
          this.body.vertices[2].x - pos.x, this.body.vertices[2].y - pos.y,
          this.body.vertices[3].x - pos.x, this.body.vertices[3].y - pos.y,
          this.body.vertices[0].x - pos.x, this.body.vertices[0].y - pos.y);
-    // rect(0, 0, this.w, this.h);
     pop();
   }
 
 }
+
 // Makes a rectangle
 class Rectangle extends Shapes {
   constructor(x, y, w, h, isStatic) {
@@ -66,6 +54,16 @@ class Trapezoid extends Shapes {
     World.add(world, this.body);
   }
 }
+
+
+
+
+
+
+
+
+
+
   // Displays the trapezoid
   // display() {
   //   var pos = this.body.position;
@@ -83,6 +81,18 @@ class Trapezoid extends Shapes {
   //   pop();
   // }
 // }
+
+  // Draws the shape
+  // display() {
+  //   var pos = this.body.position;
+  //   var angle = this.body.angle;
+  //   push();
+  //   translate(pos.x, pos.y);
+  //   rotate(angle);
+  //   rectMode(CENTER);
+  //   rect(0, 0, this.w, this.h);
+  //   pop();
+  // }
   // function Trapezoid(x, y, w, h, is angle, modifier, static) {
     // World.add(world, this.body);
 
