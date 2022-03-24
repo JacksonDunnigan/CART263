@@ -102,7 +102,9 @@ function setup() {
 
 // Runs the program
 function draw() {
-  background(0);
+  background(spriteBackground);
+  noStroke();
+  noSmooth();
   for (var i = 0; i < objectList.length; i++) {
     objectList[i].display();
   }

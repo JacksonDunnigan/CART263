@@ -22,7 +22,6 @@ class Shaker {
   display() {
 
     // Holding logic
-      // if (mouseConstraint.body != null) {
     for (var i = 1; i < this.compoundBody.parts.length; i++) {
       var currentBody = this.compoundBody.parts[i];
       var pos = currentBody.position;
@@ -30,22 +29,29 @@ class Shaker {
       var tempBounds = Bounds.create(currentBody.vertices);
 
       // Mouse interaction
-      if (mouseConstraint.body != null && Bounds.contains(tempBounds, {x: mouseX, y: mouseY})) {
-        console.log(i);
-
-        // Takes off the top
-        if (currentBody == this.topBody) {
-          Body.setPosition(this.topBody, {x:mouseX, y: mouseY})
-          // Body.setStatic(this.middleBody, true);
-          // Body.setStatic(this.bottomBody, true);
-        // Takes off the middle and top
-        } else if (i == 2) {
-
-        }
-      }
+      // if (mouseConstraint.body != null && Bounds.contains(tempBounds, {x: mouseX, y: mouseY})) {
+      //   // console.log(i);
+      //
+      //   // Takes off the top
+      //   // if (i == 1 && currentBody == this.topBody) {
+      //     // this.bodyList.splice(1);
+      //     // console.log(5);
+      //     // this.bodyList[i] = new Rectangle(mouseX, mouseY, 45, 35, 0);
+      //     // this.topBody = new Rectangle(mouseX, mouseY, 45, 35, 0);
+      //
+      //     //new Rectangle(120, 260, 45, 35, 0);
+      //     // Body.setPosition(this.topBody, {x:mouseX, y: mouseY});
+      //
+      //     // Body.setParts(this.compoundBody, [this.compoundBody, this.middleBody, this.bottomBody]);
+      //     // Body.setStatic(this.middleBody, true);
+      //     // Body.setStatic(this.bottomBody, true);
+      //   // Takes off the middle and top
+      //   } else if (i == 2) {
+      //
+      //   }
+      // }
 
       // Draws the shapes
-      // var pos = currentBody.position;
       push();
       translate(pos.x, pos.y);
       rectMode(CENTER);
