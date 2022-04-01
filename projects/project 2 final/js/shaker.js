@@ -51,10 +51,16 @@ class Shaker {
       //   }
       // }
 
+
       // Draws the shapes
       push();
       translate(pos.x, pos.y);
       rectMode(CENTER);
+      fill(cLightGrey);
+      // setGradient(this.body.vertices[0].x - pos.x, this.body.vertices[0].y - pos.y,
+      //             this.body.vertices[2].x,
+      //             this.body.vertices[2].y ,
+      //             cDarkGrey, cLightGrey, 1);
       quad(currentBody.vertices[1].x - pos.x, currentBody.vertices[1].y - pos.y,
            currentBody.vertices[2].x - pos.x, currentBody.vertices[2].y - pos.y,
            currentBody.vertices[3].x - pos.x, currentBody.vertices[3].y - pos.y,

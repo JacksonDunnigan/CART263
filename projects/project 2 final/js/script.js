@@ -12,21 +12,16 @@ let objectList = [];
 let canvas;
 
 // Defines sprites
-let spriteBackground;
+let spriteBackground, spriteTable;
+
+// Defines colors
+let cDarkGrey, cLightGrey;
 
 // Defines objects
-let shakerLid;
-let shaker;
-let boxA;
-let boxB;
-let ground;
-let ice;
+let shakerLid, shaker, boxA, boxB, ground, ice;
 
 // Implements Matter.js modules
-let engine;
-let render;
-let mouse;
-let mouseConstraint;
+let engine, render, mouse, mouseConstraint;
 let Engine = Matter.Engine,
     Render = Matter.Render,
     Runner = Matter.Runner,
@@ -44,10 +39,15 @@ let Engine = Matter.Engine,
     Body = Matter.Body;
 
 
-// Loads images and sounds
+// Loads images, sounds and colours
 function preload() {
+  // Defines
   spriteBackground = loadImage('assets/images/background.png');
+  spriteTable = loadImage('assets/images/table.png');
 
+  // Defines colours
+  cDarkGrey = color(58, 59, 60);
+  cLightGrey = color(176, 179, 184);
 }
 
 // Sets up the canvas
@@ -59,46 +59,53 @@ function setup() {
   world = engine.world;
   Engine.run(engine);
 
-  // Creates the ground
-  ground = new Rectangle(400, 600, 810, 150, 1);
-
   // Creates objects
+  ground = new Rectangle(400, 550, 810, 100, 1, spriteTable);
   boxA = new Rectangle(350, -100, 80, 80, 0);
   boxB = new Rectangle(375, 100, 80, 80, 0);
-
-  // Add bodies
   shaker = new Shaker();
-  // var shakerA = new Trapezoid(260, 100, 80, 190, -.35, 200, 0);
-  // var shakerB = new Trapezoid(120, 275, 108, 35, .6, 200, 0);
-  // var shakerC = new Rectangle(120, 200, 45, 35, 0);
-  // shaker = Body.create({ parts: [shakerA.body, shakerB.body, shakerC.body]});
 
-  objectList.push(ground, boxA, boxB, shaker);//, shakerA, shakerB, shakerC);
-
-  // Creates Ice
-  // var ice = Composites.stack(650, 400, 5, 3, 0, 0, function(x, y) {
-  //   return Bodies.rectangle(x, y, 25, 25, {
-  //     render: {
-  //       // fillStyle: '#FFFFFF',
-  //       // strokeStyle: 'black'
-  //     }
-  //   });
-  // });
+  // Adds bodies to the object list
+  objectList.push(ground, boxA, boxB, shaker);
 
   // Creates the mouse for interaction
   mouse = Mouse.create(canvas.elt);
   mouseConstraint = MouseConstraint.create(engine, {
-      mouse: mouse,
-      pixelRatio: pixelDensity(),
-      constraint: {
-          stiffness: 0.4,
-          render: {
-              visible: false
-          }
-      }
-    });
+    mouse: mouse,
+    pixelRatio: pixelDensity(),
+    constraint: {
+        stiffness: 0.4,
+        render: {
+            visible: false
+        }
+    }
+  });
   World.add(world, mouseConstraint);
 }
+
+// Creates gradients
+function setGradient(x, y, w, h, c1, c2, axis) {
+  noFill();
+
+  if (axis === 1) {
+    // Top to bottom gradient
+    for (let i = y; i <= y + h; i++) {
+      let inter = map(i, y, y + h, 0, 1);
+      let c = lerpColor(c1, c2, inter);
+      stroke(c);
+      line(x, i, x + w, i);
+    }
+  } else if (axis === 2) {
+    // Left to right gradient
+    for (let i = x; i <= x + w; i++) {
+      let inter = map(i, x, x + w, 0, 1);
+      let c = lerpColor(c1, c2, inter);
+      stroke(c);
+      line(i, y, i, y + h);
+    }
+  }
+}
+
 
 // Runs the program
 function draw() {
