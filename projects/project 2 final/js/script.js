@@ -13,12 +13,12 @@ let canvas;
 
 // Defines sprites
 let spriteBackground, spriteTable;
-
+let shakerGraphics;
 // Defines colors
 let cDarkGrey, cLightGrey;
 
 // Defines objects
-let shakerLid, shaker, boxA, boxB, ground, ice;
+let ground, wallA, wallB, cieling, shaker, boxA, boxB, ice;
 
 // Implements Matter.js modules
 let engine, render, mouse, mouseConstraint;
@@ -58,18 +58,22 @@ function setup() {
   engine = Engine.create();
   world = engine.world;
   Engine.run(engine);
-
+  shakerGraphics = createGraphics(110, 260);
   // Creates objects
-  ground = new Rectangle(400, 550, 810, 100, 1, spriteTable);
-  boxA = new Rectangle(350, -100, 80, 80, 0);
-  boxB = new Rectangle(375, 100, 80, 80, 0);
+  ground = new Ground(400, 550, 810, 100, 0, spriteTable);
+  wallA = new Ground(-30, 300, 60, 600, 0, spriteTable);
+  wallB = new Ground(830, 300, 60, 600, 0, spriteTable);
+  cieling = new Ground(400, -30, 800, 60, 0, spriteTable);
+  boxA = new Rectangle(350, 460, 80, 80, 0);
+  boxB = new Rectangle(500, 460, 80, 80, 0);
   shaker = new Shaker();
 
   // Adds bodies to the object list
-  objectList.push(ground, boxA, boxB, shaker);
+  objectList.push(ground, wallA, wallB, boxA, boxB, shaker);
 
   // Creates the mouse for interaction
   mouse = Mouse.create(canvas.elt);
+  mouse.pixelRatio = pixelDensity();
   mouseConstraint = MouseConstraint.create(engine, {
     mouse: mouse,
     pixelRatio: pixelDensity(),
@@ -84,27 +88,27 @@ function setup() {
 }
 
 // Creates gradients
-function setGradient(x, y, w, h, c1, c2, axis) {
-  noFill();
-
-  if (axis === 1) {
-    // Top to bottom gradient
-    for (let i = y; i <= y + h; i++) {
-      let inter = map(i, y, y + h, 0, 1);
-      let c = lerpColor(c1, c2, inter);
-      stroke(c);
-      line(x, i, x + w, i);
-    }
-  } else if (axis === 2) {
-    // Left to right gradient
-    for (let i = x; i <= x + w; i++) {
-      let inter = map(i, x, x + w, 0, 1);
-      let c = lerpColor(c1, c2, inter);
-      stroke(c);
-      line(i, y, i, y + h);
-    }
-  }
-}
+// function setGradient(x, y, w, h, c1, c2, axis) {
+//   noFill();
+//
+//   if (axis === 1) {
+//     // Top to bottom gradient
+//     for (let i = y; i <= y + h; i++) {
+//       let inter = map(i, y, y + h, 0, 1);
+//       let c = lerpColor(c1, c2, inter);
+//       stroke(c);
+//       line(x, i, x + w, i);
+//     }
+//   } else if (axis === 2) {
+//     // Left to right gradient
+//     for (let i = x; i <= x + w; i++) {
+//       let inter = map(i, x, x + w, 0, 1);
+//       let c = lerpColor(c1, c2, inter);
+//       stroke(c);
+//       line(i, y, i, y + h);
+//     }
+//   }
+// }
 
 
 // Runs the program
