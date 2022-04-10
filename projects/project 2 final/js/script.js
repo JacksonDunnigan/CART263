@@ -12,13 +12,14 @@ let objectList = [];
 let canvas;
 
 // Defines sprites
-let spriteBackground, spriteTable;
-let shakerGraphics;
+let spriteBackground, spriteTable, spriteGlass, spriteShaker;
+// let shakerGraphics, glassGraphics;
+
 // Defines colors
 let cDarkGrey, cLightGrey;
 
 // Defines objects
-let ground, wallA, wallB, cieling, shaker, boxA, boxB, ice;
+let ground, wallA, wallB, cieling, shaker, glass, boxB, ice;
 
 // Implements Matter.js modules
 let engine, render, mouse, mouseConstraint;
@@ -44,6 +45,8 @@ function preload() {
   // Defines
   spriteBackground = loadImage('assets/images/background.png');
   spriteTable = loadImage('assets/images/table.png');
+  spriteGlass = loadImage('assets/images/glass.png');
+  spriteShaker = loadImage('assets/images/shaker.png');
 
   // Defines colours
   cDarkGrey = color(58, 59, 60);
@@ -58,18 +61,18 @@ function setup() {
   engine = Engine.create();
   world = engine.world;
   Engine.run(engine);
-  shakerGraphics = createGraphics(110, 260);
+  // shakerGraphics = createGraphics(110, 260);
   // Creates objects
   ground = new Ground(400, 550, 810, 100, 0, spriteTable);
   wallA = new Ground(-30, 300, 60, 600, 0, spriteTable);
   wallB = new Ground(830, 300, 60, 600, 0, spriteTable);
   cieling = new Ground(400, -30, 800, 60, 0, spriteTable);
-  boxA = new Rectangle(350, 460, 80, 80, 0);
-  boxB = new Rectangle(500, 460, 80, 80, 0);
+
+  glass = new Glass(350, 460, 100, 105, 0, spriteGlass);
   shaker = new Shaker();
 
   // Adds bodies to the object list
-  objectList.push(ground, wallA, wallB, boxA, boxB, shaker);
+  objectList.push(ground, wallA, wallB, glass, shaker);
 
   // Creates the mouse for interaction
   mouse = Mouse.create(canvas.elt);

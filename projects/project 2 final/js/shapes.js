@@ -21,22 +21,6 @@ class Shapes {
          this.body.vertices[2].x - pos.x, this.body.vertices[2].y - pos.y,
          this.body.vertices[3].x - pos.x, this.body.vertices[3].y - pos.y,
          this.body.vertices[0].x - pos.x, this.body.vertices[0].y - pos.y);
-
-     // setGradient(this.body.vertices[0].x - pos.x, this.body.vertices[0].y - pos.y,
-     //             this.body.vertices[2].x,
-     //             this.body.vertices[2].y ,
-     //             cDarkGrey, cLightGrey, 1);
-
-    // // If there is a sprite
-    // if (this.sprite != 0){
-    //   imageMode(CORNERS);
-    //   image(this.sprite,
-    //     this.body.vertices[1].x - pos.x,
-    //     this.body.vertices[1].y - pos.y,
-    //     this.body.vertices[3].x - pos.x,
-    //     this.body.vertices[3].y - pos.y);
-    //
-    // }
     pop();
   }
 }
@@ -58,6 +42,7 @@ class Rectangle extends Shapes {
     World.add(world, this.body);
   }
 }
+
 
 // Makes a ground
 class Ground extends Shapes {
