@@ -10,7 +10,12 @@ class Shapes {
     this.sprite = sprite || 0;
   }
 
-// Displays the shape
+  // Moving logic
+  move() {
+
+  }
+
+  // Displays the shape
   display() {
     var pos = this.body.position;
     var angle = this.body.angle;

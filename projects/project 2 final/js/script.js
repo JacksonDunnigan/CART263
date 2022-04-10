@@ -120,6 +120,9 @@ function draw() {
   noStroke();
   noSmooth();
   for (var i = 0; i < objectList.length; i++) {
+    objectList[i].move();
+  }
+  for (var i = 0; i < objectList.length; i++) {
     objectList[i].display();
   }
 }

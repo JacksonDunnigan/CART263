@@ -4,25 +4,40 @@ class Glass extends Shapes {
     super(x, y, w, h, isStatic, sprite);
     var options = {
       friction: 0.3,
-      restitution: 0.6,
+      // restitution: 0.1,
+      intertia: 5,
+      frictionAir: 0.1,
+      // mass: 100
     };
     this.body = Bodies.rectangle(x, y, w, h, {options});
     World.add(world, this.body);
+    this.bounds = Bounds.create(this.body.vertices);
 
     // Creates graphics
-    // push();
-
+    this.canRotate = true;
     this.graphics = createGraphics(this.w, this.h);
     this.graphics.noStroke();
     this.graphics.fill(255,255,255,70);
     this.graphics.noSmooth();
-
-    // this.graphics.rect(0, 0, this.w, this.h);
-    // this.graphics.rect(0, this.h * .75, this.w, this.h);
     this.graphics.image(this.sprite, 0, 0, this.w, this.h);
-    // pop();
 
   }
+  // Mouse interaction
+  move() {
+    Bounds.update(this.bounds,this.body.vertices,0);
+
+    if (mouseConstraint.body != null && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
+      Body.setAngularVelocity(this.body, 0);
+      // Body.setVelocity(this.compoundBody, 0);
+
+       if (this.body.angle % Math.PI > 0 && this.body.angle % Math.PI < Math.PI){
+         Body.rotate(this.body, -0.015);
+       } else if (this.body.angle % Math.PI < 0 && this.body.angle % Math.PI < Math.PI) {
+         Body.rotate(this.body, 0.015);
+      }
+    }
+  }
+
   // Displays the shape
   display() {
     var pos = this.body.position;
@@ -32,21 +47,7 @@ class Glass extends Shapes {
     rotate(angle);
     imageMode(CENTER);
     rectMode(CENTER);
-    // fill(200, 216, 230, 70);
-    // pointLight(250, 250, 250, width/2, height/2, 50);
-    // glassGraphics
-    // this.graphics.background('rgba(255,255,255,80)');
-
     image(this.graphics,0,0,this.w, this.h)
-    // rect(0, 0, this.w, this.h);
-    // quad(this.body.vertices[1].x - pos.x, this.body.vertices[1].y - pos.y,
-    //      this.body.vertices[2].x - pos.x, this.body.vertices[2].y - pos.y,
-    //      this.body.vertices[3].x - pos.x, this.body.vertices[3].y - pos.y,
-    //      this.body.vertices[0].x - pos.x, this.body.vertices[0].y - pos.y);
-    // quad(this.body.vertices[1].x - pos.x, this.body.vertices[1].y - pos.y+75,
-    //      this.body.vertices[2].x - pos.x, this.body.vertices[2].y - pos.y,
-    //      this.body.vertices[3].x - pos.x, this.body.vertices[3].y - pos.y,
-    //      this.body.vertices[0].x - pos.x, this.body.vertices[0].y - pos.y+75);
     pop();
   }
 }
