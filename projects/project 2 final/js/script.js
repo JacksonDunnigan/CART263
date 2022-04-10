@@ -11,15 +11,18 @@ let world;
 let objectList = [];
 let canvas;
 
+// Control variables
+let scrollDelta = 0;
+let scrolling = false;
+
 // Defines sprites
-let spriteBackground, spriteTable, spriteGlass, spriteShaker;
-// let shakerGraphics, glassGraphics;
+let spriteBackground, spriteTable, spriteGlass, spriteIce, spriteShaker, spriteBuckets;
 
 // Defines colors
 let cDarkGrey, cLightGrey;
 
 // Defines objects
-let ground, wallA, wallB, cieling, shaker, glass, boxB, ice;
+let ground, wallA, wallB, buckets, cieling, shaker, glass, boxB, ice;
 
 // Implements Matter.js modules
 let engine, render, mouse, mouseConstraint;
@@ -47,6 +50,8 @@ function preload() {
   spriteTable = loadImage('assets/images/table.png');
   spriteGlass = loadImage('assets/images/glass.png');
   spriteShaker = loadImage('assets/images/shaker.png');
+  spriteBuckets = loadImage('assets/images/buckets.png');
+  spriteIce = loadImage('assets/images/ice.png');
 
   // Defines colours
   cDarkGrey = color(58, 59, 60);
@@ -56,23 +61,26 @@ function preload() {
 // Sets up the canvas
 function setup() {
   canvas = createCanvas(canvasWidth, canvasHeight);
-
   // Creates an engine
   engine = Engine.create();
   world = engine.world;
   Engine.run(engine);
 
-  // Creates objects
+  // Creates Static objects
   ground = new Ground(400, 540, 810, 130, 0, spriteTable);
   wallA = new Ground(-30, 300, 60, 600, 0, spriteTable);
   wallB = new Ground(830, 300, 60, 600, 0, spriteTable);
   cieling = new Ground(400, -30, 800, 60, 0, spriteTable);
+  buckets = new Ground(400, 570, 800, 90, 0, spriteBuckets);
 
+
+  // Creates interactable objects
   glass = new Glass(350, 460, 100, 105, 0, spriteGlass);
   shaker = new Shaker();
+  ice = new Ice(400, 460, 50, 50, 0, spriteIce);
 
   // Adds bodies to the object list
-  objectList.push(ground, wallA, wallB, glass, shaker);
+  objectList.push(ground, wallA, wallB, buckets, glass, shaker, ice);
 
   // Creates the mouse for interaction
   mouse = Mouse.create(canvas.elt);
@@ -90,6 +98,11 @@ function setup() {
   World.add(world, mouseConstraint);
 }
 
+// Mouse Scrolling
+function mouseWheel(event) {
+  scrolling = true;
+  scrollDelta = event.delta / abs(event.delta)
+}
 
 // Runs the program
 function draw() {

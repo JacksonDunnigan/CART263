@@ -1,6 +1,8 @@
 // Coctail shaker
-class Shaker {
+class Shaker extends InteractableShapes{
   constructor() {
+    super(110, 0, 0, 0, false, spriteShaker);
+
     // Size variables
     this.x = 110;
     this.y1 = 270;
@@ -14,38 +16,18 @@ class Shaker {
     this.bodyList = [this.bottomBody,this.middleBody,this.topBody];
 
     // Connects the objects
-    this.compoundBody = Body.create({
-        parts: this.bodyList,
-        // mass: 200,
-        // restitution: 0
-
+    this.body = Body.create({
+        parts: this.bodyList
     });
-    Composite.add(world, this.compoundBody);
-    this.bounds = Bounds.create(this.compoundBody.vertices);
-
-    // Body.setMass(this.compoundBody, 100);
+    Composite.add(world, this.body);
+    this.bounds = Bounds.create(this.body.vertices);
 
     // Creates graphics
     this.canRotate = true;
-    this.sprite = spriteShaker;
     this.graphics = createGraphics(110, 260);
     this.graphics.noSmooth();
     this.graphics.image(spriteShaker, 0, -8, 110, 260);
 
-  }
-  // Mouse interaction
-  move() {
-    Bounds.update(this.bounds,this.compoundBody.vertices,0);
-
-    if (mouseConstraint.body != null && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
-      Body.setAngularVelocity(this.compoundBody, 0);
-
-       if (this.compoundBody.angle % Math.PI > 0 && this.compoundBody.angle % Math.PI < Math.PI){
-         Body.rotate(this.compoundBody, -0.015);
-       } else if (this.compoundBody.angle % Math.PI < 0 && this.compoundBody.angle % Math.PI < Math.PI) {
-         Body.rotate(this.compoundBody, 0.015);
-      }
-    }
   }
   // Draws the shaker
   display() {
@@ -74,8 +56,8 @@ class Shaker {
 
       // Draws the graphics
       push();
-        pos = this.compoundBody.parts[0].position;
-        angle = this.compoundBody.parts[0].angle;
+        pos = this.body.parts[0].position;
+        angle = this.body.parts[0].angle;
         translate(pos.x, pos.y);
         rotate(angle);
         imageMode(CENTER);

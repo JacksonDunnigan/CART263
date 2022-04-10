@@ -1,6 +1,9 @@
-// Makes the Glass
-class Glass extends InteractableShapes {
+// Makes the ice
+class Ice extends InteractableShapes {
   constructor(x, y, w, h, isStatic, sprite) {
+    w = random(w-5,w+5);
+    w = h;
+    
     super(x, y, w, h, isStatic, sprite);
     var options = {
       friction: 0.3,

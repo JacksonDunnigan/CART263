@@ -8,6 +8,7 @@ class Shapes {
     this.static = isStatic;
     this.body;
     this.sprite = sprite || 0;
+    this.bounds = null;
   }
 
   // Moving logic
@@ -30,26 +31,58 @@ class Shapes {
   }
 }
 
-// Makes a rectangle
-class Rectangle extends Shapes {
+// Class for shapes that the player can interact with
+class InteractableShapes extends Shapes {
   constructor(x, y, w, h, isStatic, sprite) {
     super(x, y, w, h, isStatic, sprite);
-    var options = {
-      friction: 0.3,
-      restitution: 0.6,
-    };
+  }
 
-    if (this.static == 0) {
-      this.body = Bodies.rectangle(x, y, w, h, {options});
-    } else {
-      this.body = Bodies.rectangle(x, y, w, h, { isStatic: true });
+  // Moving logic
+  move() {
+    Bounds.update(this.bounds,this.body.vertices,0);
+    if (mouseConstraint.body != null && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
+      if (scrolling == true) {
+        Body.setAngularVelocity(this.body, 0);
+        Body.rotate(this.body, scrollDelta / 3);
+      }
+      scrolling = false;
     }
-    World.add(world, this.body);
+  }
+
+  // Displays the shape
+  display() {
+    var pos = this.body.position;
+    var angle = this.body.angle;
+    push();
+    translate(pos.x, pos.y);
+    rectMode(CENTER);
+    quad(this.body.vertices[1].x - pos.x, this.body.vertices[1].y - pos.y,
+         this.body.vertices[2].x - pos.x, this.body.vertices[2].y - pos.y,
+         this.body.vertices[3].x - pos.x, this.body.vertices[3].y - pos.y,
+         this.body.vertices[0].x - pos.x, this.body.vertices[0].y - pos.y);
+    pop();
   }
 }
+// Makes a rectangle
+// class Rectangle extends Shapes {
+//   constructor(x, y, w, h, isStatic, sprite) {
+//     super(x, y, w, h, isStatic, sprite);
+//     var options = {
+//       friction: 0.3,
+//       restitution: 0.6,
+//     };
+//
+//     if (this.static == 0) {
+//       this.body = Bodies.rectangle(x, y, w, h, {options});
+//     } else {
+//       this.body = Bodies.rectangle(x, y, w, h, { isStatic: true });
+//     }
+//     World.add(world, this.body);
+//   }
+// }
 
 
-// Makes a ground
+// Class for static ground elements
 class Ground extends Shapes {
   constructor(x, y, w, h, isStatic, sprite) {
     super(x, y, w, h, isStatic, sprite);
