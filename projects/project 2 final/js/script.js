@@ -73,7 +73,6 @@ function setup() {
   cieling = new Ground(400, -30, 800, 60, 0, spriteTable);
   buckets = new Ground(400, 570, 800, 90, 0, spriteBuckets);
 
-
   // Creates interactable objects
   glass = new Glass(350, 460, 100, 105, 0, spriteGlass);
   shaker = new Shaker();
