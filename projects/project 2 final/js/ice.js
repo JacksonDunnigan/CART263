@@ -3,7 +3,7 @@ class Ice extends InteractableShapes {
   constructor(x, y, w, h, isStatic, sprite) {
     w = random(w-5,w+5);
     w = h;
-    
+
     super(x, y, w, h, isStatic, sprite);
     var options = {
       friction: 0.3,
@@ -11,6 +11,8 @@ class Ice extends InteractableShapes {
       frictionAir: 0.1,
     };
     this.body = Bodies.rectangle(x, y, w, h, {options});
+    this.body.collisionFilter = this.canCollide;
+
     World.add(world, this.body);
     this.bounds = Bounds.create(this.body.vertices);
 

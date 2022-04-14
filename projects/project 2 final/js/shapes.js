@@ -9,6 +9,16 @@ class Shapes {
     this.body;
     this.sprite = sprite || 0;
     this.bounds = null;
+    this.noCollide = {
+      'group': -1,
+      'category': 0x0001,
+      'mask': 0,
+    };
+    this.canCollide = {
+      'group': 1,
+      'category': 0x0001,
+      'mask': 0,
+    };
   }
 
   // Moving logic
@@ -40,7 +50,9 @@ class InteractableShapes extends Shapes {
   // Moving logic
   move() {
     Bounds.update(this.bounds,this.body.vertices,0);
-    if (mouseConstraint.body != null && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
+    if (mouseConstraint.body == this.body && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
+      // console.log(mouseConstraint.constraint);
+
       if (scrolling == true) {
         Body.setAngularVelocity(this.body, 0);
         Body.rotate(this.body, scrollDelta / 3);
@@ -87,6 +99,7 @@ class Ground extends Shapes {
   constructor(x, y, w, h, isStatic, sprite) {
     super(x, y, w, h, isStatic, sprite);
     this.body = Bodies.rectangle(x, y, w, h, { isStatic: true });
+    this.body.collisionFilter = this.canCollide;
     World.add(world, this.body);
   }
   //Draws the boundaries

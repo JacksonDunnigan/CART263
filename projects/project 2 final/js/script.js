@@ -94,6 +94,9 @@ function setup() {
         }
     }
   });
+  mouseConstraint.collisionFilter = {
+    'group': 1,
+  };
   World.add(world, mouseConstraint);
 }
 

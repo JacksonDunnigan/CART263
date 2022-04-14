@@ -13,12 +13,13 @@ class Shaker extends InteractableShapes{
     this.topBody = Bodies.rectangle(this.x, this.y1, 45, 35);//new Rectangle(120, 260, 45, 35, 0);
     this.middleBody = Bodies.trapezoid(this.x, this.y2, 108, 25, .6, 200);//new Trapezoid(120, 295, 108, 35, .6, 200, 0);
     this.bottomBody = Bodies.trapezoid(this.x, this.y3, 80, 190, -.35, 200);//new Trapezoid(120, 400, 80, 190, -.35, 200, 0);
-    this.bodyList = [this.bottomBody,this.middleBody,this.topBody];
+    this.bodyList = [this.bottomBody, this.middleBody, this.topBody];
 
     // Connects the objects
     this.body = Body.create({
         parts: this.bodyList
     });
+    this.body.collisionFilter = this.canCollide;
     Composite.add(world, this.body);
     this.bounds = Bounds.create(this.body.vertices);
 
