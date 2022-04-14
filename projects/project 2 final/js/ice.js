@@ -9,6 +9,7 @@ class Ice extends InteractableShapes {
       friction: 0.3,
       intertia: 5,
       frictionAir: 0.1,
+      mass: 5
     };
     this.body = Bodies.rectangle(x, y, w, h, {options});
     this.body.collisionFilter = this.canCollide;

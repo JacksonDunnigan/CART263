@@ -17,7 +17,8 @@ class Glass extends InteractableShapes {
     this.bodyList = [this.leftBody, this.middleBody, this.rightBody];
     this.holdingConstraint;
     this.body = Body.create({
-        parts: this.bodyList
+        parts: this.bodyList,
+        density: 0.5,
     });
     this.body.collisionFilter = this.canCollide;
     World.add(world, this.body);
@@ -35,8 +36,10 @@ class Glass extends InteractableShapes {
   }
   // Manually moves the glass
   move() {
+
     Bounds.update(this.bounds,this.body.vertices,0);
     if ((mouseConstraint.body == null || mouseConstraint.body === this.body) && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
+      Body.setAngularVelocity(this.body, 0);
 
       if (mouseIsPressed === true){
         if (this.holdingConstraint === undefined){
@@ -58,7 +61,7 @@ class Glass extends InteractableShapes {
 
 
        // Rotating logic
-       console.log(scrolling);
+       // console.log(scrolling);
       if (scrolling == true) {
         Body.setAngularVelocity(this.body, 0);
         Body.rotate(this.body, scrollDelta / 3);

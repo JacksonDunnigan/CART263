@@ -10,6 +10,7 @@ let canvasHeight = 600;
 let world;
 let objectList = [];
 let canvas;
+let state = 'menu';
 
 // Control variables
 let scrollDelta = 0;
@@ -111,6 +112,37 @@ function draw() {
   background(spriteBackground);
   noStroke();
   noSmooth();
+
+  // Game states
+  if (state === 'menu'){
+    menu();
+  } else if (state === 'simulation'){
+    simulation();
+  }
+}
+
+// Switching between game states
+function mousePressed() {
+  if (state === 'menu'){
+    state = 'simulation';
+  }
+}
+
+// Main Menu
+function menu() {
+  push();
+  textSize(56);
+  fill(255);
+  textAlign(LEFT);
+  text(`Bartending Simulator`, width *.017, height *.91);
+  textSize(18);
+  text(`By Jackson Dunnigan`, width *.02, height *.95);
+  pop();
+}
+
+
+// Runs the simulation
+function simulation() {
   for (var i = 0; i < objectList.length; i++) {
     objectList[i].move();
   }
