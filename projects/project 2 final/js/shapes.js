@@ -50,7 +50,8 @@ class InteractableShapes extends Shapes {
   // Moving logic
   move() {
     Bounds.update(this.bounds,this.body.vertices,0);
-    if (mouseConstraint.body == this.body && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
+    if (mouseConstraint.body === this.body
+      && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
       // console.log(mouseConstraint.constraint);
 
       if (scrolling == true) {

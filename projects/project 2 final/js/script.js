@@ -9,6 +9,7 @@ let canvasWidth = 800;
 let canvasHeight = 600;
 let world;
 let objectList = [];
+let menuObjectList = [];
 let canvas;
 let state = 'menu';
 
@@ -75,12 +76,13 @@ function setup() {
   buckets = new Ground(400, 570, 800, 90, 0, spriteBuckets);
 
   // Creates interactable objects
-  glass = new Glass(350, 460, 100, 105, 0, spriteGlass);
+  glass = new Glass(220, 460, 100, 105, 0, spriteGlass);
   shaker = new Shaker();
   ice = new Ice(400, 460, 50, 50, 0, spriteIce);
 
   // Adds bodies to the object list
-  objectList.push(ground, wallA, wallB, buckets, glass, shaker, ice);
+  objectList.push(ground, wallA, wallB, buckets, shaker, ice, glass);
+  menuObjectList.push(ground, shaker, glass);
 
   // Creates the mouse for interaction
   mouse = Mouse.create(canvas.elt);
@@ -130,6 +132,9 @@ function mousePressed() {
 
 // Main Menu
 function menu() {
+  for (var i = 0; i < menuObjectList.length; i++) {
+    menuObjectList[i].display();
+  }
   push();
   textSize(56);
   fill(255);

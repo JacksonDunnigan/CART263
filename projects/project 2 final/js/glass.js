@@ -38,7 +38,8 @@ class Glass extends InteractableShapes {
   move() {
 
     Bounds.update(this.bounds,this.body.vertices,0);
-    if ((mouseConstraint.body == null || mouseConstraint.body === this.body) && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
+    if ((mouseConstraint.body === null || mouseConstraint.body === this.body)
+    && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
       Body.setAngularVelocity(this.body, 0);
 
       if (mouseIsPressed === true){
@@ -51,7 +52,13 @@ class Glass extends InteractableShapes {
            });
            World.add(world, this.holdingConstraint);
         }
-
+        // Rotating logic
+       // console.log(scrolling);
+        if (scrolling == true) {
+          Body.setAngularVelocity(this.body, 0);
+          Body.rotate(this.body, scrollDelta / 3);
+        }
+        scrolling = false;
       } else {
         if (this.holdingConstraint != undefined) {
           World.remove(world, this.holdingConstraint, true);
@@ -60,13 +67,7 @@ class Glass extends InteractableShapes {
       }
 
 
-       // Rotating logic
-       // console.log(scrolling);
-      if (scrolling == true) {
-        Body.setAngularVelocity(this.body, 0);
-        Body.rotate(this.body, scrollDelta / 3);
-      }
-      scrolling = false;
+       //
     }
   }
   // Displays the shape
