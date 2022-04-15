@@ -10,7 +10,7 @@ class Shapes {
     this.sprite = sprite || 0;
     this.bounds = null;
     this.noCollide = {
-      'group': -1,
+      'group': 2,
       'category': 0x0001,
       'mask': 0,
     };
@@ -23,7 +23,6 @@ class Shapes {
 
   // Moving logic
   move() {
-
   }
 
   // Displays the shape
@@ -52,7 +51,6 @@ class InteractableShapes extends Shapes {
     Bounds.update(this.bounds,this.body.vertices,0);
     if (mouseConstraint.body === this.body
       && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
-      // console.log(mouseConstraint.constraint);
 
       if (scrolling == true) {
         Body.setAngularVelocity(this.body, 0);
@@ -76,24 +74,6 @@ class InteractableShapes extends Shapes {
     pop();
   }
 }
-// Makes a rectangle
-// class Rectangle extends Shapes {
-//   constructor(x, y, w, h, isStatic, sprite) {
-//     super(x, y, w, h, isStatic, sprite);
-//     var options = {
-//       friction: 0.3,
-//       restitution: 0.6,
-//     };
-//
-//     if (this.static == 0) {
-//       this.body = Bodies.rectangle(x, y, w, h, {options});
-//     } else {
-//       this.body = Bodies.rectangle(x, y, w, h, { isStatic: true });
-//     }
-//     World.add(world, this.body);
-//   }
-// }
-
 
 // Class for static ground elements
 class Ground extends Shapes {
@@ -123,69 +103,49 @@ class Ground extends Shapes {
   }
 }
 
-// Makes a trapezoid
-// class Trapezoid extends Shapes {
-//   constructor(x, y, w, h, angle, modifier, isStatic) {
-//     super(x, y, w, h, isStatic);
-//
-//     if (this.static == 0) {
-//       this.body = Bodies.trapezoid(x, y, w, h, angle, modifier);
-//     } else {
-//       this.body = Bodies.trapezoid(x, y, w, h, angle, modifier);
-//     }
-//     console.log(this.body.vertices);
-//     World.add(world, this.body);
-//   }
-// }
-//
-//
+// Buckets
+class Buckets extends Ground {
+  constructor(x, y, w, h, isStatic, sprite) {
+    super(x, y, w, h, isStatic, sprite);
+    this.bounds = Bounds.create(this.body.vertices);
+    this.inBounds = false;
+    this.newIce = null;
+    this.holdingConstraint = null;
+  }
+  move(){
+    // Creates ice cubes and limes
+    Bounds.update(this.bounds, this.body.vertices,0);
+    this.inBounds = (Bounds.contains(this.bounds, {x: mouseX, y: mouseY}));
 
+    // Only creates ice cubes if the mouse is within the boundaries of the buckets
+    if (this.inBounds) {
+      if (mouseIsPressed && this.newIce == null) {
+        console.log(1);
+        this.inBounds = true;
+        var size = random(40, 50);
 
+        // Creates the ice
+        this.newIce = new Ice(mouseX, mouseY, size, size, 0, spriteIce);
 
+        // Creates the constraint
+        this.holdingConstraint = Constraint.create({
+             pointB: mouseConstraint.mouse.position,
+             bodyA: this.newIce.body,
+             stiffness: 0.9,
+         });
+         
+        // Adds constraints to the world
+        World.add(world, this.holdingConstraint);
+        objectList.push(this.newIce);
+      }
 
-
-
-
-
-  // Displays the trapezoid
-  // display() {
-  //   var pos = this.body.position;
-  //   var angle = this.body.angle;
-  //   push();
-  //   translate(pos.x, pos.y);
-  //   // rotate(angle);
-  //   rectMode(CENTER);
-  //   // console.log(this.body.vertices[1].y);
-  //   quad(this.body.vertices[1].x - pos.x, this.body.vertices[1].y - pos.y,
-  //        this.body.vertices[2].x - pos.x, this.body.vertices[2].y - pos.y,
-  //        this.body.vertices[3].x - pos.x, this.body.vertices[3].y - pos.y,
-  //        this.body.vertices[0].x - pos.x, this.body.vertices[0].y - pos.y);
-  //   // rect(0, 0, this.w, this.h);
-  //   pop();
-  // }
-// }
-
-  // Draws the shape
-  // display() {
-  //   var pos = this.body.position;
-  //   var angle = this.body.angle;
-  //   push();
-  //   translate(pos.x, pos.y);
-  //   rotate(angle);
-  //   rectMode(CENTER);
-  //   rect(0, 0, this.w, this.h);
-  //   pop();
-  // }
-  // function Trapezoid(x, y, w, h, is angle, modifier, static) {
-    // World.add(world, this.body);
-
-    // Draws the shape
-    // this.show = function() {
-    //   var pos = this.body.position;
-    //   var angle = this.body.angle;
-    //   push();
-    //   translate(pos.x, pos.y);
-    //   // rotate(radians(angle));
-    //   rect(0, 0, this.w, this.h);
-    //   pop();
-    // }
+    // Switches the constraints back to normal
+    } else {
+      if (this.newIce != null && !mouseIsPressed) {
+        World.remove(world, this.holdingConstraint, true);
+        this.holdingConstraint = undefined;
+        this.newIce = null;
+      }
+    }
+  }
+}
