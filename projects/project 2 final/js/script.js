@@ -18,7 +18,7 @@ let scrollDelta = 0;
 let scrolling = false;
 
 // Defines sprites
-let spriteBackground, spriteTable, spriteGlass, spriteIce, spriteShaker, spriteBuckets;
+let spriteBackground, spriteTable, spriteGlass, spriteIce, spriteShaker, spriteBuckets, spriteCherry, spriteOrange;
 
 // Defines colors
 let cDarkGrey, cLightGrey;
@@ -54,6 +54,8 @@ function preload() {
   spriteShaker = loadImage('assets/images/shaker.png');
   spriteBuckets = loadImage('assets/images/buckets.png');
   spriteIce = loadImage('assets/images/ice.png');
+  spriteCherry = loadImage('assets/images/cherry.png');
+  spriteOrange = loadImage('assets/images/orange.png');
 
   // Defines colours
   cDarkGrey = color(58, 59, 60);
@@ -78,10 +80,10 @@ function setup() {
   // Creates interactable objects
   glass = new Glass(220, 460, 100, 105, 0, spriteGlass);
   shaker = new Shaker();
-  ice = new Ice(400, 460, 50, 50, 0, spriteIce);
+  // ice = new Ice(400, 460, 50, 50, 0, spriteIce);
 
   // Adds bodies to the object list
-  objectList.push(ground, wallA, wallB, buckets, shaker, ice, glass);
+  objectList.push(ground, wallA, wallB, buckets, shaker, glass);
   menuObjectList.push(ground, shaker, glass);
 
   // Creates the mouse for interaction

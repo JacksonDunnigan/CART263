@@ -1,17 +1,18 @@
 // Makes the ice
-class Ice extends InteractableShapes {
+class Cherry extends InteractableShapes {
   constructor(x, y, w, h, isStatic, sprite) {
-    w = random(w-8, w+8);
-    w = h;
+
 
     super(x, y, w, h, isStatic, sprite);
+    this.w = random(w-8 ,w+8);
+    this.h = this.w * 1.5;
     var options = {
       friction: 0.3,
       intertia: 5,
       frictionAir: 0.1,
       mass: 5
     };
-    this.body = Bodies.rectangle(x, y, w, h, {options});
+    this.body = Bodies.circle(x, y, w*.4);
     this.body.collisionFilter = this.canCollide;
 
     World.add(world, this.body);
@@ -36,7 +37,9 @@ class Ice extends InteractableShapes {
     rotate(angle);
     imageMode(CENTER);
     rectMode(CENTER);
-    image(this.graphics,0,0,this.w, this.h)
+    fill(255);
+    // circle(0,0,this.w*.8);
+    image(this.graphics, 4, -18,this.w, this.h)
     pop();
   }
 }
