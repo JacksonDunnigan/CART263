@@ -1,9 +1,9 @@
-// Makes the ice
+// Class to define a cherry
 class Cherry extends InteractableShapes {
-  constructor(x, y, w, h, isStatic, sprite) {
+  constructor(x, y, w, h, isStatic) {
 
 
-    super(x, y, w, h, isStatic, sprite);
+    super(x, y, w, h, isStatic, spriteCherry);
     this.w = random(w-8 ,w+8);
     this.h = this.w * 1.5;
     var options = {

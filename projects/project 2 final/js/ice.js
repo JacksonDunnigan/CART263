@@ -1,10 +1,10 @@
-// Makes the ice
+// Class to define an ice cube
 class Ice extends InteractableShapes {
-  constructor(x, y, w, h, isStatic, sprite) {
+  constructor(x, y, w, h, isStatic) {
     w = random(w-8, w+8);
     w = h;
 
-    super(x, y, w, h, isStatic, sprite);
+    super(x, y, w, h, isStatic, spriteIce);
     var options = {
       friction: 0.3,
       intertia: 5,

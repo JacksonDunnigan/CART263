@@ -21,13 +21,19 @@ class Buckets extends Ground {
         this.inBounds = true;
 
         // Decides what type of object should be created
-        // Creates the ice
+
+        // Creates ice
         if (mouseX > width * 2/3) {
-          this.newObject = new Ice(mouseX, mouseY, this.objectSize, this.objectSize, 0, spriteIce);
-        // Creates the cherry
+          this.newObject = new Ice(mouseX, mouseY, this.objectSize, this.objectSize, 0);
+
+        // Creates cherries
+        } else if (mouseX > width / 3) {
+          this.newObject = new Cherry(mouseX, mouseY, this.objectSize*.85, this.objectSize*.85, 0);
+        // Creates oranges
         } else {
-          this.newObject = new Cherry(mouseX, mouseY, this.objectSize*.85, this.objectSize*.85, 0, spriteCherry);
+        this.newObject = new Orange(mouseX, mouseY, this.objectSize, this.objectSize, 0);
         }
+
 
         // Creates the constraint
         this.holdingConstraint = Constraint.create({
