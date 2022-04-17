@@ -67,22 +67,3 @@ class Shaker extends InteractableShapes{
 
   }
 }
-
-
-      // }
-      // Takes off the top
-      // if (i == 1 && currentBody == this.topBody) {
-        // this.bodyList.splice(1);
-        // console.log(5);
-        // this.bodyList[i] = new Rectangle(mouseX, mouseY, 45, 35, 0);
-        // this.topBody = new Rectangle(mouseX, mouseY, 45, 35, 0);
-
-        //new Rectangle(120, 260, 45, 35, 0);
-        // Body.setPosition(this.topBody, {x:mouseX, y: mouseY});
-
-        // Body.setParts(this.compoundBody, [this.compoundBody, this.middleBody, this.bottomBody]);
-        // Body.setStatic(this.middleBody, true);
-        // Body.setStatic(this.bottomBody, true);
-      // Takes off the middle and top
-
-    // }

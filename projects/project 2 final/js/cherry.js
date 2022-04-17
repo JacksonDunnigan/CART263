@@ -4,7 +4,7 @@ class Cherry extends InteractableShapes {
 
 
     super(x, y, w, h, isStatic, spriteCherry);
-    this.w = random(w-8 ,w+8);
+    this.w = random(w-2 ,w+2);
     this.h = this.w * 1.5;
     var options = {
       friction: 0.3,

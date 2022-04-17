@@ -5,7 +5,7 @@ class Shapes {
     this.y = y;
     this.w = w;
     this.h = h;
-    this.static = isStatic;
+    this.static = isStatic || 0;
     this.body;
     this.sprite = sprite || 0;
     this.bounds = null;

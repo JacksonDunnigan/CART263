@@ -18,13 +18,13 @@ let scrollDelta = 0;
 let scrolling = false;
 
 // Defines sprites
-let spriteBackground, spriteTable, spriteGlass, spriteIce, spriteShaker, spriteBuckets, spriteCherry, spriteOrange;
+let spriteBackground, spriteTable, spriteGlass, spriteIce, spriteShaker, spriteBuckets, spriteCherry, spriteOrange, spriteWhiskey;
 
 // Defines colors
 let cDarkGrey, cLightGrey;
 
 // Defines objects
-let ground, wallA, wallB, buckets, cieling, shaker, glass, boxB, ice;
+let ground, wallA, wallB, buckets, cieling, shaker, glass, boxB, ice, whiskey;
 
 // Implements Matter.js modules
 let engine, render, mouse, mouseConstraint;
@@ -56,6 +56,7 @@ function preload() {
   spriteIce = loadImage('assets/images/ice.png');
   spriteCherry = loadImage('assets/images/cherry.png');
   spriteOrange = loadImage('assets/images/orange.png');
+  spriteWhiskey = loadImage('assets/images/whiskey.png');
 
   // Defines colours
   cDarkGrey = color(58, 59, 60);
@@ -80,10 +81,10 @@ function setup() {
   // Creates interactable objects
   glass = new Glass(220, 460, 100, 105, 0, spriteGlass);
   shaker = new Shaker();
-  // ice = new Ice(400, 460, 50, 50, 0, spriteIce);
+  whiskey = new Whiskey();
 
   // Adds bodies to the object list
-  objectList.push(ground, wallA, wallB, buckets, shaker, glass);
+  objectList.push(ground, wallA, wallB, buckets, shaker, glass, whiskey);
   menuObjectList.push(ground, shaker, glass);
 
   // Creates the mouse for interaction
