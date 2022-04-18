@@ -6,13 +6,14 @@ class Glass extends InteractableShapes {
       friction: 0.3,
       intertia: 5,
       frictionAir: 0.1,
+      mass:100,
     };
 
 
     // Creates the bodyList
-    this.leftBody = Bodies.rectangle(this.x-w*.45, this.y, 5, h);//new Rectangle(120, 260, 45, 35, 0);
-    this.middleBody = Bodies.rectangle(this.x, this.y+h*.45, w-10, 5);//new Trapezoid(120, 295, 108, 35, .6, 200, 0);
-    this.rightBody = Bodies.rectangle(this.x+w*.45, this.y, 5, h);//new Trapezoid(120, 400, 80, 190, -.35, 200, 0);
+    this.leftBody = Bodies.rectangle(this.x-w*.45, this.y, 15, h);//new Rectangle(120, 260, 45, 35, 0);
+    this.middleBody = Bodies.rectangle(this.x, this.y+h*.4, w-10, 20);//new Trapezoid(120, 295, 108, 35, .6, 200, 0);
+    this.rightBody = Bodies.rectangle(this.x+w*.45, this.y, 15, h);//new Trapezoid(120, 400, 80, 190, -.35, 200, 0);
     this.holdingBody = Bodies.rectangle(x, y, w, h, {options});
     this.bodyList = [this.leftBody, this.middleBody, this.rightBody];
     this.holdingConstraint;
@@ -43,13 +44,18 @@ class Glass extends InteractableShapes {
 
       if (mouseIsPressed === true){
         Body.setAngularVelocity(this.body, 0);
-
+        // mouseConstraint.body = this.body;
+        // mouseConstraint.element = this.body;
+        console.log(mouseConstraint);
         if (this.holdingConstraint === undefined){
 
           this.holdingConstraint = Constraint.create({
                pointB: mouseConstraint.mouse.position,
                bodyA: this.body,
                stiffness: 0.9,
+               damping: 0.2,
+
+
            });
            World.add(world, this.holdingConstraint);
         }
@@ -67,7 +73,7 @@ class Glass extends InteractableShapes {
           this.holdingConstraint = undefined;
         }
       }
-
+      this.clampVelocity();
       // Body.setAngularVelocity(this.body, 0);
 
     }

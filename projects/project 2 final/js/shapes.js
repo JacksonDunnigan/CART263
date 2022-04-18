@@ -5,6 +5,7 @@ class Shapes {
     this.y = y;
     this.w = w;
     this.h = h;
+    this.maxVelocity = 15;
     this.static = isStatic || 0;
     this.body;
     this.sprite = sprite || 0;
@@ -20,10 +21,31 @@ class Shapes {
       'mask': 0,
     };
   }
+  // Clamps velocity
+  clampVelocity = function(){
+    // console.log("bruh")
+   // Clamps x velocity
+   if (abs(this.body.velocity.x) > this.maxVelocity) {
+     Matter.Body.setVelocity(this.body, {
+       x: this.maxVelocity * (this.body.velocity.x / abs(this.body.velocity.x)),
+       y: this.body.velocity.y})
+   }
+   // Clamps y velocity
+   if (abs(this.body.velocity.y) > this.maxVelocity) {
+     Matter.Body.setVelocity(this.body, {
+       x: this.body.velocity.x,
+       y: this.maxVelocity * (this.body.velocity.y / abs(this.body.velocity.y))
+       })
+     }
+   }
 
   // Moving logic
   move() {
+    // console.log(this.body.velocity);
+    this.clampVelocity();
+
   }
+
 
   // Displays the shape
   display() {
@@ -48,6 +70,7 @@ class InteractableShapes extends Shapes {
 
   // Moving logic
   move() {
+    this.clampVelocity();
     Bounds.update(this.bounds,this.body.vertices,0);
     if (mouseConstraint.body === this.body
       && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {

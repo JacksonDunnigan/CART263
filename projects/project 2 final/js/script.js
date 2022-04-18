@@ -75,7 +75,7 @@ function setup() {
       positionIterations: 6,
       velocityIterations: 4,
       constraintIterations: 2,
-      enableSleeping: false,
+      enableSleeping: true,
       events: [],
       plugin: {},
       gravity: {
@@ -85,7 +85,7 @@ function setup() {
       },
       timing: {
           timestamp: 0,
-          timeScale: .5,
+          timeScale: 1,
           lastDelta: 0,
           lastElapsed: 0
       }
@@ -176,6 +176,7 @@ function menu() {
 
 // Runs the simulation
 function simulation() {
+   frameRate(60);
   for (var i = 0; i < objectList.length; i++) {
     if (objectList[i] == null) {
       i++;
@@ -196,9 +197,9 @@ function simulation() {
   // }
 }
 
-(function run() {
-    window.requestAnimationFrame(run);
-    for (let i = 0; i < subSteps; i += 1) {
-      Engine.update(engine, subDelta);
-    }
-})();
+// (function run() {
+//     window.requestAnimationFrame(run);
+//     for (let i = 0; i < subSteps; i += 1) {
+//       Engine.update(engine, subDelta);
+//     }
+// })();

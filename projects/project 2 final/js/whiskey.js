@@ -39,6 +39,8 @@ class Whiskey extends InteractableShapes  {
 
   }
   move() {
+    this.clampVelocity();
+
     // Rotating the bottle
     Bounds.update(this.bounds,this.body.vertices,0);
     if (mouseConstraint.body === this.body
@@ -57,9 +59,7 @@ class Whiskey extends InteractableShapes  {
     var tempAngle = abs(this.body.parts[0].angle % (Math.PI * 2));
     if (tempAngle > Math.PI - (Math.PI / 2) && tempAngle < Math.PI + (Math.PI / 2)) {
       var vector = createVector(this.body.parts[3].vertices[0].x, this.body.parts[3].vertices[0].y);
-      var vector2 = createVector(20, 0);
 
-      // console.log(topPos);
       this.newObject = new Liquid(vector.x, vector.y, this.liquidSize, this.liquidSize);
       this.liquid.push(this.newObject);
       World.add(world, this.newObject);
@@ -79,13 +79,7 @@ class Whiskey extends InteractableShapes  {
   // Draws the shaker
   display() {
 
-    // var pos;
-    // var angle;
-    // var currentBody;
-    // Draws the graphics
     push();
-      // this.pos = this.body.parts[0].position;
-      // this.angle = this.body.parts[0].angle;
       translate(this.pos.x, this.pos.y);
       rotate(this.angle);
       imageMode(CENTER);
@@ -120,12 +114,21 @@ class Whiskey extends InteractableShapes  {
 class Liquid extends Shapes {
   constructor(x, y, w, h) {
     super(x, y, w, h);
-    this.body = Bodies.rectangle(this.x, this.y, this.w, this.h);
+    var options = {
+      mass:0.0125,
+      restitution:0.4,
+      frictionAir:0.04,
+      friction:.7,
+    }
+    this.body = Bodies.rectangle(this.x, this.y, this.w, this.h, options);
     this.body.collisionFilter = this.canCollide;
 
     World.add(world, this.body);
     this.bounds = Bounds.create(this.body.vertices);
   }
+  // move(){
+  //
+  // }
   display() {
     var pos = this.body.position;
     var angle = this.body.angle;
