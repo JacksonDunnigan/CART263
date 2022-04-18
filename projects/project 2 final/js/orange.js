@@ -4,14 +4,14 @@ class Orange extends InteractableShapes {
 
     super(x, y, w, h, isStatic, spriteOrange);
     this.h = h;
-    this.w = this.h *1.5;
+    this.w = this.h * 1.5;
     var options = {
       friction: 0.3,
       intertia: 5,
       frictionAir: 0.1,
       mass: 5
     };
-    this.body = Bodies.rectangle(this.x, this.y, this.w*.65, this.h);
+    this.body = Bodies.rectangle(this.x, this.y, this.w*.65, this.h*.75);
     this.body.collisionFilter = this.canCollide;
 
     World.add(world, this.body);
@@ -40,7 +40,7 @@ class Orange extends InteractableShapes {
     // rotate(angle + Math.PI/4);
     // this.graphics.rotate(Math.PI/4);
     imageMode(CENTER);
-    image(this.graphics, 0, 0, this.w, this.h)
+    image(this.graphics, 0, -this.h*.15, this.w, this.h)
     pop();
   }
 }

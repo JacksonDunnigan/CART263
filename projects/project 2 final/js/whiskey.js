@@ -4,7 +4,7 @@ class Whiskey extends InteractableShapes  {
     super(110, 0, 0, 0, false, spriteWhiskey);
 
     // Size variables
-    this.x = 380;
+    this.x = 700;
     this.y1 = 350;
     this.y2 = 395;
     this.y3 = 485;

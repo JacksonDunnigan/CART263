@@ -5,13 +5,17 @@
 "use strict";
 
 // World variables
-let canvasWidth = 800;
-let canvasHeight = 600;
+const canvasWidth = 800;
+const canvasHeight = 600;
 let world;
 let objectList = [];
 let menuObjectList = [];
 let canvas;
 let state = 'menu';
+const delta = 1000 / 60;
+const subSteps = 2;
+const subDelta = delta / subSteps;
+
 
 // Control variables
 let scrollDelta = 0;
@@ -67,8 +71,29 @@ function preload() {
 function setup() {
   canvas = createCanvas(canvasWidth, canvasHeight);
   // Creates an engine
-  engine = Engine.create();
+  var engineOptions = {
+      positionIterations: 6,
+      velocityIterations: 4,
+      constraintIterations: 2,
+      enableSleeping: false,
+      events: [],
+      plugin: {},
+      gravity: {
+          x: 0,
+          y: 1,
+          scale: 0.001
+      },
+      timing: {
+          timestamp: 0,
+          timeScale: .5,
+          lastDelta: 0,
+          lastElapsed: 0
+      }
+  };
+
+  engine = Engine.create(engineOptions);
   world = engine.world;
+  // world.timing.timeScale = 3;
   Engine.run(engine);
 
   // Creates Static objects
@@ -165,4 +190,15 @@ function simulation() {
       objectList[i].display();
     }
   }
+  // window.requestAnimationFrame(run);
+  // for (let i = 0; i < subSteps; i += 1) {
+    // Engine.update(engine, subDelta);
+  // }
 }
+
+(function run() {
+    window.requestAnimationFrame(run);
+    for (let i = 0; i < subSteps; i += 1) {
+      Engine.update(engine, subDelta);
+    }
+})();
