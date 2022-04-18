@@ -152,9 +152,17 @@ function menu() {
 // Runs the simulation
 function simulation() {
   for (var i = 0; i < objectList.length; i++) {
-    objectList[i].move();
+    if (objectList[i] == null) {
+      i++;
+    } else {
+      objectList[i].move();
+    }
   }
   for (var i = 0; i < objectList.length; i++) {
-    objectList[i].display();
+    if (objectList[i] == null) {
+      i++;
+    } else {
+      objectList[i].display();
+    }
   }
 }

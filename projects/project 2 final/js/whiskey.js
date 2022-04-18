@@ -27,6 +27,7 @@ class Whiskey extends InteractableShapes  {
 
     // Variables for liquids
     this.liquid = [];
+    this.liquidMaxSize = 200;
     this.liquidSize = 5;
     this.newObject;
 
@@ -50,26 +51,29 @@ class Whiskey extends InteractableShapes  {
       scrolling = false;
     }
 
-    // Pouring liquid
+    // Creates liquid
     this.pos = this.body.parts[0].position;
     this.angle = this.body.parts[0].angle
-
-
     var tempAngle = abs(this.body.parts[0].angle % (Math.PI * 2));
     if (tempAngle > Math.PI - (Math.PI / 2) && tempAngle < Math.PI + (Math.PI / 2)) {
       var vector = createVector(this.body.parts[3].vertices[0].x, this.body.parts[3].vertices[0].y);
       var vector2 = createVector(20, 0);
 
-      // let vector3 = p5.Vector.add(vector, vector2);
-      // p5.Vector.div(vector3, 2);
       // console.log(topPos);
-      push();
       this.newObject = new Liquid(vector.x, vector.y, this.liquidSize, this.liquidSize);
       this.liquid.push(this.newObject);
-      World.add(world,this.newObject);
+      World.add(world, this.newObject);
       objectList.push(this.newObject);
-      console.log(1);
-      pop();
+
+      // Deletes the liquid if needed
+      if (this.liquid.length >= this.liquidMaxSize) {
+        var tempIndex = objectList.indexOf(this.liquid[0]);
+        objectList.splice(tempIndex, 1);
+        this.liquid.splice(0,1);
+        World.remove(world, this.liquid[0].body);
+      }
+
+      console.log(world.bodies.length);
     }
   }
   // Draws the shaker
