@@ -45,14 +45,14 @@ class Shapes {
     if (this.body != null
     && this.pickupSound != null
     && Matter.SAT.collides(this.body, ground.body).collided == true
-    && abs(this.body.velocity.y) > 0.1) {
+    && abs(this.body.velocity.y) > 0.11) {
       if (this.colliding == false) {
         this.colliding = true;
         // console.log(1)
-        // if (this.pickupSound.isPlaying() == false){
+        if (this.pickupSound.isPlaying() == false){
           playSound(this.pickupSound);
 
-        // }
+        }
       }
     } else {
       this.colliding = false;

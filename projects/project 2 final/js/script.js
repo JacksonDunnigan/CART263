@@ -1,4 +1,4 @@
-// Bar Tending Simulator
+// Bartending Simulator
 // By Jacksonn Dunnigan
 // Student ID: 40212769
 
@@ -17,6 +17,7 @@ const subSteps = 2;
 const subDelta = delta / subSteps;
 let click = false;
 let mouseHolding = false;
+let helpButtonOpen = false;
 
 // Control variables
 let scrollDelta = 0;
@@ -201,6 +202,59 @@ function mousePressed() {
   }
 }
 
+// Help helpButton
+function helpButton(){
+  var tempX = width *.947;
+  var tempY = height * .01;
+  var buttonWidth = 38;
+
+  push();
+  textSize(28);
+  var tempColor = color(255);
+  tempColor.setAlpha(180);
+  fill(tempColor);
+  textAlign(RIGHT);
+  text(`?`, width *.986, height * .09);
+  noFill();
+  stroke(tempColor);
+  strokeWeight(3);
+  rect(tempX, tempY, buttonWidth, buttonWidth);
+
+  // Clicking the button logic
+  if (click) {
+    if (mouseX >= tempX
+      && mouseX <= tempX + buttonWidth
+      && mouseY >= tempY
+      && mouseY <= tempY + buttonWidth
+      && click == true) {
+      playSound(soundSquish);
+      helpButtonOpen = true;
+    } else {
+      helpButtonOpen = false;
+    }
+  }
+
+  // Displays the help screen
+  if (helpButtonOpen) {
+    textSize(32);
+    textAlign(CENTER);
+    strokeWeight(0);
+    tempColor.setAlpha(220);
+    fill(tempColor);
+    drawingContext.shadowOffsetX = 0;
+    drawingContext.shadowOffsetY = 5;
+    drawingContext.shadowBlur = 5;
+    drawingContext.shadowColor =  color(0,0,0);
+    text(`Instructions
+      Grab objects with the mouse
+      Scroll to rotate objects
+      Combine ingredients in the
+      glass to make drinks`, width *.5, height * .15);
+  }
+  pop();
+
+}
+
 // Main Menu
 function menu() {
   for (var i = 0; i < menuObjectList.length; i++) {
@@ -210,9 +264,13 @@ function menu() {
   textSize(46);
   fill(255);
   textAlign(LEFT);
-  text(`Bartending Simulator`, width *.017, height *.99);
+  drawingContext.shadowOffsetX = 0;
+  drawingContext.shadowOffsetY = 5;
+  drawingContext.shadowBlur = 8;
+  drawingContext.shadowColor =  color(0,0,0);
+  text(`Bartending Simulator`, width *.017, height *.97);
   textSize(16);
-  text(`By Jackson Dunnigan`, width *.02, height *.999);
+  text(`By Jackson Dunnigan`, width *.02, height *.98);
   pop();
 }
 
@@ -235,23 +293,17 @@ function simulation() {
       objectList[i].display();
     }
   }
+  helpButton();
+
   click = false;
-  // console.log(mouseConstraint.body);
+
   // Globally stores what the mouse is holding
   if (mouseConstraint.body != null){
     mouseHolding = true;
   } else {
     mouseHolding = false;
   }
-  // window.requestAnimationFrame(run);
-  // for (let i = 0; i < subSteps; i += 1) {
-    // Engine.update(engine, subDelta);
-  // }
-}
 
-// (function run() {
-//     window.requestAnimationFrame(run);
-//     for (let i = 0; i < subSteps; i += 1) {
-//       Engine.update(engine, subDelta);
-//     }
-// })();
+
+
+}
