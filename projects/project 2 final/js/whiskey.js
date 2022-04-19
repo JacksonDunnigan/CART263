@@ -59,10 +59,9 @@ class Whiskey extends InteractableShapes  {
     this.angle = this.body.parts[0].angle
     var tempAngle = abs(this.body.parts[0].angle % (Math.PI * 2));
     if (tempAngle > Math.PI - (Math.PI / 2) && tempAngle < Math.PI + (Math.PI / 2)) {
-      if (!soundPour.isPlaying()){
-        soundPour.play();
+      if (!soundPour.isPlaying()) {
+        playSound(soundPour);
       }
-
       var vector = createVector(this.body.parts[3].vertices[0].x, this.body.parts[3].vertices[0].y);
       this.newObject = new Liquid(vector.x, vector.y, this.liquidSize, this.liquidSize);
       this.liquid.push(this.newObject);

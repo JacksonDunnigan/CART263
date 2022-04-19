@@ -42,30 +42,21 @@ class Glass extends InteractableShapes {
     Bounds.update(this.bounds,this.body.vertices,0);
     if ((mouseConstraint.body === null || mouseConstraint.body === this.body)
     && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
-
-      if (mouseIsPressed === true){
+      if (mouseIsPressed === true) {
         this.updateSound();
+        mouseConstraint.body = this.body;
         Body.setAngularVelocity(this.body, 0);
-        // mouseConstraint.body = this.body;
-        // mouseConstraint.element = this.body;
-        console.log(mouseConstraint);
         if (this.holdingConstraint === undefined){
-          soundClink.play();
           this.holdingConstraint = Constraint.create({
                pointB: mouseConstraint.mouse.position,
                bodyA: this.body,
                stiffness: 0.9,
-               damping: 0.2,
-
-
+               damping: 0.2
            });
            World.add(world, this.holdingConstraint);
         }
         // Rotating logic
-       // console.log(scrolling);
         if (scrolling == true) {
-          // Body.setAngularVelocity(this.body, 0);
-
           Body.rotate(this.body, scrollDelta / 3);
         }
         scrolling = false;

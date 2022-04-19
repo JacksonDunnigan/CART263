@@ -45,13 +45,14 @@ class Shapes {
     if (this.body != null
     && this.pickupSound != null
     && Matter.SAT.collides(this.body, ground.body).collided == true
-    && this.body.velocity.y > .2) {
+    && abs(this.body.velocity.y) > 0.1) {
       if (this.colliding == false) {
         this.colliding = true;
-        console.log(1)
-        if (this.pickupSound.isPlaying() == false){
-          this.pickupSound.play();
-        }
+        // console.log(1)
+        // if (this.pickupSound.isPlaying() == false){
+          playSound(this.pickupSound);
+
+        // }
       }
     } else {
       this.colliding = false;
@@ -61,19 +62,14 @@ class Shapes {
   // Updates sound effects
   updateSound = function() {
     if (click && this.pickupSound != null) {
-      if (this.pickupSound.isPlaying() == false){
-        this.pickupSound.play();
-      }
+      playSound(this.pickupSound);
     }
   }
 
   // Moving logic
   move() {
-    // console.log(this.body.velocity);
-    // this.updateSound();
     this.clampVelocity();
     this.collisionCheck();
-
   }
 
   // Displays the shape
@@ -99,8 +95,6 @@ class InteractableShapes extends Shapes {
 
   // Moving logic
   move() {
-
-
     // Holding
     Bounds.update(this.bounds,this.body.vertices,0);
     if (mouseConstraint.body === this.body

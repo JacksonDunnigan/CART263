@@ -16,7 +16,7 @@ const delta = 1000 / 60;
 const subSteps = 2;
 const subDelta = delta / subSteps;
 let click = false;
-
+let mouseHolding = false;
 
 // Control variables
 let scrollDelta = 0;
@@ -26,7 +26,10 @@ let scrolling = false;
 let spriteBackground, spriteTable, spriteGlass, spriteIce, spriteShaker, spriteBuckets, spriteCherry, spriteOrange, spriteWhiskey;
 
 // Defines sounds
-let soundClink, soundPickup, soundPour, soundSquish;
+let soundClink, soundPickup, soundPour, soundSquish, soundAmbience, soundMetal;
+
+// Defines font
+let fontPixel;
 
 // Defines colors
 let cDarkGrey, cLightGrey;
@@ -69,14 +72,20 @@ function preload() {
 
   // Loads Sounds
   soundClink = loadSound('assets/sounds/clink.wav');
-  soundClink.setVolume(0.1);
+  soundClink.setVolume(0.05);
   soundPickup = loadSound('assets/sounds/pickup.wav');
-  soundPickup.setVolume(0.9);
+  soundPickup.setVolume(0.6);
   soundPour = loadSound('assets/sounds/pour.wav');
   soundPour.setVolume(0.6);
   soundSquish = loadSound('assets/sounds/squish.wav');
   soundSquish.setVolume(0.3);
+  soundAmbience = loadSound('assets/sounds/ambience.wav');
+  soundAmbience.setVolume(0.1);
+  soundMetal = loadSound('assets/sounds/metal.wav');
+  soundMetal.setVolume(0.2);
 
+  // Loads fonts
+  fontPixel = loadFont('assets/Minecraftia.ttf');
   // Defines colours
   // cDarkGrey = color(58, 59, 60);
   // cLightGrey = color(176, 179, 184);
@@ -85,6 +94,8 @@ function preload() {
 // Sets up the canvas
 function setup() {
   canvas = createCanvas(canvasWidth, canvasHeight);
+  textFont(fontPixel);
+
   // Creates an engine
   var engineOptions = {
       positionIterations: 6,
@@ -106,10 +117,13 @@ function setup() {
       }
   };
 
+  // Creates the engine
   engine = Engine.create(engineOptions);
   world = engine.world;
-  // world.timing.timeScale = 3;
   Engine.run(engine);
+
+  // Sound
+  soundAmbience.loop();
 
   // Creates Static objects
   ground = new Ground(400, 540, 810, 130, 0, spriteTable);
@@ -144,15 +158,12 @@ function setup() {
     'group': 1,
   };
   // Mouse clicking
-  // click = false;
   Events.on(mouseConstraint, 'mousedown', function(event) {
-    // var pickup = mouseConstraint.
     click = true;
-    // console.log(click);
-    soundPickup.play();
+    if (mouseHolding == true) {
+      playSound(soundPickup);
+    }
   });
-
-
   World.add(world, mouseConstraint);
 }
 
@@ -161,6 +172,12 @@ function setup() {
 function mouseWheel(event) {
   scrolling = true;
   scrollDelta = event.delta / abs(event.delta)
+}
+
+// Plays a sound
+function playSound(sound) {
+  sound.rate(random(0.7, 1));
+  sound.play();
 }
 
 // Runs the program
@@ -190,12 +207,12 @@ function menu() {
     menuObjectList[i].display();
   }
   push();
-  textSize(56);
+  textSize(46);
   fill(255);
   textAlign(LEFT);
-  text(`Bartending Simulator`, width *.017, height *.91);
-  textSize(18);
-  text(`By Jackson Dunnigan`, width *.02, height *.95);
+  text(`Bartending Simulator`, width *.017, height *.99);
+  textSize(16);
+  text(`By Jackson Dunnigan`, width *.02, height *.999);
   pop();
 }
 
@@ -219,7 +236,13 @@ function simulation() {
     }
   }
   click = false;
-
+  // console.log(mouseConstraint.body);
+  // Globally stores what the mouse is holding
+  if (mouseConstraint.body != null){
+    mouseHolding = true;
+  } else {
+    mouseHolding = false;
+  }
   // window.requestAnimationFrame(run);
   // for (let i = 0; i < subSteps; i += 1) {
     // Engine.update(engine, subDelta);

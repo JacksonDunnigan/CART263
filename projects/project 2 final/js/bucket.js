@@ -24,7 +24,7 @@ class Buckets extends Ground {
 
         // Creates ice
         if (mouseX > width * 2/3) {
-          this.newObject = new Ice(mouseX, mouseY, this.objectSize, this.objectSize, 0);
+          this.newObject = new Ice(mouseX, mouseY, this.objectSize*.8, this.objectSize*.8, 0);
           soundClink.play();
         // Creates cherries
         } else if (mouseX > width / 3) {

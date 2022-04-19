@@ -24,6 +24,7 @@ class Shaker extends InteractableShapes{
     this.bounds = Bounds.create(this.body.vertices);
 
     // Creates graphics
+    this.pickupSound = soundMetal;
     this.canRotate = true;
     this.graphics = createGraphics(110, 260);
     this.graphics.noSmooth();
