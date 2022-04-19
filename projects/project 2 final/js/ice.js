@@ -18,6 +18,7 @@ class Ice extends InteractableShapes {
     this.bounds = Bounds.create(this.body.vertices);
 
     // Creates graphics
+    this.pickupSound = soundClink;
     this.canRotate = true;
     this.graphics = createGraphics(this.w, this.h);
     this.graphics.noStroke();

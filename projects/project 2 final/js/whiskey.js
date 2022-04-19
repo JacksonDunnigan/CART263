@@ -32,6 +32,7 @@ class Whiskey extends InteractableShapes  {
     this.newObject;
 
     // Creates graphics
+    this.pickupSound = soundClink;
     this.canRotate = true;
     this.graphics = createGraphics(110, 260);
     this.graphics.noSmooth();
@@ -39,13 +40,13 @@ class Whiskey extends InteractableShapes  {
 
   }
   move() {
-    this.clampVelocity();
+
 
     // Rotating the bottle
     Bounds.update(this.bounds,this.body.vertices,0);
     if (mouseConstraint.body === this.body
       && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
-
+      this.updateSound();
       if (scrolling == true) {
         Body.setAngularVelocity(this.body, 0);
         Body.rotate(this.body, scrollDelta / 3);
@@ -58,8 +59,11 @@ class Whiskey extends InteractableShapes  {
     this.angle = this.body.parts[0].angle
     var tempAngle = abs(this.body.parts[0].angle % (Math.PI * 2));
     if (tempAngle > Math.PI - (Math.PI / 2) && tempAngle < Math.PI + (Math.PI / 2)) {
-      var vector = createVector(this.body.parts[3].vertices[0].x, this.body.parts[3].vertices[0].y);
+      if (!soundPour.isPlaying()){
+        soundPour.play();
+      }
 
+      var vector = createVector(this.body.parts[3].vertices[0].x, this.body.parts[3].vertices[0].y);
       this.newObject = new Liquid(vector.x, vector.y, this.liquidSize, this.liquidSize);
       this.liquid.push(this.newObject);
       World.add(world, this.newObject);
@@ -73,8 +77,14 @@ class Whiskey extends InteractableShapes  {
         World.remove(world, this.liquid[0].body);
       }
 
-      console.log(world.bodies.length);
+      // console.log(world.bodies.length);
+    } else {
+      if (soundPour.isPlaying()){
+        soundPour.stop();
+      }
     }
+    this.clampVelocity();
+    this.collisionCheck();
   }
   // Draws the shaker
   display() {

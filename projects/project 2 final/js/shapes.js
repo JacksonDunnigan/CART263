@@ -8,8 +8,10 @@ class Shapes {
     this.maxVelocity = 15;
     this.static = isStatic || 0;
     this.body;
+    this.pickupSound = null;
     this.sprite = sprite || 0;
     this.bounds = null;
+    this.colliding;
     this.noCollide = {
       'group': 2,
       'category': 0x0001,
@@ -22,8 +24,7 @@ class Shapes {
     };
   }
   // Clamps velocity
-  clampVelocity = function(){
-    // console.log("bruh")
+  clampVelocity = function() {
    // Clamps x velocity
    if (abs(this.body.velocity.x) > this.maxVelocity) {
      Matter.Body.setVelocity(this.body, {
@@ -39,13 +40,41 @@ class Shapes {
      }
    }
 
+  // Checks for collision
+  collisionCheck = function(){
+    if (this.body != null
+    && this.pickupSound != null
+    && Matter.SAT.collides(this.body, ground.body).collided == true
+    && this.body.velocity.y > .2) {
+      if (this.colliding == false) {
+        this.colliding = true;
+        console.log(1)
+        if (this.pickupSound.isPlaying() == false){
+          this.pickupSound.play();
+        }
+      }
+    } else {
+      this.colliding = false;
+    }
+  }
+
+  // Updates sound effects
+  updateSound = function() {
+    if (click && this.pickupSound != null) {
+      if (this.pickupSound.isPlaying() == false){
+        this.pickupSound.play();
+      }
+    }
+  }
+
   // Moving logic
   move() {
     // console.log(this.body.velocity);
+    // this.updateSound();
     this.clampVelocity();
+    this.collisionCheck();
 
   }
-
 
   // Displays the shape
   display() {
@@ -70,17 +99,22 @@ class InteractableShapes extends Shapes {
 
   // Moving logic
   move() {
-    this.clampVelocity();
+
+
+    // Holding
     Bounds.update(this.bounds,this.body.vertices,0);
     if (mouseConstraint.body === this.body
       && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
-
+      this.updateSound();
       if (scrolling == true) {
         Body.setAngularVelocity(this.body, 0);
         Body.rotate(this.body, scrollDelta / 3);
       }
       scrolling = false;
     }
+    this.clampVelocity();
+    this.collisionCheck();
+
   }
 
   // Displays the shape

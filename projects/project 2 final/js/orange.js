@@ -18,6 +18,7 @@ class Orange extends InteractableShapes {
     this.bounds = Bounds.create(this.body.vertices);
 
     // Creates graphics
+    this.pickupSound = soundSquish;
     this.canRotate = true;
     this.graphics = createGraphics(this.w, this.h);
     this.graphics.noStroke();
@@ -26,6 +27,7 @@ class Orange extends InteractableShapes {
     this.graphics.image(this.sprite, 0, 0, this.w, this.h);
 
   }
+  
 
   // Displays the shape
   display() {

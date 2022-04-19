@@ -27,6 +27,7 @@ class Glass extends InteractableShapes {
 
 
     // Creates graphics
+    this.pickupSound = soundClink;
     this.canRotate = true;
     this.graphics = createGraphics(this.w, this.h);
     this.graphics.noStroke();
@@ -37,18 +38,19 @@ class Glass extends InteractableShapes {
   }
   // Manually moves the glass
   move() {
-
+    this.collisionCheck();
     Bounds.update(this.bounds,this.body.vertices,0);
     if ((mouseConstraint.body === null || mouseConstraint.body === this.body)
     && Bounds.contains(this.bounds, {x: mouseX, y: mouseY})) {
 
       if (mouseIsPressed === true){
+        this.updateSound();
         Body.setAngularVelocity(this.body, 0);
         // mouseConstraint.body = this.body;
         // mouseConstraint.element = this.body;
         console.log(mouseConstraint);
         if (this.holdingConstraint === undefined){
-
+          soundClink.play();
           this.holdingConstraint = Constraint.create({
                pointB: mouseConstraint.mouse.position,
                bodyA: this.body,

@@ -15,6 +15,7 @@ let state = 'menu';
 const delta = 1000 / 60;
 const subSteps = 2;
 const subDelta = delta / subSteps;
+let click = false;
 
 
 // Control variables
@@ -23,6 +24,9 @@ let scrolling = false;
 
 // Defines sprites
 let spriteBackground, spriteTable, spriteGlass, spriteIce, spriteShaker, spriteBuckets, spriteCherry, spriteOrange, spriteWhiskey;
+
+// Defines sounds
+let soundClink, soundPickup, soundPour, soundSquish;
 
 // Defines colors
 let cDarkGrey, cLightGrey;
@@ -44,6 +48,7 @@ let Engine = Matter.Engine,
     Bounds = Matter.Bounds,
     Composites = Matter.Composites,
     Constraint = Matter.Constraint,
+    Collision = Matter.Collision,
     Vertices = Matter.Vertices,
     Common = Matter.Common,
     Body = Matter.Body;
@@ -51,7 +56,7 @@ let Engine = Matter.Engine,
 
 // Loads images, sounds and colours
 function preload() {
-  // Defines
+  // Loads sprites
   spriteBackground = loadImage('assets/images/background.png');
   spriteTable = loadImage('assets/images/table.png');
   spriteGlass = loadImage('assets/images/glass.png');
@@ -62,9 +67,19 @@ function preload() {
   spriteOrange = loadImage('assets/images/orange.png');
   spriteWhiskey = loadImage('assets/images/whiskey.png');
 
+  // Loads Sounds
+  soundClink = loadSound('assets/sounds/clink.wav');
+  soundClink.setVolume(0.1);
+  soundPickup = loadSound('assets/sounds/pickup.wav');
+  soundPickup.setVolume(0.9);
+  soundPour = loadSound('assets/sounds/pour.wav');
+  soundPour.setVolume(0.6);
+  soundSquish = loadSound('assets/sounds/squish.wav');
+  soundSquish.setVolume(0.3);
+
   // Defines colours
-  cDarkGrey = color(58, 59, 60);
-  cLightGrey = color(176, 179, 184);
+  // cDarkGrey = color(58, 59, 60);
+  // cLightGrey = color(176, 179, 184);
 }
 
 // Sets up the canvas
@@ -128,8 +143,19 @@ function setup() {
   mouseConstraint.collisionFilter = {
     'group': 1,
   };
+  // Mouse clicking
+  // click = false;
+  Events.on(mouseConstraint, 'mousedown', function(event) {
+    // var pickup = mouseConstraint.
+    click = true;
+    // console.log(click);
+    soundPickup.play();
+  });
+
+
   World.add(world, mouseConstraint);
 }
+
 
 // Mouse Scrolling
 function mouseWheel(event) {
@@ -177,6 +203,7 @@ function menu() {
 // Runs the simulation
 function simulation() {
    frameRate(60);
+
   for (var i = 0; i < objectList.length; i++) {
     if (objectList[i] == null) {
       i++;
@@ -191,6 +218,8 @@ function simulation() {
       objectList[i].display();
     }
   }
+  click = false;
+
   // window.requestAnimationFrame(run);
   // for (let i = 0; i < subSteps; i += 1) {
     // Engine.update(engine, subDelta);
